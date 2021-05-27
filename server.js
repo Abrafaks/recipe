@@ -5,6 +5,8 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 app.use(express.json());
 
+const userRouter = require("./routes/subscribers");
+
 const users = [];
 
 mongoose.connect(
