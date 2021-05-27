@@ -1,10 +1,25 @@
 const express = require("express");
 const app = express();
 const bcrypt = require("bcrypt");
-
+const mongoose = require("mongoose");
+require("dotenv").config();
 app.use(express.json());
 
 const users = [];
+
+mongoose.connect(
+  process.env.MONGODB_CONNECTION_STRING,
+  {
+    useNewUrlParser: true,
+    useFindAndModify: false,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+  },
+  (err) => {
+    if (err) throw err;
+    console.log("MongoDB connection established");
+  }
+);
 
 app.get("/users", (req, res) => {
   res.json(users);
