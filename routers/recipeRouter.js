@@ -72,22 +72,26 @@ router.get("/readbyid", auth, async (req, res) => {
 router.post("/update", auth, async (req, res) => {
   try {
     const { title, description, preparing, ingredients, url, id } = req.body;
+    const { user, admin } = req;
 
-    const recipe = new Recipe({
-      title,
-      description,
-      preparing,
-      ingredients,
-      user: req.user,
-      url,
-    });
+    if (admin) {
+      const result = await Recipe.updateOne(
+        { _id: id },
+        { title, description, preparing, ingredients, url }
+      );
+      console.log(result);
+      console.log(id);
+      if (result.nModified === 1) return res.status(200).send("success");
+    } else {
+      const result = await Recipe.updateOne(
+        { _id: id, user },
+        { title, description, preparing, ingredients, url }
+      );
 
-    await Recipe.findById(id, (error, newRecipe) => {
-      newRecipe = recipe;
-      newRecipe.save();
-    });
-
-    return res.status(200).send("success");
+      if (result.nModified === 1) return res.status(200).send("success");
+    }
+    // recepe doesn't belong to user or he sent the same copy and it wasn't modified
+    return res.status(400).send();
   } catch (err) {
     console.error(err);
     res.status(500).send();
