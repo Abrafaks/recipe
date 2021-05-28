@@ -66,4 +66,4 @@ ciasteczka HTTP-only)\
 + automatyczny restart serwera\
 ` }`
   
-  
+Do testowania użyłem programu Insomnia, podobny do postmana
