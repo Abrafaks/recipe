@@ -1,10 +1,9 @@
 {
   "name": "tutorial",
   "version": "1.0.0",
-  "description": "",
-  "main": "app.js",
   "scripts": {
-    "devStart": "nodemon server.js"
+    "devStart": "nodemon server.js",
+    "start": "ts-node ./src/server.ts"
   },
   "keywords": [],
   "author": "",
@@ -13,11 +12,39 @@
     "bcrypt": "^5.0.1",
     "cookie-parser": "^1.4.5",
     "express": "^4.17.1",
+    "express-generator-typescript": "^1.7.8",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.11"
   },
+  "nodemonConfig": {
+    "watch": [
+      "src"
+    ],
+    "ext": "ts, html",
+    "ignore": [
+      "src/public"
+    ],
+    "exec": "./node_modules/.bin/ts-node -r tsconfig-paths/register ./src"
+  },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/cookie-parser": "^1.4.2",
+    "@types/express": "^4.17.12",
+    "@types/jsonwebtoken": "^8.5.3",
+    "@types/node": "^16.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.28.2",
+    "@typescript-eslint/parser": "^4.28.2",
     "dotenv": "^10.0.0",
-    "nodemon": "^2.0.7"
-  }
+    "nodemon": "^2.0.9",
+    "ts-node": "^10.0.0",
+    "typescript": "^4.3.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Abrafaks/recipe.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Abrafaks/recipe/issues"
+  },
+  "homepage": "https://github.com/Abrafaks/recipe#readme"
 }

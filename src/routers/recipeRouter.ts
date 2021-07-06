@@ -1,6 +1,24 @@
+/*
 const router = require("express").Router();
 const Recipe = require("../models/recipeModel");
 const auth = require("../middleware/auth");
+*/
+
+import express from "express";
+import { Request } from "express";
+import Recipe from "../models/recipeModel";
+import auth from "../middleware/auth";
+
+let router = express.Router();
+
+// declare global {
+//   namespace Express {
+//     interface Request {
+//       user?: Record<string, any>;
+//       admin: boolean;
+//     }
+//   }
+// }
 
 router.post("/create", auth, async (req, res) => {
   try {
