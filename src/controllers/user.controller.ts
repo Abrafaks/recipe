@@ -1,7 +1,4 @@
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import { Request, Response } from "express";
-import { User } from "../models/user.model";
 import * as user_services from "../services/user.service";
 
 interface UserAuthData {
