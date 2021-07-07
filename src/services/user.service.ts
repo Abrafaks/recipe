@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { Request, Response } from "express";
+import { Response } from "express";
 import { User } from "../models/user.model";
 
 export function setCookie(res: Response, token: string): Response {
