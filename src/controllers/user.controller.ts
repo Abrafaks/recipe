@@ -37,8 +37,8 @@ export async function login(req: Request, res: Response): Promise<Response> {
 
       const token = jwt.sign(
         {
-          user: existingUser._id,
-          admin: existingUser.admin,
+          userId: existingUser._id,
+          isAdmin: existingUser.isAdmin,
         },
         process.env.JWT!
       );
@@ -72,7 +72,6 @@ export async function register(req: Request, res: Response): Promise<Response> {
         .json({ errorMessage: "Password must be at least 8 characters long." });
     }
 
-    //const existingUser = await User.findOne({ email });
     const existingUser = await user_services.getUserByEmail(email);
 
     if (existingUser) {
@@ -81,29 +80,16 @@ export async function register(req: Request, res: Response): Promise<Response> {
         .json({ errorMessage: "Account with this email already exists." });
     }
 
-    //const passwordHash = await bcrypt.hash(password, 10);
     const passwordHash = await user_services.hashPassword(password, 10);
 
-    const user = new User({ email, passwordHash });
-
-    const savedUser = await user.save();
+    const savedUser = await user_services.createUser(email, passwordHash);
 
     //log in the user via token
 
-    const token = jwt.sign(
-      {
-        user: savedUser._id,
-        admin: 0,
-      },
-      process.env.JWT!
-    );
+    const token = user_services.createToken(savedUser._id, false);
 
     // sending cookie in HTTP-only cookie
-    return res
-      .cookie("token", token, {
-        httpOnly: true,
-      })
-      .send();
+    return user_services.setCookie(res, token);
   } catch (err) {
     console.error(err);
     return res.status(500).send();

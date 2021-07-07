@@ -3,13 +3,14 @@ import * as mongoose from "mongoose";
 export interface User {
   email: string;
   passwordHash: string;
-  admin: string;
+  isAdmin: string;
+  _id: string;
 }
 
 const userSchema = new mongoose.Schema<User>({
   email: { type: String, required: true },
   passwordHash: { type: String, required: true },
-  admin: { type: Boolean, required: true, default: 0 },
+  isAdmin: { type: Boolean, required: true, default: false },
 });
 
 export const User = mongoose.model<User>("user", userSchema);

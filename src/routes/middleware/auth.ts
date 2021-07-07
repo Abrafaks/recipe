@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 interface VerifiedToken {
-  user: string;
-  admin: boolean;
+  userId: string;
+  isAdmin: boolean;
 }
 
 function auth(req: Request, res: Response, next: NextFunction) {
@@ -15,8 +15,8 @@ function auth(req: Request, res: Response, next: NextFunction) {
 
     const verified = <VerifiedToken>jwt.verify(token, process.env.JWT!);
 
-    req.userId = verified.user;
-    req.admin = verified.admin;
+    req.userId = verified.userId;
+    req.admin = verified.isAdmin;
     next();
   } catch (err) {
     res.status(401).json({ errorMessage: "Unauthorized" });
