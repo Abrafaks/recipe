@@ -1,9 +1,6 @@
-//const jwt = require("jsonwebtoken");
-
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-
-interface Verified {
+interface VerifiedToken {
   user: string;
   admin: boolean;
 }
@@ -16,17 +13,14 @@ function auth(req: Request, res: Response, next: NextFunction) {
       return res.status(401).json({ errorMessage: "Unauthorized" });
     }
 
-    const verified = <Verified>jwt.verify(token, process.env.JWT!);
+    const verified = <VerifiedToken>jwt.verify(token, process.env.JWT!);
 
-    req.user = verified.user;
+    req.userId = verified.user;
     req.admin = verified.admin;
     next();
   } catch (err) {
-    console.error(err);
     res.status(401).json({ errorMessage: "Unauthorized" });
   }
 }
-
-module.exports = auth;
 
 export default auth;
