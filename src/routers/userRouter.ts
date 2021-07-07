@@ -1,7 +1,15 @@
+/*
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
+*/
+import express from "express";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import User from "../models/userModel";
+
+let router = express.Router();
 
 // register
 router.post("/", async (req, res) => {
@@ -38,7 +46,7 @@ router.post("/", async (req, res) => {
         user: savedUser._id,
         admin: 0,
       },
-      process.env.JWT
+      process.env.JWT!
     );
 
     // sending cookie in HTTP-only cookie
@@ -79,7 +87,7 @@ router.post("/login", async (req, res) => {
         user: existingUser._id,
         admin: existingUser.admin,
       },
-      process.env.JWT
+      process.env.JWT!
     );
 
     // sending cookie in HTTP-only cookie
