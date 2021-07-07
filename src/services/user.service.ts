@@ -11,7 +11,7 @@ export function setCookie(res: Response, token: string): Response {
     .send();
 }
 
-export function unsetCookie(req: Request, res: Response): Response {
+export function unsetCookie(res: Response): Response {
   return res
     .cookie("token", "", {
       httpOnly: true,
@@ -21,7 +21,7 @@ export function unsetCookie(req: Request, res: Response): Response {
 }
 
 // user will be null if there isn't
-// this email is db => account can be registered
+// this email in db => account can be registered
 export async function getUserByEmail(email: string): Promise<User | null> {
   return await User.findOne({ email });
 }
@@ -50,4 +50,11 @@ export function createToken(userId: string, isAdmin: boolean): string {
     },
     process.env.JWT!
   );
+}
+
+export async function arePasswordsMatching(
+  password: string,
+  hash: string
+): Promise<boolean> {
+  return await bcrypt.compare(password, hash);
 }
