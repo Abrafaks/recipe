@@ -18,8 +18,8 @@ function auth(req: Request, res: Response, next: NextFunction) {
 
     const verified = <Verified>jwt.verify(token, process.env.JWT!);
 
-    req.user = (verified as any).user;
-    req.admin = (verified as any).admin;
+    req.user = verified.user;
+    req.admin = verified.admin;
     next();
   } catch (err) {
     console.error(err);
