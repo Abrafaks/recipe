@@ -19,39 +19,31 @@ export async function login(req: Request, res: Response): Promise<Response> {
         .json({ errorMessage: "Please enter all required data." });
     }
 
-    const existingUser = await User.findOne({ email });
+    const existingUser = await user_services.getUserByEmail(email);
 
     if (!existingUser) {
-      return res.status(401).json({ errorMessage: "Wrong email or password." });
+      return res.status(403).json({ errorMessage: "Wrong email or password." });
     }
 
-    const passwordCorrect = await bcrypt.compare(
+    const passwordCorrect = user_services.arePasswordsMatching(
       password,
       existingUser.passwordHash
     );
 
     if (!passwordCorrect) {
-      return res.status(401).json({ errorMessage: "Wrong email or password." });
+      return res.status(403).json({ errorMessage: "Wrong email or password." });
     } else {
       //log in the user via token
 
-      const token = jwt.sign(
-        {
-          userId: existingUser._id,
-          isAdmin: existingUser.isAdmin,
-        },
-        process.env.JWT!
+      const token = user_services.createToken(
+        existingUser._id,
+        existingUser.isAdmin
       );
 
       // sending cookie in HTTP-only cookie
-      return res
-        .cookie("token", token, {
-          httpOnly: true,
-        })
-        .send();
+      return user_services.setCookie(res, token);
     }
   } catch (err) {
-    console.error(err);
     return res.status(500).send();
   }
 }
@@ -76,7 +68,7 @@ export async function register(req: Request, res: Response): Promise<Response> {
 
     if (existingUser) {
       return res
-        .status(400)
+        .status(409)
         .json({ errorMessage: "Account with this email already exists." });
     }
 
@@ -91,11 +83,10 @@ export async function register(req: Request, res: Response): Promise<Response> {
     // sending cookie in HTTP-only cookie
     return user_services.setCookie(res, token);
   } catch (err) {
-    console.error(err);
     return res.status(500).send();
   }
 }
 
 export function logout(req: Request, res: Response): Response {
-  return user_services.unsetCookie(req, res);
+  return user_services.unsetCookie(res);
 }
