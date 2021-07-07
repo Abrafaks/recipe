@@ -1,18 +1,14 @@
-/*
-const express = require("express");
-const app = express();
-const mongoose = require("mongoose");
-const cookieParser = require("cookie-parser");
-require("dotenv").config();
-*/
-
 import express from "express";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
-require("dotenv").config();
+import dotenv from "dotenv";
+import userRouter from "./routers/userRouter";
+import recipeRouter from "./routers/recipeRouter";
+
+dotenv.config();
 const app = express();
 
-const PORT = process.env.PORT! || 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(cookieParser());
@@ -33,8 +29,8 @@ mongoose.connect(
 
 //setting up routes
 
-app.use("/auth", require("./routers/userRouter"));
-app.use("/recipe", require("./routers/recipeRouter"));
+app.use("/auth", userRouter);
+app.use("/recipe", recipeRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is up on port ${PORT}`);
