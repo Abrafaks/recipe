@@ -1,6 +1,6 @@
 import express from "express";
 import { Request, Response } from "express";
-import { Recipe } from "../models/recipeModel";
+import { Recipe } from "../models/recipe.model";
 import auth from "./middleware/auth";
 
 const router = express.Router();
