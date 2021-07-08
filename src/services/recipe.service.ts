@@ -4,6 +4,12 @@ import { Recipe } from "../models/recipe.model";
 
 type CreateRecipeBody = Omit<Recipe, "userId">;
 
+export async function createRecipe(recipe: Recipe): Promise<Recipe> {
+  const newRecipe = new Recipe(recipe);
+  const savedRecipe = await newRecipe.save();
+  return savedRecipe;
+}
+
 export async function filterRecipesByName(
   res: Response,
   name: string

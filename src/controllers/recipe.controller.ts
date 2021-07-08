@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 import { Recipe } from "../models/recipe.model";
 import * as recipeServices from "../services/recipe.service";
+
+type CreateRecipeBody = Omit<Recipe, "userId">;
+
 interface RecipeWithId extends Recipe {
   id: string;
 }
@@ -9,56 +12,38 @@ interface Pagination {
   skip: number;
   limit: number;
 }
-/*
 
-router.post(
-  "/create",
-  auth,
-  async (req: Request, res: Response): Promise<Response> => {
-    try {
-      const { title, description, preparing, ingredients, url } =
-        req.body as CreateRecipeBody;
+export async function create(req: Request, res: Response): Promise<Response> {
+  try {
+    const { title, description, preparing, ingredients, url } =
+      req.body as CreateRecipeBody;
 
-      if (!title || !description || !preparing || !ingredients || !url) {
-        return res
-          .status(400)
-          .json({ errorMessage: "Please enter all required data." });
-      }
-
-      const recipeData: Recipe = {
-        title,
-        description,
-        preparing,
-        ingredients,
-        userId: req.userId,
-        url,
-      };
-      const newRecipe = new Recipe(recipeData);
-
-      const savedRecipe = await newRecipe.save();
-
-      return res.json(savedRecipe);
-    } catch (err) {
-      console.error(err);
-      return res.status(500).send();
+    if (!title || !description || !preparing || !ingredients || !url) {
+      return res
+        .status(400)
+        .json({ errorMessage: "Please enter all required data." });
     }
+
+    const recipeData: Recipe = {
+      title,
+      description,
+      preparing,
+      ingredients,
+      userId: req.userId,
+      url,
+    };
+
+    const savedRecipe = await recipeServices.createRecipe(recipeData);
+    console.log(savedRecipe);
+    return res.send(savedRecipe);
+  } catch (err) {
+    return res.status(500).send();
   }
-);
+}
 
 // reading recipes - if user is admin, then he sees all,
 // else user sees only recipes created by him
-
 // skip: number of items to skip, limit: how much to show
-router.post(
-  "/read",
-  auth,
-  async (req: Request, res: Response): Promise<void> => {
-    
-  }
-);
-*/
-
-export async function create(req: Request, res: Response): Promise<void> {}
 export async function readAll(
   req: Request,
   res: Response
