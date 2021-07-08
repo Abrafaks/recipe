@@ -12,8 +12,11 @@ export async function filterRecipesByName(
     title: new RegExp("^" + name + "$", "i"),
   });
 
-  // Ask for declaration of array of objects | null
   return recipes;
+}
+
+export async function readRecipeById(id: string): Promise<Recipe | null> {
+  return await Recipe.findById(id);
 }
 
 export async function updateRecipe(
