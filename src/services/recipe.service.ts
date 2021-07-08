@@ -9,17 +9,9 @@ export async function createRecipe(recipe: Recipe): Promise<RecipeDocument> {
   return await newRecipe.save();
 }
 
-export async function filterRecipesByName(
-  res: Response,
-  name: string
-): Promise<RecipeDocument[]> {
-  return await Recipe.find({
-    title: new RegExp("^" + name + "$", "i"),
-  });
-}
-
 export async function readAllRecipes(
   userId: string | null,
+  name: string | null,
   skip: number,
   limit: number
 ): Promise<RecipeDocument[]> {
@@ -27,7 +19,12 @@ export async function readAllRecipes(
   if (!userId) {
     recipes = Recipe.find({}, null, { skip, limit });
   } else {
-    recipes = Recipe.find({ userId }, null, { skip, limit });
+    if (name === null) {
+      recipes = Recipe.find({ userId }, null, { skip, limit });
+    } else {
+      const regexp = new RegExp(name, "gmi");
+      recipes = Recipe.find({ title: regexp, userId }, null, { skip, limit });
+    }
   }
   return recipes;
 }
