@@ -19,7 +19,7 @@ export async function login(req: Request, res: Response): Promise<Response> {
     const existingUser = await userService.getUserByEmail(email);
 
     if (!existingUser) {
-      return res.status(403).json({ errorMessage: "Wrong email or password." });
+      return res.status(401).json({ errorMessage: "Wrong email or password." });
     }
 
     const passwordCorrect = userService.arePasswordsMatching(
@@ -28,7 +28,7 @@ export async function login(req: Request, res: Response): Promise<Response> {
     );
 
     if (!passwordCorrect) {
-      return res.status(403).json({ errorMessage: "Wrong email or password." });
+      return res.status(401).json({ errorMessage: "Wrong email or password." });
     } else {
       //log in the user via token
 
@@ -65,7 +65,7 @@ export async function register(req: Request, res: Response): Promise<Response> {
 
     if (existingUser) {
       return res
-        .status(409)
+        .status(400)
         .json({ errorMessage: "Account with this email already exists." });
     }
 
