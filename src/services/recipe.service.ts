@@ -7,7 +7,7 @@ type CreateRecipeBody = Omit<Recipe, "userId">;
 export async function filterRecipesByName(
   res: Response,
   name: string
-): Promise<(Recipe | null)[]> {
+): Promise<Recipe[]> {
   const recipes = await Recipe.find({
     title: new RegExp("^" + name + "$", "i"),
   });

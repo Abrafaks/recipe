@@ -135,12 +135,11 @@ export async function update(req: Request, res: Response): Promise<Response> {
   }
 }
 
-/*
 // find recipe by exact name (title)
 export async function readByName(
   req: Request,
   res: Response
-): Promise<Recipe[]> {
+): Promise<Response<Recipe[]>> {
   try {
     const { name } = req.body;
 
@@ -149,9 +148,8 @@ export async function readByName(
     return res.json(recipes);
   } catch (err) {
     console.error(err);
-    res.status(500).send();
+    return res.status(500).send();
   }
 }
-*/
 
 export default router;
