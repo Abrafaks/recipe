@@ -6,19 +6,16 @@ type CreateRecipeBody = Omit<Recipe, "userId">;
 
 export async function createRecipe(recipe: Recipe): Promise<RecipeDocument> {
   const newRecipe = new Recipe(recipe);
-  const savedRecipe = await newRecipe.save();
-  return savedRecipe;
+  return await newRecipe.save();
 }
 
 export async function filterRecipesByName(
   res: Response,
   name: string
 ): Promise<RecipeDocument[]> {
-  const recipes = await Recipe.find({
+  return await Recipe.find({
     title: new RegExp("^" + name + "$", "i"),
   });
-
-  return recipes;
 }
 
 export async function readAllRecipes(

@@ -13,10 +13,10 @@ function auth(req: Request, res: Response, next: NextFunction) {
       return res.status(401).json({ errorMessage: "Unauthorized" });
     }
 
-    const verified = <VerifiedToken>jwt.verify(token, process.env.JWT!);
+    const verifiedToken = <VerifiedToken>jwt.verify(token, process.env.JWT!);
 
-    req.userId = verified.userId;
-    req.admin = verified.isAdmin;
+    req.userId = verifiedToken.userId;
+    req.admin = verifiedToken.isAdmin;
     next();
   } catch (err) {
     res.status(401).json({ errorMessage: "Unauthorized" });
