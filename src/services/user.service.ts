@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { Response } from "express";
-import { User } from "../models/user.model";
+import { User, UserDocument } from "../models/user.model";
 
 export class UserService {
   public setCookie(res: Response, token: string): Response {
@@ -23,18 +23,21 @@ export class UserService {
 
   // user will be null if there isn't
   // this email in db => account can be registered
-  public async getUserByEmail(email: string): Promise<User | null> {
-    return await User.findOne({ email });
+  public async getUserByEmail(email: string): Promise<UserDocument | null> {
+    return User.findOne({ email });
   }
 
   public async hashPassword(password: string, salt: number): Promise<string> {
-    return await bcrypt.hash(password, salt);
+    return bcrypt.hash(password, salt);
   }
 
-  public async createUser(email: string, passwordHash: string): Promise<User> {
+  public async createUser(
+    email: string,
+    passwordHash: string
+  ): Promise<UserDocument> {
     const user = new User({ email, passwordHash });
 
-    return await user.save();
+    return user.save();
   }
 
   public createToken(userId: string, isAdmin: boolean): string {
@@ -60,7 +63,7 @@ export class UserService {
     password: string,
     hash: string
   ): Promise<boolean> {
-    return await bcrypt.compare(password, hash);
+    return bcrypt.compare(password, hash);
   }
 }
 

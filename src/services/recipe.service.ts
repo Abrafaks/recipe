@@ -1,10 +1,10 @@
 import express from "express";
 import { Request, Response } from "express";
-import { Recipe } from "../models/recipe.model";
+import { Recipe, RecipeDocument } from "../models/recipe.model";
 
 type CreateRecipeBody = Omit<Recipe, "userId">;
 
-export async function createRecipe(recipe: Recipe): Promise<Recipe> {
+export async function createRecipe(recipe: Recipe): Promise<RecipeDocument> {
   const newRecipe = new Recipe(recipe);
   const savedRecipe = await newRecipe.save();
   return savedRecipe;
@@ -13,7 +13,7 @@ export async function createRecipe(recipe: Recipe): Promise<Recipe> {
 export async function filterRecipesByName(
   res: Response,
   name: string
-): Promise<Recipe[]> {
+): Promise<RecipeDocument[]> {
   const recipes = await Recipe.find({
     title: new RegExp("^" + name + "$", "i"),
   });
@@ -25,7 +25,7 @@ export async function readAllRecipes(
   userId: string | null,
   skip: number,
   limit: number
-): Promise<Recipe[]> {
+): Promise<RecipeDocument[]> {
   let recipes;
   if (!userId) {
     recipes = Recipe.find({}, null, { skip, limit });
@@ -35,7 +35,9 @@ export async function readAllRecipes(
   return recipes;
 }
 
-export async function readRecipeById(id: string): Promise<Recipe | null> {
+export async function readRecipeById(
+  id: string
+): Promise<RecipeDocument | null> {
   return await Recipe.findById(id);
 }
 
