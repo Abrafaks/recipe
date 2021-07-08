@@ -17,7 +17,6 @@ export async function create(req: Request, res: Response): Promise<Response> {
   try {
     const { title, description, preparing, ingredients, url } =
       req.body as CreateRecipeBody;
-
     if (!title || !description || !preparing || !ingredients || !url) {
       return res
         .status(400)
@@ -43,26 +42,36 @@ export async function create(req: Request, res: Response): Promise<Response> {
 // reading recipes - if user is admin, then he sees all,
 // else user sees only recipes created by him
 // skip: number of items to skip, limit: how much to show
+// added filtering
 export async function readAll(
   req: Request,
   res: Response
 ): Promise<Response<RecipeDocument[]>> {
   try {
     const { userId, admin } = req;
-    const { skip, limit } = req.query;
+    const { skip, limit, name } = req.query;
+    let parsedName;
     let recipes;
     const parsedSkip = Number(skip);
     const parsedLimit = Number(limit);
 
+    if (name === undefined) {
+      parsedName = null;
+    } else {
+      parsedName = String(name);
+    }
+
     if (admin) {
       recipes = await recipeServices.readAllRecipes(
         null,
+        parsedName,
         parsedSkip,
         parsedLimit
       );
     } else {
       recipes = await recipeServices.readAllRecipes(
         userId,
+        parsedName,
         parsedSkip,
         parsedLimit
       );
@@ -83,22 +92,6 @@ export async function read(
 
     const recipe = await recipeServices.readRecipeById(id);
     return res.json(recipe);
-  } catch (err) {
-    return res.status(500).send();
-  }
-}
-
-// find recipe by exact name (title)
-export async function readByName(
-  req: Request,
-  res: Response
-): Promise<Response<RecipeDocument[]>> {
-  try {
-    const { name } = req.body;
-
-    const recipes = await recipeServices.filterRecipesByName(res, name);
-
-    return res.json(recipes);
   } catch (err) {
     return res.status(500).send();
   }
