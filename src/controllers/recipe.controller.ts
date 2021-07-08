@@ -88,7 +88,7 @@ export async function read(
   res: Response
 ): Promise<Response<RecipeDocument>> {
   try {
-    const { id } = req.body;
+    const { id } = req.params;
 
     const recipe = await recipeServices.readRecipeById(id);
     return res.json(recipe);
