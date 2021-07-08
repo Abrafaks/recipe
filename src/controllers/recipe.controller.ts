@@ -1,7 +1,7 @@
 import express from "express";
 import { Request, Response } from "express";
 import { Recipe } from "../models/recipe.model";
-import * as recipe_services from "../services/recipe.service";
+import * as recipeServices from "../services/recipe.service";
 
 const router = express.Router();
 
@@ -80,26 +80,25 @@ router.post(
     }
   }
 );
-
-// reading recipe by id
-router.get(
-  "/readbyid",
-  auth,
-  async (req: Request, res: Response): Promise<void> => {
-    try {
-      const { id } = req.body;
-
-      const recipes = await Recipe.find({ _id: id });
-      res.json(recipes);
-    } catch (err) {
-      console.error(err);
-      res.status(500).send();
-    }
-  }
-);
 */
+
 export async function create(req: Request, res: Response): Promise<void> {}
-export async function read(req: Request, res: Response): Promise<void> {}
+
+// Reading recipe by id
+export async function read(
+  req: Request,
+  res: Response
+): Promise<Response<Recipe>> {
+  try {
+    const { id } = req.body;
+
+    const recipe = await recipeServices.readRecipeById(id);
+    return res.json(recipe);
+  } catch (err) {
+    return res.status(500).send();
+  }
+}
+
 export async function update(req: Request, res: Response): Promise<Response> {
   try {
     const { title, description, preparing, ingredients, url, id } =
@@ -108,7 +107,7 @@ export async function update(req: Request, res: Response): Promise<Response> {
     let result: boolean;
 
     if (admin) {
-      result = await recipe_services.updateRecipe(id, null, {
+      result = await recipeServices.updateRecipe(id, null, {
         title,
         description,
         preparing,
@@ -116,7 +115,7 @@ export async function update(req: Request, res: Response): Promise<Response> {
         url,
       });
     } else {
-      result = await recipe_services.updateRecipe(id, userId, {
+      result = await recipeServices.updateRecipe(id, userId, {
         title,
         description,
         preparing,
@@ -143,7 +142,7 @@ export async function readByName(
   try {
     const { name } = req.body;
 
-    const recipes = await recipe_services.filterRecipesByName(res, name);
+    const recipes = await recipeServices.filterRecipesByName(res, name);
 
     return res.json(recipes);
   } catch (err) {
