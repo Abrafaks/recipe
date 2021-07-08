@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Recipe } from "../models/recipe.model";
+import { Recipe, RecipeDocument } from "../models/recipe.model";
 import * as recipeServices from "../services/recipe.service";
 
 type CreateRecipeBody = Omit<Recipe, "userId">;
@@ -34,7 +34,6 @@ export async function create(req: Request, res: Response): Promise<Response> {
     };
 
     const savedRecipe = await recipeServices.createRecipe(recipeData);
-    console.log(savedRecipe);
     return res.send(savedRecipe);
   } catch (err) {
     return res.status(500).send();
@@ -47,7 +46,7 @@ export async function create(req: Request, res: Response): Promise<Response> {
 export async function readAll(
   req: Request,
   res: Response
-): Promise<Response<Recipe[]>> {
+): Promise<Response<RecipeDocument[]>> {
   try {
     const { userId, admin } = req;
     const { skip, limit } = req.body as Pagination;
@@ -68,7 +67,7 @@ export async function readAll(
 export async function read(
   req: Request,
   res: Response
-): Promise<Response<Recipe>> {
+): Promise<Response<RecipeDocument>> {
   try {
     const { id } = req.body;
 
@@ -83,7 +82,7 @@ export async function read(
 export async function readByName(
   req: Request,
   res: Response
-): Promise<Response<Recipe[]>> {
+): Promise<Response<RecipeDocument[]>> {
   try {
     const { name } = req.body;
 
