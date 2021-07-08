@@ -1,4 +1,4 @@
-import * as mongoose from "mongoose";
+import { Document, Schema, model } from "mongoose";
 
 export interface Recipe {
   title: string;
@@ -8,8 +8,9 @@ export interface Recipe {
   userId: string;
   url: string;
 }
+export interface RecipeDocument extends Recipe, Document {}
 
-const recipeSchema = new mongoose.Schema<Recipe>({
+const recipeSchema = new Schema<Recipe>({
   title: { type: String, required: true },
   description: { type: String, required: true },
   preparing: [{ type: String, required: true }],
@@ -18,4 +19,4 @@ const recipeSchema = new mongoose.Schema<Recipe>({
   url: { type: String, required: true },
 });
 
-export const Recipe = mongoose.model<Recipe>("recipe", recipeSchema);
+export const Recipe = model<RecipeDocument>("recipe", recipeSchema);
