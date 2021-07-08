@@ -90,7 +90,6 @@ export async function readByName(
 
     return res.json(recipes);
   } catch (err) {
-    console.error(err);
     return res.status(500).send();
   }
 }

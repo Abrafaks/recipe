@@ -3,6 +3,8 @@ import jwt from "jsonwebtoken";
 import { Response } from "express";
 import { User, UserDocument } from "../models/user.model";
 
+const salt = 10;
+
 export class UserService {
   public setCookie(res: Response, token: string): Response {
     return res
@@ -54,7 +56,7 @@ export class UserService {
     email: string,
     password: string
   ): Promise<string> {
-    const passwordHash = await this.hashPassword(password, 10);
+    const passwordHash = await this.hashPassword(password, salt);
     const savedUser = await this.createUser(email, passwordHash);
     return this.createToken(savedUser._id, false);
   }
