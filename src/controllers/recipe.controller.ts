@@ -49,13 +49,23 @@ export async function readAll(
 ): Promise<Response<RecipeDocument[]>> {
   try {
     const { userId, admin } = req;
-    const { skip, limit } = req.body as Pagination;
+    const { skip, limit } = req.query;
     let recipes;
+    const parsedSkip = Number(skip);
+    const parsedLimit = Number(limit);
 
     if (admin) {
-      recipes = await recipeServices.readAllRecipes(null, skip, limit);
+      recipes = await recipeServices.readAllRecipes(
+        null,
+        parsedSkip,
+        parsedLimit
+      );
     } else {
-      recipes = await recipeServices.readAllRecipes(userId, skip, limit);
+      recipes = await recipeServices.readAllRecipes(
+        userId,
+        parsedSkip,
+        parsedLimit
+      );
     }
     return res.json(recipes);
   } catch (err) {

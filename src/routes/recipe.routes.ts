@@ -3,7 +3,7 @@ import auth from "./middleware/auth";
 import * as recipeController from "../controllers/recipe.controller";
 
 const router = express.Router();
-
+// this one is working
 router.post("/", auth, recipeController.create);
 
 router.get("/", auth, recipeController.readAll);
