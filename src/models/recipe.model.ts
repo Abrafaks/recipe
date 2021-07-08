@@ -8,6 +8,7 @@ export interface Recipe {
   userId: string;
   url: string;
 }
+export interface Recipes extends Recipe, Array<Recipe> {}
 
 const recipeSchema = new mongoose.Schema<Recipe>({
   title: { type: String, required: true },
