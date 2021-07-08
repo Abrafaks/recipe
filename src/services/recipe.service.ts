@@ -15,6 +15,20 @@ export async function filterRecipesByName(
   return recipes;
 }
 
+export async function readAllRecipes(
+  userId: string | null,
+  skip: number,
+  limit: number
+): Promise<Recipe[]> {
+  let recipes;
+  if (!userId) {
+    recipes = Recipe.find({}, null, { skip, limit });
+  } else {
+    recipes = Recipe.find({ userId }, null, { skip, limit });
+  }
+  return recipes;
+}
+
 export async function readRecipeById(id: string): Promise<Recipe | null> {
   return await Recipe.findById(id);
 }

@@ -5,6 +5,9 @@ import * as recipeController from "../controllers/recipe.controller";
 const router = express.Router();
 
 router.post("/create", auth, recipeController.create);
+
+router.post("/readAll", auth, recipeController.readAll);
+
 router.post("/read", auth, recipeController.read);
 
 // Shouldn't it be changed to put?

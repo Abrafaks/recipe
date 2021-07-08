@@ -1,12 +1,6 @@
-import express from "express";
 import { Request, Response } from "express";
 import { Recipe } from "../models/recipe.model";
 import * as recipeServices from "../services/recipe.service";
-
-const router = express.Router();
-
-type CreateRecipeBody = Omit<Recipe, "userId">;
-
 interface RecipeWithId extends Recipe {
   id: string;
 }
@@ -59,30 +53,31 @@ router.post(
   "/read",
   auth,
   async (req: Request, res: Response): Promise<void> => {
-    try {
-      const { userId, admin } = req;
-      const { skip, limit } = req.body as Pagination;
-
-      if (admin) {
-        Recipe.find({}, null, { skip, limit }, (err, result) => {
-          if (err) console.log(err);
-          else res.send(result);
-        });
-      } else {
-        Recipe.find({ userId }, null, { skip, limit }, (err, result) => {
-          if (err) console.log(err);
-          else res.send(result);
-        });
-      }
-    } catch (err) {
-      console.error(err);
-      res.status(500).send();
-    }
+    
   }
 );
 */
 
 export async function create(req: Request, res: Response): Promise<void> {}
+export async function readAll(
+  req: Request,
+  res: Response
+): Promise<Response<Recipe[]>> {
+  try {
+    const { userId, admin } = req;
+    const { skip, limit } = req.body as Pagination;
+    let recipes;
+
+    if (admin) {
+      recipes = await recipeServices.readAllRecipes(null, skip, limit);
+    } else {
+      recipes = await recipeServices.readAllRecipes(userId, skip, limit);
+    }
+    return res.json(recipes);
+  } catch (err) {
+    return res.status(500).send();
+  }
+}
 
 // Reading recipe by id
 export async function read(
@@ -95,6 +90,23 @@ export async function read(
     const recipe = await recipeServices.readRecipeById(id);
     return res.json(recipe);
   } catch (err) {
+    return res.status(500).send();
+  }
+}
+
+// find recipe by exact name (title)
+export async function readByName(
+  req: Request,
+  res: Response
+): Promise<Response<Recipe[]>> {
+  try {
+    const { name } = req.body;
+
+    const recipes = await recipeServices.filterRecipesByName(res, name);
+
+    return res.json(recipes);
+  } catch (err) {
+    console.error(err);
     return res.status(500).send();
   }
 }
@@ -133,22 +145,3 @@ export async function update(req: Request, res: Response): Promise<Response> {
     return res.status(500).send();
   }
 }
-
-// find recipe by exact name (title)
-export async function readByName(
-  req: Request,
-  res: Response
-): Promise<Response<Recipe[]>> {
-  try {
-    const { name } = req.body;
-
-    const recipes = await recipeServices.filterRecipesByName(res, name);
-
-    return res.json(recipes);
-  } catch (err) {
-    console.error(err);
-    return res.status(500).send();
-  }
-}
-
-export default router;
