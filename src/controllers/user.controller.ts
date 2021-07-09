@@ -35,14 +35,11 @@ export class UserController {
           .status(401)
           .json({ errorMessage: "Wrong email or password." });
       } else {
-        //log in the user via token
-
         const token = userService.createToken(
           existingUser._id,
           existingUser.isAdmin
         );
 
-        // sending cookie in HTTP-only cookie
         return userService.setCookie(res, token);
       }
     } catch (err) {
@@ -78,11 +75,8 @@ export class UserController {
 
       const savedUser = await userService.createUser(email, passwordHash);
 
-      //log in the user via token
-
       const token = userService.createToken(savedUser._id, false);
 
-      // sending cookie in HTTP-only cookie
       return userService.setCookie(res, token);
     } catch (err) {
       return res.status(500).send();

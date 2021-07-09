@@ -3,9 +3,8 @@ import { Recipe, RecipeDocument } from "../models/recipe.model";
 type CreateRecipeBody = Omit<Recipe, "userId">;
 
 export class RecipeService {
-  public async createRecipe(recipe: Recipe): Promise<RecipeDocument> {
-    const newRecipe = new Recipe(recipe);
-    return await newRecipe.save();
+  public createRecipe(recipe: Recipe): Promise<RecipeDocument> {
+    return new Recipe(recipe).save();
   }
 
   public async getRecipeList(
@@ -32,7 +31,7 @@ export class RecipeService {
   }
 
   public async readRecipeById(id: string): Promise<RecipeDocument | null> {
-    return await Recipe.findById(id);
+    return Recipe.findById(id);
   }
 
   public async updateRecipe(

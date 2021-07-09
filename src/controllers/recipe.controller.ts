@@ -40,10 +40,6 @@ export class RecipeController {
     }
   }
 
-  // reading recipes - if user is admin, then he sees all,
-  // else user sees only recipes created by him
-  // skip: number of items to skip, limit: how much to show
-  // added filtering
   public async getRecipeList(
     req: Request,
     res: Response
@@ -83,7 +79,6 @@ export class RecipeController {
     }
   }
 
-  // Reading recipe by id
   public async readRecipeById(
     req: Request,
     res: Response
@@ -125,7 +120,6 @@ export class RecipeController {
       if (result) {
         return res.send();
       } else {
-        // recipe doesn't belong to user or he sent the same copy and it wasn't modified
         return res.status(400).send();
       }
     } catch (err) {
