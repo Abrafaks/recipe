@@ -1,5 +1,3 @@
-import express from "express";
-import { Request, Response } from "express";
 import { Recipe, RecipeDocument } from "../models/recipe.model";
 
 type CreateRecipeBody = Omit<Recipe, "userId">;
