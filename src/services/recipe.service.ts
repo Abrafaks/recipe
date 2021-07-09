@@ -9,7 +9,7 @@ export async function createRecipe(recipe: Recipe): Promise<RecipeDocument> {
   return await newRecipe.save();
 }
 
-export async function readAllRecipes(
+export function getRecipeList(
   userId: string | null,
   name: string | null,
   skip: number,
