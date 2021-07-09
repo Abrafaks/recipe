@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { Recipe, RecipeDocument } from "../models/recipe.model";
-import * as recipeServices from "../services/recipe.service";
+import * as recipeService from "../services/recipe.service";
 
 type CreateRecipeBody = Omit<Recipe, "userId">;
 
@@ -35,7 +35,7 @@ export async function createRecipe(
       url,
     };
 
-    const savedRecipe = await recipeServices.createRecipe(recipeData);
+    const savedRecipe = await recipeService.createRecipe(recipeData);
     return res.send(savedRecipe);
   } catch (err) {
     return res.status(500).send();
@@ -65,14 +65,14 @@ export async function getRecipeList(
     }
 
     if (admin) {
-      recipes = await recipeServices.getRecipeList(
+      recipes = await recipeService.getRecipeList(
         null,
         parsedName,
         parsedSkip,
         parsedLimit
       );
     } else {
-      recipes = await recipeServices.getRecipeList(
+      recipes = await recipeService.getRecipeList(
         userId,
         parsedName,
         parsedSkip,
@@ -93,7 +93,7 @@ export async function readRecipeById(
   try {
     const { id } = req.params;
 
-    const recipe = await recipeServices.readRecipeById(id);
+    const recipe = await recipeService.readRecipeById(id);
     return res.json(recipe);
   } catch (err) {
     return res.status(500).send();
@@ -111,7 +111,7 @@ export async function updateRecipe(
     let result: boolean;
 
     if (admin) {
-      result = await recipeServices.updateRecipe(id, null, {
+      result = await recipeService.updateRecipe(id, null, {
         title,
         description,
         preparing,
@@ -119,7 +119,7 @@ export async function updateRecipe(
         url,
       });
     } else {
-      result = await recipeServices.updateRecipe(id, userId, {
+      result = await recipeService.updateRecipe(id, userId, {
         title,
         description,
         preparing,
