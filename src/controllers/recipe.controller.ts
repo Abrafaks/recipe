@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { Recipe, RecipeDocument } from "../models/recipe.model";
-import * as recipeService from "../services/recipe.service";
+import recipeService from "../services/recipe.service";
 
 type CreateRecipeBody = Omit<Recipe, "userId">;
 
