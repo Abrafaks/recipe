@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { Recipe, RecipeDocument } from "../models/recipe.model";
-import * as recipeServices from "../services/recipe.service";
+import * as recipeService from "../services/recipe.service";
 
 type CreateRecipeBody = Omit<Recipe, "userId">;
 
@@ -13,11 +13,13 @@ interface Pagination {
   limit: number;
 }
 
-export async function create(req: Request, res: Response): Promise<Response> {
+export async function createRecipe(
+  req: Request,
+  res: Response
+): Promise<Response> {
   try {
     const { title, description, preparing, ingredients, url } =
       req.body as CreateRecipeBody;
-
     if (!title || !description || !preparing || !ingredients || !url) {
       return res
         .status(400)
@@ -33,7 +35,7 @@ export async function create(req: Request, res: Response): Promise<Response> {
       url,
     };
 
-    const savedRecipe = await recipeServices.createRecipe(recipeData);
+    const savedRecipe = await recipeService.createRecipe(recipeData);
     return res.send(savedRecipe);
   } catch (err) {
     return res.status(500).send();
@@ -43,19 +45,39 @@ export async function create(req: Request, res: Response): Promise<Response> {
 // reading recipes - if user is admin, then he sees all,
 // else user sees only recipes created by him
 // skip: number of items to skip, limit: how much to show
-export async function readAll(
+// added filtering
+export async function getRecipeList(
   req: Request,
   res: Response
 ): Promise<Response<RecipeDocument[]>> {
   try {
     const { userId, admin } = req;
-    const { skip, limit } = req.body as Pagination;
+    const { skip, limit, name } = req.query;
+    let parsedName;
     let recipes;
+    const parsedSkip = Number(skip);
+    const parsedLimit = Number(limit);
+
+    if (name === undefined) {
+      parsedName = null;
+    } else {
+      parsedName = String(name);
+    }
 
     if (admin) {
-      recipes = await recipeServices.readAllRecipes(null, skip, limit);
+      recipes = await recipeService.getRecipeList(
+        null,
+        parsedName,
+        parsedSkip,
+        parsedLimit
+      );
     } else {
-      recipes = await recipeServices.readAllRecipes(userId, skip, limit);
+      recipes = await recipeService.getRecipeList(
+        userId,
+        parsedName,
+        parsedSkip,
+        parsedLimit
+      );
     }
     return res.json(recipes);
   } catch (err) {
@@ -64,37 +86,24 @@ export async function readAll(
 }
 
 // Reading recipe by id
-export async function read(
+export async function readRecipeById(
   req: Request,
   res: Response
 ): Promise<Response<RecipeDocument>> {
   try {
-    const { id } = req.body;
+    const { id } = req.params;
 
-    const recipe = await recipeServices.readRecipeById(id);
+    const recipe = await recipeService.readRecipeById(id);
     return res.json(recipe);
   } catch (err) {
     return res.status(500).send();
   }
 }
 
-// find recipe by exact name (title)
-export async function readByName(
+export async function updateRecipe(
   req: Request,
   res: Response
-): Promise<Response<RecipeDocument[]>> {
-  try {
-    const { name } = req.body;
-
-    const recipes = await recipeServices.filterRecipesByName(res, name);
-
-    return res.json(recipes);
-  } catch (err) {
-    return res.status(500).send();
-  }
-}
-
-export async function update(req: Request, res: Response): Promise<Response> {
+): Promise<Response> {
   try {
     const { title, description, preparing, ingredients, url, id } =
       req.body as RecipeWithId;
@@ -102,7 +111,7 @@ export async function update(req: Request, res: Response): Promise<Response> {
     let result: boolean;
 
     if (admin) {
-      result = await recipeServices.updateRecipe(id, null, {
+      result = await recipeService.updateRecipe(id, null, {
         title,
         description,
         preparing,
@@ -110,7 +119,7 @@ export async function update(req: Request, res: Response): Promise<Response> {
         url,
       });
     } else {
-      result = await recipeServices.updateRecipe(id, userId, {
+      result = await recipeService.updateRecipe(id, userId, {
         title,
         description,
         preparing,
