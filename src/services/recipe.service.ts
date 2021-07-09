@@ -9,21 +9,24 @@ export async function createRecipe(recipe: Recipe): Promise<RecipeDocument> {
   return await newRecipe.save();
 }
 
-export function getRecipeList(
+export async function getRecipeList(
   userId: string | null,
   name: string | null,
   skip: number,
   limit: number
 ): Promise<RecipeDocument[]> {
-  let recipes;
+  let recipes: RecipeDocument[];
   if (!userId) {
-    recipes = Recipe.find({}, null, { skip, limit });
+    recipes = await Recipe.find({}, null, { skip, limit });
   } else {
     if (name === null) {
-      recipes = Recipe.find({ userId }, null, { skip, limit });
+      recipes = await Recipe.find({ userId }, null, { skip, limit });
     } else {
       const regexp = new RegExp(name, "gmi");
-      recipes = Recipe.find({ title: regexp, userId }, null, { skip, limit });
+      recipes = await Recipe.find({ title: regexp, userId }, null, {
+        skip,
+        limit,
+      });
     }
   }
   return recipes;
