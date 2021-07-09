@@ -24,7 +24,7 @@ export class UserService {
   }
 
   // user will be null if there isn't
-  // this email in db => account can be registered
+  // that email in db => account can be registered
   public async getUserByEmail(email: string): Promise<UserDocument | null> {
     return User.findOne({ email });
   }
