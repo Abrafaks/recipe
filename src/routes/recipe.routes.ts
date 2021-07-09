@@ -3,14 +3,13 @@ import auth from "./middleware/auth";
 import * as recipeController from "../controllers/recipe.controller";
 
 const router = express.Router();
-// this one is working
-router.post("/", auth, recipeController.create);
-// this one too
-router.get("/", auth, recipeController.readAll);
 
-router.get("/:id", auth, recipeController.read);
+router.post("/", auth, recipeController.createRecipe);
 
-// working
-router.put("/", auth, recipeController.update);
+router.get("/", auth, recipeController.getRecipeList);
+
+router.get("/:id", auth, recipeController.readRecipeById);
+
+router.put("/", auth, recipeController.updateRecipe);
 
 export default router;

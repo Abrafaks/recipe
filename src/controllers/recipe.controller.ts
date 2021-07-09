@@ -13,7 +13,10 @@ interface Pagination {
   limit: number;
 }
 
-export async function create(req: Request, res: Response): Promise<Response> {
+export async function createRecipe(
+  req: Request,
+  res: Response
+): Promise<Response> {
   try {
     const { title, description, preparing, ingredients, url } =
       req.body as CreateRecipeBody;
@@ -43,7 +46,7 @@ export async function create(req: Request, res: Response): Promise<Response> {
 // else user sees only recipes created by him
 // skip: number of items to skip, limit: how much to show
 // added filtering
-export async function readAll(
+export async function getRecipeList(
   req: Request,
   res: Response
 ): Promise<Response<RecipeDocument[]>> {
@@ -62,14 +65,14 @@ export async function readAll(
     }
 
     if (admin) {
-      recipes = await recipeServices.readAllRecipes(
+      recipes = await recipeServices.getRecipeList(
         null,
         parsedName,
         parsedSkip,
         parsedLimit
       );
     } else {
-      recipes = await recipeServices.readAllRecipes(
+      recipes = await recipeServices.getRecipeList(
         userId,
         parsedName,
         parsedSkip,
@@ -83,7 +86,7 @@ export async function readAll(
 }
 
 // Reading recipe by id
-export async function read(
+export async function readRecipeById(
   req: Request,
   res: Response
 ): Promise<Response<RecipeDocument>> {
@@ -97,7 +100,10 @@ export async function read(
   }
 }
 
-export async function update(req: Request, res: Response): Promise<Response> {
+export async function updateRecipe(
+  req: Request,
+  res: Response
+): Promise<Response> {
   try {
     const { title, description, preparing, ingredients, url, id } =
       req.body as RecipeWithId;
