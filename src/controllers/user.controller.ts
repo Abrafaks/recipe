@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import userService from "../services/user.service";
+import userService, { UserService } from "../services/user.service";
 
 interface UserAuthData {
   email: string;
@@ -7,6 +7,8 @@ interface UserAuthData {
 }
 
 export class UserController {
+  constructor(private userService: UserService) {}
+
   public async login(req: Request, res: Response): Promise<Response> {
     try {
       const { email, password } = req.body as UserAuthData;
@@ -88,4 +90,4 @@ export class UserController {
   }
 }
 
-export default new UserController();
+export default new UserController(userService);
