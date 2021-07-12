@@ -6,84 +6,86 @@ interface UserAuthData {
   password: string;
 }
 
-export async function login(req: Request, res: Response): Promise<Response> {
-  try {
-    const { email, password } = req.body as UserAuthData;
+export class UserController {
+  public async login(req: Request, res: Response): Promise<Response> {
+    try {
+      const { email, password } = req.body as UserAuthData;
 
-    if (!email || !password) {
-      return res
-        .status(400)
-        .json({ errorMessage: "Please enter all required data." });
-    }
+      if (!email || !password) {
+        return res
+          .status(400)
+          .json({ errorMessage: "Please enter all required data." });
+      }
 
-    const existingUser = await userService.getUserByEmail(email);
+      const existingUser = await userService.getUserByEmail(email);
 
-    if (!existingUser) {
-      return res.status(401).json({ errorMessage: "Wrong email or password." });
-    }
+      if (!existingUser) {
+        return res
+          .status(401)
+          .json({ errorMessage: "Wrong email or password." });
+      }
 
-    const passwordCorrect = userService.arePasswordsMatching(
-      password,
-      existingUser.passwordHash
-    );
-
-    if (!passwordCorrect) {
-      return res.status(401).json({ errorMessage: "Wrong email or password." });
-    } else {
-      //log in the user via token
-
-      const token = userService.createToken(
-        existingUser._id,
-        existingUser.isAdmin
+      const passwordCorrect = userService.arePasswordsMatching(
+        password,
+        existingUser.passwordHash
       );
 
-      // sending cookie in HTTP-only cookie
+      if (!passwordCorrect) {
+        return res
+          .status(401)
+          .json({ errorMessage: "Wrong email or password." });
+      } else {
+        const token = userService.createToken(
+          existingUser._id,
+          existingUser.isAdmin
+        );
+
+        return userService.setCookie(res, token);
+      }
+    } catch (err) {
+      return res.status(500).send();
+    }
+  }
+
+  public async register(req: Request, res: Response): Promise<Response> {
+    try {
+      const { email, password } = req.body as UserAuthData;
+
+      if (!email || !password) {
+        return res
+          .status(400)
+          .json({ errorMessage: "Please enter all required data." });
+      }
+
+      if (password.length < 8) {
+        return res.status(400).json({
+          errorMessage: "Password must be at least 8 characters long.",
+        });
+      }
+
+      const existingUser = await userService.getUserByEmail(email);
+
+      if (existingUser) {
+        return res
+          .status(400)
+          .json({ errorMessage: "Account with this email already exists." });
+      }
+
+      const passwordHash = await userService.hashPassword(password, 10);
+
+      const savedUser = await userService.createUser(email, passwordHash);
+
+      const token = userService.createToken(savedUser._id, false);
+
       return userService.setCookie(res, token);
+    } catch (err) {
+      return res.status(500).send();
     }
-  } catch (err) {
-    return res.status(500).send();
+  }
+
+  public logout(req: Request, res: Response): Response {
+    return userService.unsetCookie(res);
   }
 }
 
-export async function register(req: Request, res: Response): Promise<Response> {
-  try {
-    const { email, password } = req.body as UserAuthData;
-
-    if (!email || !password) {
-      return res
-        .status(400)
-        .json({ errorMessage: "Please enter all required data." });
-    }
-
-    if (password.length < 8) {
-      return res
-        .status(400)
-        .json({ errorMessage: "Password must be at least 8 characters long." });
-    }
-
-    const existingUser = await userService.getUserByEmail(email);
-
-    if (existingUser) {
-      return res
-        .status(400)
-        .json({ errorMessage: "Account with this email already exists." });
-    }
-
-    const passwordHash = await userService.hashPassword(password, 10);
-
-    const savedUser = await userService.createUser(email, passwordHash);
-
-    //log in the user via token
-
-    const token = userService.createToken(savedUser._id, false);
-
-    // sending cookie in HTTP-only cookie
-    return userService.setCookie(res, token);
-  } catch (err) {
-    return res.status(500).send();
-  }
-}
-
-export function logout(req: Request, res: Response): Response {
-  return userService.unsetCookie(res);
-}
+export default new UserController();

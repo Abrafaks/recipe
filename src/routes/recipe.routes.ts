@@ -1,6 +1,6 @@
 import express from "express";
 import auth from "./middleware/auth";
-import * as recipeController from "../controllers/recipe.controller";
+import recipeController from "../controllers/recipe.controller";
 
 const router = express.Router();
 
