@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { Recipe, RecipeDocument } from "../models/recipe.model";
-import recipeService from "../services/recipe.service";
+import recipeService, { RecipeService } from "../services/recipe.service";
 
 type CreateRecipeBody = Omit<Recipe, "userId">;
 
@@ -14,6 +14,8 @@ interface Pagination {
 }
 
 export class RecipeController {
+  constructor(private recipeService: RecipeService) {}
+
   public async createRecipe(req: Request, res: Response): Promise<Response> {
     try {
       const { title, description, preparing, ingredients, url } =
@@ -134,4 +136,4 @@ export class RecipeController {
   }
 }
 
-export default new RecipeController();
+export default new RecipeController(recipeService);
