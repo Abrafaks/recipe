@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import { Response } from "express";
 import { User, UserDocument } from "../models/user.model";
 
-const salt = 10;
+const rounds = 10;
 
 export class UserService {
   public setCookie(res: Response, token: string): Response {
@@ -29,8 +29,8 @@ export class UserService {
     return User.findOne({ email });
   }
 
-  public async hashPassword(password: string, salt: number): Promise<string> {
-    return bcrypt.hash(password, salt);
+  public async hashPassword(password: string, rounds: number): Promise<string> {
+    return bcrypt.hash(password, rounds);
   }
 
   public async createUser(
@@ -56,7 +56,7 @@ export class UserService {
     email: string,
     password: string
   ): Promise<string> {
-    const passwordHash = await this.hashPassword(password, salt);
+    const passwordHash = await this.hashPassword(password, rounds);
     const savedUser = await this.createUser(email, passwordHash);
     return this.createToken(savedUser._id, false);
   }
