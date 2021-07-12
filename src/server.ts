@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 mongoose.connect(
-  process.env.MONGODB_CONNECTION_STRING!,
+  "mongodb://mongodb:27017",
   {
     useNewUrlParser: true,
     useFindAndModify: false,
