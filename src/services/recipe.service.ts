@@ -14,8 +14,18 @@ export class RecipeService {
     limit: number
   ): Promise<RecipeDocument[]> {
     let recipes;
+    // admin search
     if (!userId) {
       recipes = await Recipe.find({}, null, { skip, limit });
+      if (name === null) {
+        recipes = await Recipe.find({}, null, { skip, limit });
+      } else {
+        const regexp = new RegExp(name, "gmi");
+        recipes = await Recipe.find({ title: regexp }, null, {
+          skip,
+          limit,
+        });
+      }
     } else {
       if (name === null) {
         recipes = await Recipe.find({ userId }, null, { skip, limit });
