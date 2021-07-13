@@ -15,9 +15,17 @@ export class RecipeService {
   ): Promise<RecipeDocument[]> {
     let recipes;
     if (!userId) {
-      recipes = await Recipe.find({}, null, { skip, limit });
+      if (!name) {
+        recipes = await Recipe.find({}, null, { skip, limit });
+      } else {
+        const regexp = new RegExp(name, "gmi");
+        recipes = await Recipe.find({ title: regexp }, null, {
+          skip,
+          limit,
+        });
+      }
     } else {
-      if (name === null) {
+      if (!name) {
         recipes = await Recipe.find({ userId }, null, { skip, limit });
       } else {
         const regexp = new RegExp(name, "gmi");
