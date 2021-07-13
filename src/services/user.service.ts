@@ -41,22 +41,25 @@ export class UserService {
   }
 
   public createToken(userId: string, isAdmin: boolean): string {
-    return jwt.sign(
-      {
-        userId,
-        isAdmin,
-      },
-      process.env.JWT!
+    return (
+      "Bearer " +
+      jwt.sign(
+        {
+          userId,
+          isAdmin,
+        },
+        process.env.JWT!
+      )
     );
   }
 
   public async createUserAndReturnToken(
     email: string,
     password: string
-  ): Promise<string> {
+  ): Promise<Object> {
     const passwordHash = await this.hashPassword(password, rounds);
     const savedUser = await this.createUser(email, passwordHash);
-    return this.createToken(savedUser._id, false);
+    return { savedUser, token: this.createToken(savedUser._id, false) };
   }
 
   public async arePasswordsMatching(
