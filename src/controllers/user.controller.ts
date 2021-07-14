@@ -42,7 +42,7 @@ export class UserController {
           existingUser.isAdmin
         );
 
-        return res.send({ existingUser, token });
+        return res.send({ token });
       }
     } catch (err) {
       return res.status(500).send();
