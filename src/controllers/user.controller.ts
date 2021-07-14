@@ -27,7 +27,7 @@ export class UserController {
           .json({ errorMessage: "Wrong email or password." });
       }
 
-      const passwordCorrect = userService.arePasswordsMatching(
+      const passwordCorrect = await userService.arePasswordsMatching(
         password,
         existingUser.passwordHash
       );
@@ -42,7 +42,7 @@ export class UserController {
           existingUser.isAdmin
         );
 
-        return userService.setCookie(res, token);
+        return res.send({ existingUser, token });
       }
     } catch (err) {
       return res.status(500).send();
@@ -73,20 +73,12 @@ export class UserController {
           .json({ errorMessage: "Account with this email already exists." });
       }
 
-      const passwordHash = await userService.hashPassword(password, 10);
-
-      const savedUser = await userService.createUser(email, passwordHash);
-
-      const token = userService.createToken(savedUser._id, false);
-
-      return userService.setCookie(res, token);
+      return res.send(
+        await userService.createUserAndReturnToken(email, password)
+      );
     } catch (err) {
       return res.status(500).send();
     }
-  }
-
-  public logout(req: Request, res: Response): Response {
-    return userService.unsetCookie(res);
   }
 }
 

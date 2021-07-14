@@ -6,23 +6,6 @@ import { User, UserDocument } from "../models/user.model";
 const rounds = 10;
 
 export class UserService {
-  public setCookie(res: Response, token: string): Response {
-    return res
-      .cookie("token", token, {
-        httpOnly: true,
-      })
-      .send();
-  }
-
-  public unsetCookie(res: Response): Response {
-    return res
-      .cookie("token", "", {
-        httpOnly: true,
-        expires: new Date(0),
-      })
-      .send();
-  }
-
   public async getUserByEmail(email: string): Promise<UserDocument | null> {
     return User.findOne({ email });
   }
@@ -53,10 +36,10 @@ export class UserService {
   public async createUserAndReturnToken(
     email: string,
     password: string
-  ): Promise<string> {
+  ): Promise<Object> {
     const passwordHash = await this.hashPassword(password, rounds);
     const savedUser = await this.createUser(email, passwordHash);
-    return this.createToken(savedUser._id, false);
+    return { savedUser, token: this.createToken(savedUser._id, false) };
   }
 
   public async arePasswordsMatching(

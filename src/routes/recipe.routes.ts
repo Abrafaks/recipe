@@ -1,15 +1,31 @@
 import express from "express";
-import auth from "./middleware/auth";
 import recipeController from "../controllers/recipe.controller";
+import passport from "passport";
 
 const router = express.Router();
 
-router.post("/", auth, recipeController.createRecipe);
+router.post(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  recipeController.createRecipe
+);
 
-router.get("/", auth, recipeController.getRecipeList);
+router.get(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  recipeController.getRecipeList
+);
 
-router.get("/:id", auth, recipeController.readRecipeById);
+router.get(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  recipeController.readRecipeById
+);
 
-router.put("/", auth, recipeController.updateRecipe);
+router.put(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  recipeController.updateRecipe
+);
 
 export default router;
