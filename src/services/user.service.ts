@@ -6,23 +6,6 @@ import { User, UserDocument } from "../models/user.model";
 const rounds = 10;
 
 export class UserService {
-  public setCookie(res: Response, token: string): Response {
-    return res
-      .cookie("token", token, {
-        httpOnly: true,
-      })
-      .send();
-  }
-
-  public unsetCookie(res: Response): Response {
-    return res
-      .cookie("token", "", {
-        httpOnly: true,
-        expires: new Date(0),
-      })
-      .send();
-  }
-
   public async getUserByEmail(email: string): Promise<UserDocument | null> {
     return User.findOne({ email });
   }
