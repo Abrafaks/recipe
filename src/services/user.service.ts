@@ -41,15 +41,12 @@ export class UserService {
   }
 
   public createToken(userId: string, isAdmin: boolean): string {
-    return (
-      "Bearer " +
-      jwt.sign(
-        {
-          userId,
-          isAdmin,
-        },
-        process.env.JWT!
-      )
+    return jwt.sign(
+      {
+        userId,
+        isAdmin,
+      },
+      process.env.JWT!
     );
   }
 
