@@ -42,7 +42,6 @@ export class UserController {
           existingUser.isAdmin
         );
 
-        // return userService.setCookie(res, token);
         return res.send({ existingUser, token });
       }
     } catch (err) {
@@ -74,21 +73,12 @@ export class UserController {
           .json({ errorMessage: "Account with this email already exists." });
       }
 
-      // return userService.setCookie(
-      //   res,
-      //   await userService.createUserAndReturnToken(email, password)
-      // );
-
       return res.send(
         await userService.createUserAndReturnToken(email, password)
       );
     } catch (err) {
       return res.status(500).send();
     }
-  }
-
-  public logout(req: Request, res: Response): Response {
-    return userService.unsetCookie(res);
   }
 }
 
