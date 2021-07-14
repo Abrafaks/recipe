@@ -8,7 +8,7 @@ import passport from "passport";
 dotenv.config();
 
 import "./config/db_config";
-import "./config/passport";
+import "./routes/middleware/auth";
 
 const app = express();
 
