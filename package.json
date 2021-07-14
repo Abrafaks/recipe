@@ -13,7 +13,9 @@
     "cookie-parser": "1.4.5",
     "express": "4.17.1",
     "jsonwebtoken": "8.5.1",
-    "mongoose": "5.12.11"
+    "mongoose": "5.12.11",
+    "passport": "0.4.1",
+    "passport-jwt": "4.0.0"
   },
   "nodemonConfig": {
     "restartable": "rs",
@@ -34,6 +36,8 @@
     "@types/jsonwebtoken": "8.5.3",
     "@types/mongoose": "5.11.97",
     "@types/node": "16.0.0",
+    "@types/passport": "1.0.7",
+    "@types/passport-jwt": "3.0.6",
     "@typescript-eslint/eslint-plugin": "4.28.2",
     "@typescript-eslint/parser": "4.28.2",
     "dotenv": "10.0.0",
