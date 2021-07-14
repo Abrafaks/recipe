@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { Recipe, RecipeDocument } from "../models/recipe.model";
+import { UserDocument } from "../models/user.model";
 import recipeService, { RecipeService } from "../services/recipe.service";
 
 type CreateRecipeBody = Omit<Recipe, "userId">;
@@ -20,6 +21,8 @@ export class RecipeController {
     try {
       const { title, description, preparing, ingredients, url } =
         req.body as CreateRecipeBody;
+      const { _id } = req.user as UserDocument;
+
       if (!title || !description || !preparing || !ingredients || !url) {
         return res
           .status(400)
@@ -31,7 +34,7 @@ export class RecipeController {
         description,
         preparing,
         ingredients,
-        userId: req.userId,
+        userId: _id,
         url,
       };
 
@@ -47,7 +50,7 @@ export class RecipeController {
     res: Response
   ): Promise<Response<RecipeDocument[]>> {
     try {
-      const { userId, admin } = req;
+      const { _id, isAdmin } = req.user as UserDocument;
       const { skip, limit, name } = req.query;
       let parsedName;
       let recipes;
@@ -60,7 +63,7 @@ export class RecipeController {
         parsedName = String(name);
       }
 
-      if (admin) {
+      if (isAdmin) {
         recipes = await recipeService.getRecipeList(
           null,
           parsedName,
@@ -69,7 +72,7 @@ export class RecipeController {
         );
       } else {
         recipes = await recipeService.getRecipeList(
-          userId,
+          _id,
           parsedName,
           parsedSkip,
           parsedLimit
@@ -99,10 +102,10 @@ export class RecipeController {
     try {
       const { title, description, preparing, ingredients, url, id } =
         req.body as RecipeWithId;
-      const { userId, admin } = req;
+      const { _id, isAdmin } = req.user as UserDocument;
       let result: boolean;
 
-      if (admin) {
+      if (isAdmin) {
         result = await recipeService.updateRecipe(id, null, {
           title,
           description,
@@ -111,7 +114,7 @@ export class RecipeController {
           url,
         });
       } else {
-        result = await recipeService.updateRecipe(id, userId, {
+        result = await recipeService.updateRecipe(id, _id, {
           title,
           description,
           preparing,
