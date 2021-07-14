@@ -1,5 +1,4 @@
 import express from "express";
-import auth from "./middleware/auth";
 import recipeController from "../controllers/recipe.controller";
 import passport from "passport";
 
