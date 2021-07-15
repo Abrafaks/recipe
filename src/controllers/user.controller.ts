@@ -11,39 +11,11 @@ export class UserController {
 
   public async login(req: Request, res: Response): Promise<Response> {
     try {
-      const { email, password } = req.body as UserAuthData;
+      const { _id, isAdmin } = req.user!;
 
-      if (!email || !password) {
-        return res
-          .status(400)
-          .json({ errorMessage: "Please enter all required data." });
-      }
+      const token = userService.createToken(_id, isAdmin);
 
-      const existingUser = await userService.getUserByEmail(email);
-
-      if (!existingUser) {
-        return res
-          .status(401)
-          .json({ errorMessage: "Wrong email or password." });
-      }
-
-      const passwordCorrect = await userService.arePasswordsMatching(
-        password,
-        existingUser.passwordHash
-      );
-
-      if (!passwordCorrect) {
-        return res
-          .status(401)
-          .json({ errorMessage: "Wrong email or password." });
-      } else {
-        const token = userService.createToken(
-          existingUser._id,
-          existingUser.isAdmin
-        );
-
-        return res.send({ existingUser, token });
-      }
+      return res.send({ token });
     } catch (err) {
       return res.status(500).send();
     }

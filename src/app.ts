@@ -8,7 +8,6 @@ import passport from "passport";
 dotenv.config();
 
 import "./config/db_config";
-import "./config/passport";
 
 const app = express();
 

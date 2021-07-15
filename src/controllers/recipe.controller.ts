@@ -21,7 +21,7 @@ export class RecipeController {
     try {
       const { title, description, preparing, ingredients, url } =
         req.body as CreateRecipeBody;
-      const { _id } = req.user as UserDocument;
+      const { _id } = req.user!;
 
       if (!title || !description || !preparing || !ingredients || !url) {
         return res
@@ -50,7 +50,7 @@ export class RecipeController {
     res: Response
   ): Promise<Response<RecipeDocument[]>> {
     try {
-      const { _id, isAdmin } = req.user as UserDocument;
+      const { _id, isAdmin } = req.user!;
       const { skip, limit, name } = req.query;
       let parsedName;
       let recipes;
@@ -102,7 +102,7 @@ export class RecipeController {
     try {
       const { title, description, preparing, ingredients, url, id } =
         req.body as RecipeWithId;
-      const { _id, isAdmin } = req.user as UserDocument;
+      const { _id, isAdmin } = req.user!;
       let result: boolean;
 
       if (isAdmin) {
