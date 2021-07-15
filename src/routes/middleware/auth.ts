@@ -2,5 +2,18 @@ import passport from "passport";
 import basicStrategy from "./basicStrategy";
 import jwt from "./jwtStrategy";
 
-passport.use(jwt);
-passport.use(basicStrategy);
+enum Strategy {
+  Basic = "basic",
+  Bearer = "bearer",
+}
+
+passport.use(Strategy.Bearer, jwt);
+passport.use(Strategy.Basic, basicStrategy);
+
+const auth = {
+  authenticate: (strategies: Array<Strategy>) => {
+    return passport.authenticate(strategies, { session: false });
+  },
+};
+
+export { Strategy, auth };
