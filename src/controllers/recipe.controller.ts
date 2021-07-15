@@ -14,10 +14,6 @@ interface Pagination {
   limit: number;
 }
 
-// export interface AuthRequest extends Omit<Request, "user"> {
-//   user?: UserDocument | undefined;
-// }
-
 export class RecipeController {
   constructor(private recipeService: RecipeService) {}
 
