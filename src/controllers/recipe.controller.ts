@@ -23,12 +23,6 @@ export class RecipeController {
         req.body as CreateRecipeBody;
       const { _id } = req.user!;
 
-      if (!title || !description || !preparing || !ingredients || !url) {
-        return res
-          .status(400)
-          .json({ errorMessage: "Please enter all required data." });
-      }
-
       const recipeData: Recipe = {
         title,
         description,
