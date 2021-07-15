@@ -1,6 +1,6 @@
 import express from "express";
 import userController from "../controllers/user.controller";
-import passport from "passport";
+import { Strategy, auth } from "./middleware/auth";
 
 const router = express.Router();
 
@@ -8,7 +8,7 @@ router.post("/register", userController.register);
 
 router.post(
   "/login",
-  passport.authenticate("basic", { session: false }),
+  auth.authenticate([Strategy.Basic]),
   userController.login
 );
 
