@@ -1,6 +1,6 @@
 import { body, validationResult } from "express-validator";
 import { Request, Response, NextFunction } from "express";
-export class Validator {
+export class UserValidator {
   public validateEmail() {
     return body("email").isEmail();
   }
@@ -23,4 +23,4 @@ export class Validator {
   }
 }
 
-export default new Validator();
+export default new UserValidator();
