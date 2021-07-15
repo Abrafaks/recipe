@@ -1,4 +1,7 @@
 import { ExtractJwt } from "passport-jwt";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const options = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
