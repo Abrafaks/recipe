@@ -1,17 +1,20 @@
 import { body } from "express-validator";
 
+const title = body("title").notEmpty();
+const description = body("description").notEmpty();
+const url = body("url").notEmpty();
+const id = body("id").notEmpty();
+const preparing = body("preparing").isArray();
+const ingredients = body(["ingredients", "ingredients[*]"]).isArray();
+
+const validateData = [title, description, preparing, ingredients, url];
+
 export class RecipeValidator {
   public validateCreateRecipeData() {
-    return (
-      body(["title", "description", "url"]).notEmpty(),
-      body(["preparing", "ingredients", "ingredients[*]"]).notEmpty().isArray()
-    );
+    return validateData;
   }
   public validateUpdateRecipeData() {
-    return (
-      body(["title", "description", "url", "id"]).notEmpty(),
-      body(["preparing", "ingredients", "ingredients[*]"]).notEmpty().isArray()
-    );
+    return [...validateData, id];
   }
 }
 
