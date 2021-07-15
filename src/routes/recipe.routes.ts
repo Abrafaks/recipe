@@ -1,30 +1,30 @@
 import express from "express";
 import recipeController from "../controllers/recipe.controller";
-import passport from "passport";
+import { Strategy, auth } from "./middleware/auth";
 
 const router = express.Router();
 
 router.post(
   "/",
-  passport.authenticate("jwt", { session: false }),
+  auth.authenticate([Strategy.Bearer]),
   recipeController.createRecipe
 );
 
 router.get(
   "/",
-  passport.authenticate("jwt", { session: false }),
+  auth.authenticate([Strategy.Bearer]),
   recipeController.getRecipeList
 );
 
 router.get(
   "/:id",
-  passport.authenticate("jwt", { session: false }),
+  auth.authenticate([Strategy.Bearer]),
   recipeController.readRecipeById
 );
 
 router.put(
   "/",
-  passport.authenticate("jwt", { session: false }),
+  auth.authenticate([Strategy.Bearer]),
   recipeController.updateRecipe
 );
 

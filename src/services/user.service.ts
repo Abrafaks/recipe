@@ -36,10 +36,10 @@ export class UserService {
   public async createUserAndReturnToken(
     email: string,
     password: string
-  ): Promise<Object> {
+  ): Promise<UserDocument> {
     const passwordHash = await this.hashPassword(password, rounds);
     const savedUser = await this.createUser(email, passwordHash);
-    return { savedUser, token: this.createToken(savedUser._id, false) };
+    return savedUser;
   }
 
   public async arePasswordsMatching(
