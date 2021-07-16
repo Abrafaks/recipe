@@ -23,6 +23,8 @@ router.get(
 router.get(
   "/:id",
   auth.authenticate([Strategy.Bearer]),
+  recipeValidator.validateReadRecipeById(),
+  validate,
   recipeController.readRecipeById
 );
 
