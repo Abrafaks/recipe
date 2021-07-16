@@ -25,18 +25,6 @@ export class UserController {
     try {
       const { email, password } = req.body as UserAuthData;
 
-      if (!email || !password) {
-        return res
-          .status(400)
-          .json({ errorMessage: "Please enter all required data." });
-      }
-
-      if (password.length < 8) {
-        return res.status(400).json({
-          errorMessage: "Password must be at least 8 characters long.",
-        });
-      }
-
       const existingUser = await userService.getUserByEmail(email);
 
       if (existingUser) {
