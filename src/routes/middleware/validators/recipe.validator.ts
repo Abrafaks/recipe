@@ -3,9 +3,7 @@ import { body, ValidationChain, CustomValidator } from "express-validator";
 const title = body("title")
   .notEmpty()
   .isAlphanumeric("en-US", { ignore: " " })
-  .isLength({ min: 16, max: 80 })
-  .optional()
-  .exists();
+  .isLength({ min: 16, max: 80 });
 
 const description = body("description")
   .notEmpty()
