@@ -1,10 +1,10 @@
-import { body } from "express-validator";
+import { body, ValidationChain } from "express-validator";
 
 const email = body("email").isEmail();
 const password = body("password").isStrongPassword();
 
 export class UserValidator {
-  public validateUser() {
+  public validateUser(): ValidationChain[] {
     return [email, password];
   }
 }
