@@ -1,4 +1,4 @@
-import { body } from "express-validator";
+import { body, ValidationChain } from "express-validator";
 
 const title = body("title").notEmpty();
 const description = body("description").notEmpty();
@@ -10,10 +10,10 @@ const ingredients = body(["ingredients", "ingredients[*]"]).isArray();
 const validateData = [title, description, preparing, ingredients, url];
 
 export class RecipeValidator {
-  public validateCreateRecipeData() {
+  public validateCreateRecipeData(): ValidationChain[] {
     return validateData;
   }
-  public validateUpdateRecipeData() {
+  public validateUpdateRecipeData(): ValidationChain[] {
     return [...validateData, id];
   }
 }
