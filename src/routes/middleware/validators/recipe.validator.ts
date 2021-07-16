@@ -2,7 +2,7 @@ import { body, ValidationChain, CustomValidator } from "express-validator";
 
 const title = body("title")
   .notEmpty()
-  .isAlphanumeric("en-US", { ignore: " " })
+  .isString()
   .isLength({ min: 16, max: 80 });
 
 const description = body("description")
