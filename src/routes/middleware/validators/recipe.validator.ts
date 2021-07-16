@@ -1,4 +1,9 @@
-import { body, ValidationChain, CustomValidator } from "express-validator";
+import {
+  body,
+  param,
+  ValidationChain,
+  CustomValidator,
+} from "express-validator";
 
 const title = body("title")
   .notEmpty()
@@ -7,7 +12,7 @@ const title = body("title")
 
 const description = body("description")
   .notEmpty()
-  .isAscii()
+  .isString()
   .isLength({ min: 32, max: 256 });
 
 const url = body("url")
@@ -16,9 +21,11 @@ const url = body("url")
 
 const id = body("id").notEmpty().isMongoId();
 const preparing = body("preparing").isArray();
-const preparingContent = body(["preparing[*]"]).notEmpty().isAscii();
+const preparingContent = body(["preparing[*]"]).notEmpty().isString();
 const ingredients = body(["ingredients", "ingredients[*]"]).isArray();
-const ingredientsContent = body(["ingredients[*][*]"]).notEmpty().isAscii();
+const ingredientsContent = body(["ingredients[*][*]"]).notEmpty().isString();
+
+const readId = param("id").notEmpty().isMongoId();
 
 const validateData = [
   title,
@@ -36,6 +43,9 @@ export class RecipeValidator {
   }
   public validateUpdateRecipeData(): ValidationChain[] {
     return [...validateData, id];
+  }
+  public validateReadRecipeById(): ValidationChain {
+    return readId;
   }
 }
 
