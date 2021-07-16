@@ -1,12 +1,16 @@
 import express from "express";
 import recipeController from "../controllers/recipe.controller";
 import { Strategy, auth } from "./middleware/auth";
+import recipeValidator from "./middleware/validators/recipe.validator";
+import { validate } from "./middleware/validators/validator";
 
 const router = express.Router();
 
 router.post(
   "/",
   auth.authenticate([Strategy.Bearer]),
+  recipeValidator.validateCreateRecipeData(),
+  validate,
   recipeController.createRecipe
 );
 
@@ -25,6 +29,8 @@ router.get(
 router.put(
   "/",
   auth.authenticate([Strategy.Bearer]),
+  recipeValidator.validateUpdateRecipeData(),
+  validate,
   recipeController.updateRecipe
 );
 
