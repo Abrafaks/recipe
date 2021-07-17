@@ -8,33 +8,24 @@ export class RecipeService {
   }
 
   public async getRecipeList(
-    userId: string | null,
-    name: string | null,
+    name: string | undefined,
     skip: number,
     limit: number
   ): Promise<RecipeDocument[]> {
     let recipes;
-    if (!userId) {
-      if (!name) {
-        recipes = await Recipe.find({}, null, { skip, limit });
-      } else {
-        const regexp = new RegExp(name, "gmi");
-        recipes = await Recipe.find({ title: regexp }, null, {
-          skip,
-          limit,
-        });
-      }
+    if (name) {
+      const regexp = new RegExp(name, "gmi");
+      recipes = await Recipe.find({ title: regexp }, null, {
+        skip,
+        limit,
+      });
     } else {
-      if (!name) {
-        recipes = await Recipe.find({ userId }, null, { skip, limit });
-      } else {
-        const regexp = new RegExp(name, "gmi");
-        recipes = await Recipe.find({ title: regexp, userId }, null, {
-          skip,
-          limit,
-        });
-      }
+      recipes = await Recipe.find({}, null, {
+        skip,
+        limit,
+      });
     }
+
     return recipes;
   }
 

@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { matchedData } from "express-validator";
 import { Recipe, RecipeDocument } from "../models/recipe.model";
 import { UserDocument } from "../models/user.model";
 import recipeService, { RecipeService } from "../services/recipe.service";
@@ -44,34 +45,10 @@ export class RecipeController {
     res: Response
   ): Promise<Response<RecipeDocument[]>> {
     try {
-      const { _id, isAdmin } = req.user!;
-      const { skip, limit, name } = req.query;
-      let parsedName;
-      let recipes;
-      const parsedSkip = Number(skip);
-      const parsedLimit = Number(limit);
+      const { skip, limit, name } = matchedData(req);
 
-      if (name === undefined) {
-        parsedName = null;
-      } else {
-        parsedName = String(name);
-      }
+      const recipes = await recipeService.getRecipeList(name, skip, limit);
 
-      if (isAdmin) {
-        recipes = await recipeService.getRecipeList(
-          null,
-          parsedName,
-          parsedSkip,
-          parsedLimit
-        );
-      } else {
-        recipes = await recipeService.getRecipeList(
-          _id,
-          parsedName,
-          parsedSkip,
-          parsedLimit
-        );
-      }
       return res.json(recipes);
     } catch (err) {
       return res.status(500).send();

@@ -28,7 +28,10 @@ const ingredientsContent = body(["ingredients[*][*]"]).notEmpty().isString();
 
 const readId = param("id").notEmpty().isMongoId();
 
-const paginationData = query(["skip", "limit"]).isInt({ gt: -1 }).optional();
+const paginationData = query(["skip", "limit"])
+  .isInt({ gt: -1 })
+  .toInt()
+  .optional();
 const searchName = query("name").notEmpty().isString().optional();
 
 const validateData = [
