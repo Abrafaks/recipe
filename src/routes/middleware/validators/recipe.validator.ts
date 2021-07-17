@@ -18,7 +18,7 @@ const description = body("description")
 
 const url = body("url")
   .notEmpty()
-  .matches(/(\/\w+)+\.\w+/i);
+  .matches(/^(\/\w+)+\.\w+$/i);
 
 const id = body("id").notEmpty().isMongoId();
 const preparing = body("preparing").isArray();

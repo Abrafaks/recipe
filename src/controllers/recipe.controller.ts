@@ -1,19 +1,7 @@
 import { Request, Response } from "express";
 import { matchedData } from "express-validator";
 import { Recipe, RecipeDocument } from "../models/recipe.model";
-import { UserDocument } from "../models/user.model";
 import recipeService, { RecipeService } from "../services/recipe.service";
-
-type CreateRecipeBody = Omit<Recipe, "userId">;
-
-interface RecipeWithId extends Recipe {
-  id: string;
-}
-
-interface Pagination {
-  skip: number;
-  limit: number;
-}
 
 export class RecipeController {
   constructor(private recipeService: RecipeService) {}
@@ -21,7 +9,7 @@ export class RecipeController {
   public async createRecipe(req: Request, res: Response): Promise<Response> {
     try {
       const { title, description, preparing, ingredients, url } =
-        req.body as CreateRecipeBody;
+        matchedData(req);
       const { _id } = req.user!;
 
       const recipeData: Recipe = {
