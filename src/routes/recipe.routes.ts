@@ -17,6 +17,8 @@ router.post(
 router.get(
   "/",
   auth.authenticate([Strategy.Bearer]),
+  recipeValidator.validateGetRecipeList(),
+  validate,
   recipeController.getRecipeList
 );
 

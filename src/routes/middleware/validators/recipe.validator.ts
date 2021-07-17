@@ -3,6 +3,7 @@ import {
   param,
   ValidationChain,
   CustomValidator,
+  query,
 } from "express-validator";
 
 const title = body("title")
@@ -27,6 +28,9 @@ const ingredientsContent = body(["ingredients[*][*]"]).notEmpty().isString();
 
 const readId = param("id").notEmpty().isMongoId();
 
+const paginationData = query(["skip", "limit"]).isInt({ gt: -1 }).optional();
+const searchName = query("name").notEmpty().isString().optional();
+
 const validateData = [
   title,
   description,
@@ -37,6 +41,8 @@ const validateData = [
   url,
 ];
 
+const getRecipeListData = [paginationData, searchName];
+
 export class RecipeValidator {
   public validateCreateRecipeData(): ValidationChain[] {
     return validateData;
@@ -46,6 +52,9 @@ export class RecipeValidator {
   }
   public validateReadRecipeById(): ValidationChain {
     return readId;
+  }
+  public validateGetRecipeList(): ValidationChain[] {
+    return getRecipeListData;
   }
 }
 
