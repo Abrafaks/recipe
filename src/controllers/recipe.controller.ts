@@ -60,7 +60,7 @@ export class RecipeController {
     res: Response
   ): Promise<Response<RecipeDocument>> {
     try {
-      const { id } = req.params;
+      const { id } = matchedData(req);
 
       const recipe = await recipeService.readRecipeById(id);
       return res.json(recipe);
