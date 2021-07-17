@@ -72,7 +72,7 @@ export class RecipeController {
   public async updateRecipe(req: Request, res: Response): Promise<Response> {
     try {
       const { title, description, preparing, ingredients, url, id } =
-        req.body as RecipeWithId;
+        matchedData(req);
       const { _id, isAdmin } = req.user!;
       let result: boolean;
 
