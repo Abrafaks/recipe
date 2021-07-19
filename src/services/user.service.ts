@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { Response } from "express";
 import { User, UserDocument } from "../models/user.model";
 
 const rounds = 10;

@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "scripts": {
     "devStart": "nodemon ./src/server.ts",
-    "start": "ts-node ./src/server.ts"
+    "start": "ts-node ./src/server.ts",
+    "lint": "eslint '**/*.ts'",
+    "lint-fix": "eslint --fix **/*.ts"
   },
   "keywords": [],
   "author": "",
