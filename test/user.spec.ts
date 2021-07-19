@@ -28,8 +28,6 @@ after("Close database connection", async function () {
 describe("User testing", function () {
   describe("Create user", function () {
     it("should create user", function (done) {
-      console.log(email, password);
-
       const requester = chai
         .request("http://localhost:3000")
         .post("/auth/register")
@@ -41,6 +39,21 @@ describe("User testing", function () {
         .end(function (err, res) {
           expect(err).to.be.null;
           expect(res).to.have.status(200);
+          done();
+        });
+    });
+  });
+
+  describe("Login user", function () {
+    it("should login user", function (done) {
+      const requester = chai
+        .request("http://localhost:3000")
+        .post("/auth/login")
+        .auth(email, password)
+        .end(function (err, res) {
+          expect(err).to.be.null;
+          expect(res).to.have.status(200);
+          expect(res.body.token).to.be.a("string");
           done();
         });
     });
