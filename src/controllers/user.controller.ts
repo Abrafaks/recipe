@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Request, Response } from "express";
 import userService, { UserService } from "../services/user.service";
 
