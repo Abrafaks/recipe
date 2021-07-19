@@ -1,10 +1,4 @@
-import {
-  body,
-  param,
-  ValidationChain,
-  CustomValidator,
-  query,
-} from "express-validator";
+import { body, param, ValidationChain, query } from "express-validator";
 
 const title = body("title").notEmpty().isString().isLength({ min: 3, max: 80 });
 
@@ -27,7 +21,7 @@ const ingredientsContent = body(["ingredients[*][*]"]).notEmpty().isString();
 const readId = param("id").notEmpty().isMongoId();
 
 const paginationData = query(["skip", "limit"])
-  .isInt({ gt: -1 })
+  .isInt({ min: 0 })
   .toInt()
   .optional();
 const searchName = query("name").notEmpty().isString().optional();

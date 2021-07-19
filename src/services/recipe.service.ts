@@ -12,19 +12,14 @@ export class RecipeService {
     skip: number,
     limit: number
   ): Promise<RecipeDocument[]> {
-    let recipes;
+    let regexp;
     if (name) {
-      const regexp = new RegExp(name, "gmi");
-      recipes = await Recipe.find({ title: regexp }, null, {
-        skip,
-        limit,
-      });
-    } else {
-      recipes = await Recipe.find({}, null, {
-        skip,
-        limit,
-      });
+      regexp = new RegExp(name, "gmi");
     }
+    const recipes = await Recipe.find({ title: regexp }, null, {
+      skip,
+      limit,
+    });
 
     return recipes;
   }
