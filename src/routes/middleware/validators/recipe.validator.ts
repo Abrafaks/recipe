@@ -6,15 +6,13 @@ import {
   query,
 } from "express-validator";
 
-const title = body("title")
-  .notEmpty()
-  .isString()
-  .isLength({ min: 16, max: 80 });
+const title = body("title").notEmpty().isString().isLength({ min: 3, max: 80 });
 
 const description = body("description")
   .notEmpty()
   .isString()
-  .isLength({ min: 32, max: 256 });
+  .isLength({ max: 256 })
+  .optional();
 
 const url = body("url")
   .notEmpty()
