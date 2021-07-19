@@ -12,7 +12,7 @@ export interface RecipeDocument extends Recipe, Document {}
 
 const recipeSchema = new Schema<Recipe>({
   title: { type: String, required: true },
-  description: { type: String, required: true },
+  description: { type: String, required: false },
   preparing: [{ type: String, required: true }],
   ingredients: [[{ type: String, required: true }]],
   userId: { type: String, required: true },
