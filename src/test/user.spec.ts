@@ -1,8 +1,6 @@
 import chai, { expect } from "chai";
-import mongoose from "mongoose";
 import faker from "faker";
-import { User } from "../models/user.model";
-import { server, close } from "./config/server.config";
+import { close } from "./config/server.config";
 
 const email = faker.internet.email();
 const password = "NormalPassword6!@#";
