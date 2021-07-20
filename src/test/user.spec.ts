@@ -1,28 +1,14 @@
 import chai, { expect } from "chai";
-import chaiHttp from "chai-http";
 import mongoose from "mongoose";
-import dotenv from "dotenv";
 import faker from "faker";
-import { User } from "../src/models/user.model";
-
-dotenv.config();
-process.env.MONGODB_CONNECTION_STRING = "mongodb://localhost:27017/recipe-test";
-
-import app from "../src/app";
-
-chai.use(chaiHttp);
-
-const server = app.listen(app.get("port"), () => {
-  console.log(`Server is up on port ${app.get("port")}`);
-});
+import { User } from "../models/user.model";
+import { server, close } from "./config/server.config";
 
 const email = faker.internet.email();
 const password = "NormalPassword6!@#";
 
 after("Close database connection", async function () {
-  await User.deleteMany();
-  mongoose.connection.close();
-  server.close();
+  await close();
 });
 
 describe("User testing", function () {
