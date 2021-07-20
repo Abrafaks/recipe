@@ -37,7 +37,6 @@ export class RecipeController {
       const { skip, limit, name } = matchedData(req);
 
       const recipes = await recipeService.getRecipeList(name, skip, limit);
-
       return res.json(recipes);
     } catch (err) {
       return res.status(500).send();

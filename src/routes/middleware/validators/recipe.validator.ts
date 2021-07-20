@@ -30,6 +30,8 @@ const id = body("id")
   .withMessage("Id must be valid mongodb id");
 
 const preparing = body("preparing")
+  .notEmpty()
+  .withMessage("Preparing must not be empty")
   .isArray()
   .withMessage("Preparing must be array");
 
@@ -40,6 +42,8 @@ const preparingContent = body(["preparing[*]"])
   .withMessage("Preparing must be of type string");
 
 const ingredients = body(["ingredients", "ingredients[*]"])
+  .notEmpty()
+  .withMessage("Ingredients must not be empty")
   .isArray()
   .withMessage("Ingredients must be array");
 
