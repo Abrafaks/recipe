@@ -1,5 +1,9 @@
 import { chai, expect, app, StatusCodes } from "./config/server.config";
-import { user } from "./mocks/user.mocks";
+import { user, deleteAllUsers } from "./mocks/user.mocks";
+
+after("Delete all users", async function () {
+  await deleteAllUsers();
+});
 
 describe("User testing", function () {
   describe("Create user", function () {
@@ -51,7 +55,7 @@ describe("User testing", function () {
   describe("Login user", function () {
     it("should login user", async function () {
       const response = await chai
-        .request("http://localhost:3000")
+        .request(app)
         .post("/auth/login")
         .auth(user.email, user.password);
       expect(response.error).to.be.false;
@@ -61,7 +65,7 @@ describe("User testing", function () {
 
     it("should not login user because of invalid email", async function () {
       const response = await chai
-        .request("http://localhost:3000")
+        .request(app)
         .post("/auth/login")
         .auth("em@ai,l", user.password);
       expect(response.body).to.be.an("object").that.is.empty;
@@ -71,7 +75,7 @@ describe("User testing", function () {
 
     it("should not login user because of invalid password", async function () {
       const response = await chai
-        .request("http://localhost:3000")
+        .request(app)
         .post("/auth/login")
         .auth(user.email, "someInvalidPassword");
       expect(response.body).to.be.an("object").that.is.empty;

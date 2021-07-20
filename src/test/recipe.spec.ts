@@ -1,17 +1,30 @@
-// import chai, { expect } from "chai";
-// import { server, close, user, getToken } from "./config/server.config";
+import { chai, expect, app, StatusCodes } from "./config/server.config";
+import { recipe, deleteAllRecipes } from "./mocks/recipe.mocks";
+import { getToken } from "./mocks/user.mocks";
 
-// before("Starting server", function(){
-// server()
-// })
+let token = "Bearer ";
 
-// after("Close database connection", async function () {
-//   await close();
-// });
+before("Add user and get token", async function () {
+  token += await getToken();
+});
 
-// describe("Recipe testing", function () {
-//   it("Should return token", function (done) {
-//     console.log(getToken());
-//     done();
-//   });
-// });
+after("Delete all recipes", async function () {
+  await deleteAllRecipes();
+});
+
+describe("Recipe testing", function () {
+  it("should return token", function () {
+    expect(token).to.be.a("string");
+  });
+  it("should create recipe", async function () {
+    const response = await chai
+      .request(app)
+      .post("/recipe/")
+      .set("content-type", "application/json")
+      .set("Authorization", token)
+      .send({
+        ...recipe,
+      });
+    expect(response).to.have.status(StatusCodes.OK);
+  });
+});
