@@ -1,9 +1,5 @@
 import chai, { expect } from "chai";
-import faker from "faker";
-import { close } from "./config/server.config";
-
-const email = faker.internet.email();
-const password = "NormalPassword6!@#";
+import { close, user } from "./config/server.config";
 
 after("Close database connection", async function () {
   await close();
@@ -17,8 +13,8 @@ describe("User testing", function () {
         .post("/auth/register")
         .set("content-type", "application/json")
         .send({
-          email,
-          password,
+          email: user.email,
+          password: user.password,
         })
         .end(function (err, res) {
           expect(err).to.be.null;
@@ -33,7 +29,7 @@ describe("User testing", function () {
       const requester = chai
         .request("http://localhost:3000")
         .post("/auth/login")
-        .auth(email, password)
+        .auth(user.email, user.password)
         .end(function (err, res) {
           expect(err).to.be.null;
           expect(res).to.have.status(200);
