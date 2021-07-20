@@ -20,4 +20,8 @@ app.use(passport.initialize());
 app.use("/auth", userRouter);
 app.use("/recipe", recipeRouter);
 
+app.listen(app.get("port"), () => {
+  console.log(`Server is up on port ${app.get("port")}`);
+});
+
 export default app;
