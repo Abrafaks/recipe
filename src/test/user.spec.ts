@@ -30,9 +30,6 @@ describe("User testing", function () {
           password: user.password,
         });
       expect(response.body.errors[0].param).to.have.string("email");
-      expect(response.body.errors[0].param).to.not.have.string("password");
-      expect(response.body.errors[1]).to.not.exist;
-
       expect(response).to.have.status(StatusCodes.BAD_REQUEST);
     });
 
@@ -45,9 +42,6 @@ describe("User testing", function () {
           email: user.email,
         });
       expect(response.body.errors[0].param).to.have.string("password");
-      expect(response.body.errors[0].param).to.not.have.string("email");
-      expect(response.body.errors[1]).to.not.exist;
-
       expect(response).to.have.status(StatusCodes.BAD_REQUEST);
     });
   });
