@@ -1,20 +1,44 @@
-import faker from "faker";
-const email = faker.internet.email();
-const password = "NormalPassword6!@#";
+import { faker, chai, User } from "../config/server.config";
+
+let email = faker.internet.email();
+let password = "NormalPassword6!@#";
 
 const user = {
   email,
   password,
 };
 
-const getToken = function () {
-  const requester = chai
+email += "m";
+password += "m";
+
+const recipeUser = {
+  email,
+  password,
+};
+
+const createUser = async function () {
+  const response = await chai
     .request("http://localhost:3000")
-    .post("/auth/login")
-    .auth(user.email, user.password)
-    .end(function (err, res) {
-      return res.body.token;
+    .post("/auth/register")
+    .set("content-type", "application/json")
+    .send({
+      email: recipeUser.email,
+      password: recipeUser.password,
     });
 };
 
-export { user, getToken };
+const getToken = async function () {
+  await createUser();
+
+  const response = await chai
+    .request("http://localhost:3000")
+    .post("/auth/login")
+    .auth(recipeUser.email, recipeUser.password);
+  return response.body.token;
+};
+
+const deleteAllUsers = function () {
+  return User.deleteMany();
+};
+
+export { user, getToken, deleteAllUsers };
