@@ -92,4 +92,38 @@ router.post(
   imageController.addImage
 );
 
+/**
+ * @swagger
+ * /image/:id:
+ *   post:
+ *     security:
+ *       - Bearer: []
+ *     tags:
+ *       - image
+ *     description: Delete image
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *           example: 60f7ea20cf60ae0004307aa2
+ *         description: Id of post
+ *
+ *     responses:
+ *       200:
+ *         description: Image deleted successfully
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorized
+ */
+
+router.delete(
+  "/:id",
+  auth.authenticate([Strategy.Bearer]),
+  imageValidator.validateDeleteRecipeByIdData(),
+  validate,
+  imageController.deleteImageById
+);
+
 export default router;

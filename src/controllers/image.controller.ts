@@ -1,13 +1,8 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { Request, Response } from "express";
+import { Request, response, Response } from "express";
 import imageService, { ImageService } from "../services/image.service";
 import sharp from "sharp";
 import { matchedData } from "express-validator";
-
-interface UserAuthData {
-  email: string;
-  password: string;
-}
 
 export class ImageController {
   constructor(private imageService: ImageService) {}
@@ -47,6 +42,22 @@ export class ImageController {
         return res.send({ images });
       }
       return res.status(400).send();
+    } catch (err) {
+      return res.status(500).send();
+    }
+  }
+
+  public async deleteImageById(req: Request, res: Response): Promise<Response> {
+    try {
+      const { _id, isAdmin } = req.user!;
+      const { id } = matchedData(req);
+
+      const deletedImage = await imageService.deleteImageById(id, _id, isAdmin);
+
+      if (!deletedImage) {
+        return res.status(400).send();
+      }
+      return res.send();
     } catch (err) {
       return res.status(500).send();
     }
