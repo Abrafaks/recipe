@@ -89,7 +89,7 @@ export class RecipeValidator {
     return validateData;
   }
   public validateUpdateRecipeData(): ValidationChain[] {
-    return [...validateData, id];
+    return [...validateData, readId];
   }
   public validateReadRecipeById(): ValidationChain {
     return readId;
