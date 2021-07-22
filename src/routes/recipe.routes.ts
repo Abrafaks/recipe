@@ -50,7 +50,7 @@ router.post(
  *       - Bearer: []
  *     tags:
  *       - getRecipeList
- *     description: Read all recipes. limit, skip, name are optional. User for pagination and searching
+ *     description: Read all recipes. limit, skip, name are optional. Used for pagination and searching
  *     produces:
  *       - application/json
  *     parameters:
@@ -70,12 +70,12 @@ router.post(
  *         name: skip
  *         schema:
  *           type: int
- *         description: How mane recipes to skip
+ *         description: How many recipes to skip
  *         example: 20
  *
  *     responses:
  *       200:
- *         description: Recipe read successfully. If no recipe if found, empty array will be returned
+ *         description: Recipe read successfully. If no recipe is found, empty array will be returned
  *         content:
  *           application/json:
  *             schema:
@@ -105,7 +105,7 @@ router.get(
  *       - application/json
  *     parameters:
  *       - in: path
- *         name: _id
+ *         name: id
  *         schema:
  *           type: string
  *         description: Id of recipe for reading
@@ -148,10 +148,10 @@ router.get(
  *         schema:
  *           $ref: '#components/schemas/Recipe'
  *       - in: path
- *         name: _id
+ *         name: id
  *         schema:
  *           type: string
- *         description: Id of recipe for update
+ *         description: Id of recipe to update
  *         example: 60f7ea20cf60ae0004307aa2
  *
  *     responses:

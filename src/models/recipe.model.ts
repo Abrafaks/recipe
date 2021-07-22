@@ -21,10 +21,12 @@ import { Document, Schema, model } from "mongoose";
  *            example: ['Prepare ingredients', 'Measure flour', 'Set up the oven']
  *         ingredients:
  *            type: array of arrays of strings
- *            description: Recipe ingredients. Proposed format is [['amount measure', 'ingredient'],['amount measure', 'ingredient']] but it is allowed to have only one item in nested array in case where amount and measure are not needed.
+ *            description:  |
+ *              Recipe ingredients. Proposed format is [['amount measure', 'ingredient'],['amount measure', 'ingredient']]
+ *              but it is allowed to have only one item in nested array in case where amount and measure are not needed.
  *            examples:
  *              proposed: [['1tbs', 'salt'], ['2 cups', 'water'], ['3 cups', 'flour']]
- *              optional: [['1 cup', 'water'], ['1tbs', 'basil'],['pepper'], ['salt']]
+ *              optional: [['1 cup', 'water'], ['1tbs', 'basil'], ['pepper'], ['salt']]
  *         url:
  *            type: string
  *            description: Work in progress. Will be completely changed
@@ -50,7 +52,7 @@ import { Document, Schema, model } from "mongoose";
  *            example: Chocolate cookies
  *         description:
  *            type: string
- *            description: Recipe description. Not required. Max 256 chars.
+ *            description: Recipe description. Max 256 chars.
  *            example: My first recipe
  *         preparing:
  *            type: array of strings
@@ -58,10 +60,12 @@ import { Document, Schema, model } from "mongoose";
  *            example: ['Prepare ingredients', 'Measure flour', 'Set up the oven']
  *         ingredients:
  *            type: array of arrays of strings
- *            description: Recipe ingredients. Proposed format is [['amount measure', 'ingredient'],['amount measure', 'ingredient']] but it is allowed to have only one item in nested array in case where amount and measure are not needed.
+ *            description:  |
+ *              Recipe ingredients. Proposed format is [['amount measure', 'ingredient'],['amount measure', 'ingredient']]
+ *              but it is allowed to have only one item in nested array in case where amount and measure are not needed.
  *            examples:
  *              proposed: [['1tbs', 'salt'], ['2 cups', 'water'], ['3 cups', 'flour']]
- *              optional: [['1 cup', 'water'], ['1tbs', 'basil'],['pepper'], ['salt']]
+ *              optional: [['1 cup', 'water'], ['1tbs', 'basil'], ['pepper'], ['salt']]
  *         url:
  *            type: string
  *            description: Work in progress. Will be completely changed
