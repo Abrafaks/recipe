@@ -6,7 +6,6 @@ import swaggerUI, { SwaggerOptions } from "swagger-ui-express";
 import swaggerJSDoc, { SwaggerDefinition } from "swagger-jsdoc";
 import userRouter from "./routes/user.routes";
 import recipeRouter from "./routes/recipe.routes";
-import docs from "./docs/docs";
 
 dotenv.config();
 
