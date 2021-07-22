@@ -11,6 +11,7 @@ import docs from "./docs/docs";
 dotenv.config();
 
 import "./config/db_config";
+import { Http2ServerRequest } from "http2";
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use(cookieParser());
 app.use(passport.initialize());
 
 const swaggerDefinition: SwaggerDefinition = {
+  openapi: "3.0.3",
   info: {
     title: "Recipe API",
     description: "A simple recipe API",
@@ -30,6 +32,20 @@ const swaggerDefinition: SwaggerDefinition = {
       email: "marcin.matoga.poznan@gmail.com",
     },
   },
+  components: {
+    securitySchemes: {
+      Bearer: {
+        type: "http",
+        scheme: "bearer",
+        bearerFormat: "JWT",
+      },
+      Basic: {
+        type: "http",
+        scheme: "basic",
+      },
+    },
+  },
+
   securityDefinitions: {
     Bearer: {
       type: "apiKey",

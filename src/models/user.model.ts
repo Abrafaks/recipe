@@ -2,29 +2,58 @@ import { Document, Schema, model } from "mongoose";
 
 /**
  * @swagger
- * tags:
- * - name: User
- *   description: "User model"
- * definitions:
- *   User:
- *     type: object
- *     properties:
- *       email:
- *          type: string
- *          description: User email
- *          example: some@example.com
- *       password:
- *          type: string
- *          description: Strong password - min 8 chars, 1 uppercase, 1 lowercase, 1 sign and 1 number
- *          example: Password1!
- *       isAdmin:
- *         type: boolean
- *         description: Defines if user is admin. Default false
- *         example: false
- *     required:
- *       - email
- *       - password
- *
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       properties:
+ *         email:
+ *           type: string
+ *           description: User email
+ *           example: some@example.com
+ *         password:
+ *           type: string
+ *           description: Strong password - min 8 chars, 1 uppercase, 1 lowercase, 1 sign and 1 number
+ *           example: Password1!
+ *         isAdmin:
+ *           type: boolean
+ *           description: Defines if user is admin. Default false
+ *           example: false
+ *       required:
+ *         - email
+ *         - password
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     UserDocument:
+ *       type: object
+ *       properties:
+ *         email:
+ *           type: string
+ *           description: User email
+ *           example: some@example.com
+ *         password:
+ *           type: string
+ *           description: Strong password - min 8 chars, 1 uppercase, 1 lowercase, 1 sign and 1 number
+ *           example: Password1!
+ *         isAdmin:
+ *           type: boolean
+ *           description: Defines if user is admin. Default false
+ *           example: false
+ *         _id:
+ *           type: string
+ *           description: User MongoDb id
+ *           example: 60f7e9b8cf60ae0004307aa1
+ *         passwordHash:
+ *           type: string
+ *           description: To be deleted.
+ *       required:
+ *         - email
+ *         - password
+ *         - _id
  */
 
 export interface User {
