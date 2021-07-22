@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import faker from "faker";
 import { User } from "../../models/user.model";
 import { Recipe, RecipeDocument } from "../../models/recipe.model";
+import jwt from "jsonwebtoken";
 dotenv.config();
 process.env.MONGODB_CONNECTION_STRING = "mongodb://localhost:27017/recipe-test";
 
@@ -23,4 +24,5 @@ export {
   faker,
   app,
   StatusCodes,
+  jwt,
 };
