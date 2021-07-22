@@ -1,4 +1,4 @@
-import { faker, Recipe } from "../config/server.config";
+import { faker, Recipe, User } from "../config/server.config";
 
 const title = faker.lorem.sentence();
 const description = faker.lorem.sentences(3);
@@ -181,11 +181,11 @@ const deleteAllRecipes = function () {
   return Recipe.deleteMany();
 };
 
-const addSomeRecipes = async function () {
-  const recipe1 = new Recipe({ ...recipe, userId: "60ec225655915ba21f1638e2" });
+const addSomeRecipes = async function (userId: string) {
+  const recipe1 = new Recipe({ ...recipe, userId });
   const recipe2 = new Recipe({
     ...recipeDescriptionEmpty,
-    userId: "60ec225655915ba21f1638e2",
+    userId,
   });
 
   const recipeForId = await recipe1.save();
