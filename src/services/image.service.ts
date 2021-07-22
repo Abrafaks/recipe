@@ -47,6 +47,26 @@ export class ImageService {
   public async readRecipeImages(id: string) {
     return Image.find({ recipeId: id });
   }
+
+  public async deleteImageById(
+    imageId: string,
+    userId: string,
+    isAdmin: boolean
+  ): Promise<ImageDocument | null> {
+    const image = await Image.findOne({ _id: imageId });
+
+    if (!image) {
+      return null;
+    }
+
+    const recipe = await this.readRecipeById(image.recipeId, userId, isAdmin);
+
+    if (!recipe) {
+      return null;
+    }
+
+    return Image.findOneAndDelete({ _id: imageId });
+  }
 }
 
 export default new ImageService();

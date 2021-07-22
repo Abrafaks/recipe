@@ -32,6 +32,9 @@ export class ImageValidator {
   public validateReadRecipeImagesData(): ValidationChain {
     return id;
   }
+  public validateDeleteRecipeByIdData(): ValidationChain {
+    return id;
+  }
 }
 
 export default new ImageValidator();
