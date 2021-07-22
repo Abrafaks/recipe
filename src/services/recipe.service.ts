@@ -37,7 +37,10 @@ export class RecipeService {
     if (!userId) {
       const result = await Recipe.updateOne(
         { _id: id },
-        { title, description, preparing, ingredients }
+        { title, description, preparing, ingredients },
+        {
+          omitUndefined: true,
+        }
       );
 
       if (result.nModified === 1) {
@@ -46,7 +49,10 @@ export class RecipeService {
     } else {
       const result = await Recipe.updateOne(
         { _id: id, userId },
-        { title, description, preparing, ingredients }
+        { title, description, preparing, ingredients },
+        {
+          omitUndefined: true,
+        }
       );
 
       if (result.nModified === 1) {
