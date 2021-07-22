@@ -133,7 +133,7 @@ router.get(
 
 /**
  * @swagger
- * /recipe/:
+ * /recipe/:id:
  *   put:
  *     security:
  *       - Bearer: []
@@ -168,7 +168,7 @@ router.get(
  */
 
 router.put(
-  "/",
+  "/:id",
   auth.authenticate([Strategy.Bearer]),
   recipeValidator.validateUpdateRecipeData(),
   validate,
