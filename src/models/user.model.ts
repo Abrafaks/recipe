@@ -17,7 +17,8 @@ import { Document, Schema, model } from "mongoose";
  *           example: Password1!
  *         isAdmin:
  *           type: boolean
- *           description: Defines if user is admin. Default false
+ *           description: Defines if user is admin.
+ *           default: false
  *           example: false
  *       required:
  *         - email
@@ -41,7 +42,8 @@ import { Document, Schema, model } from "mongoose";
  *           example: Password1!
  *         isAdmin:
  *           type: boolean
- *           description: Defines if user is admin. Default false
+ *           description: Defines if user is admin
+ *           default: false
  *           example: false
  *         _id:
  *           type: string
