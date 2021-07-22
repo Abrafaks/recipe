@@ -3,23 +3,24 @@ import { Request, Response } from "express";
 import { matchedData } from "express-validator";
 import { Recipe, RecipeDocument } from "../models/recipe.model";
 import recipeService, { RecipeService } from "../services/recipe.service";
+import sharp from "sharp";
 
 export class RecipeController {
   constructor(private recipeService: RecipeService) {}
 
   public async createRecipe(req: Request, res: Response): Promise<Response> {
     try {
-      const { title, description, preparing, ingredients, url } =
-        matchedData(req);
+      const { title, description, preparing, ingredients } = matchedData(req);
       const { _id } = req.user!;
 
-      const recipeData: Recipe = {
+      type RecipeWithoutImage = Omit<Recipe, "image">;
+
+      const recipeData: RecipeWithoutImage = {
         title,
         description,
         preparing,
         ingredients,
         userId: _id,
-        url,
       };
 
       const savedRecipe = await recipeService.createRecipe(recipeData);
@@ -59,7 +60,7 @@ export class RecipeController {
 
   public async updateRecipe(req: Request, res: Response): Promise<Response> {
     try {
-      const { title, description, preparing, ingredients, url, id } =
+      const { title, description, preparing, ingredients, image, id } =
         matchedData(req);
       const { _id, isAdmin } = req.user!;
       let result: boolean;
@@ -70,7 +71,6 @@ export class RecipeController {
           description,
           preparing,
           ingredients,
-          url,
         });
       } else {
         result = await recipeService.updateRecipe(id, _id, {
@@ -78,7 +78,6 @@ export class RecipeController {
           description,
           preparing,
           ingredients,
-          url,
         });
       }
       if (result) {

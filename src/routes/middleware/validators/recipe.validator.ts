@@ -17,12 +17,6 @@ const description = body("description")
   .withMessage("Description length must be max 256")
   .optional();
 
-const url = body("url")
-  .notEmpty()
-  .withMessage("Url must not be empty")
-  .matches(/^(\/\w+)+\.\w+$/i)
-  .withMessage("Must be valid url");
-
 const id = body("id")
   .notEmpty()
   .withMessage("Id must not be empty")
@@ -79,7 +73,6 @@ const validateData = [
   preparingContent,
   ingredientsContent,
   ingredients,
-  url,
 ];
 
 const getRecipeListData = [paginationData, searchName];

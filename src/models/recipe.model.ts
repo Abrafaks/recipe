@@ -27,15 +27,10 @@ import { Document, Schema, model } from "mongoose";
  *            examples:
  *              proposed: [['1tbs', 'salt'], ['2 cups', 'water'], ['3 cups', 'flour']]
  *              optional: [['1 cup', 'water'], ['1tbs', 'basil'], ['pepper'], ['salt']]
- *         url:
- *            type: string
- *            description: Work in progress. Will be completely changed
- *            example: /must/start/with/index.js
  *       required:
  *         - title
  *         - preparing
  *         - ingredients
- *         - url
  *
  */
 
@@ -66,10 +61,6 @@ import { Document, Schema, model } from "mongoose";
  *            examples:
  *              proposed: [['1tbs', 'salt'], ['2 cups', 'water'], ['3 cups', 'flour']]
  *              optional: [['1 cup', 'water'], ['1tbs', 'basil'], ['pepper'], ['salt']]
- *         url:
- *            type: string
- *            description: Work in progress. Will be completely changed
- *            example: /must/start/with/index.js
  *         _id:
  *            type: string
  *            description: Recipe MongoDB id
@@ -84,7 +75,6 @@ import { Document, Schema, model } from "mongoose";
  *         - _id
  *         - preparing
  *         - ingredients
- *         - url
  *
  */
 export interface Recipe {
@@ -93,7 +83,6 @@ export interface Recipe {
   preparing: [string];
   ingredients: [[string]];
   userId: string;
-  url: string;
 }
 export interface RecipeDocument extends Recipe, Document {}
 
@@ -103,7 +92,6 @@ const recipeSchema = new Schema<Recipe>({
   preparing: [{ type: String, required: true }],
   ingredients: [[{ type: String, required: true }]],
   userId: { type: String, required: true },
-  url: { type: String, required: true },
 });
 
 export const Recipe = model<RecipeDocument>("recipe", recipeSchema);

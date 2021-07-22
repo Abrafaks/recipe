@@ -54,7 +54,7 @@ describe("Recipe testing", function () {
         "title",
         "preparing",
         "ingredients",
-        "url",
+        "image",
         "userId",
         "__v",
       ]);
@@ -336,7 +336,7 @@ describe("Recipe testing", function () {
           "title",
           "preparing",
           "ingredients",
-          "url",
+          "image",
           "userId",
           "__v",
         ]);
@@ -435,7 +435,7 @@ describe("Recipe testing", function () {
         "title",
         "preparing",
         "ingredients",
-        "url",
+        "image",
         "userId",
         "__v",
       ]);
@@ -461,7 +461,7 @@ describe("Recipe testing", function () {
 
   describe("Update recipe testing", function () {
     it("should edit recipe for user", async function () {
-      const { description, preparing, ingredients, url } = recipes.recipe;
+      const { description, preparing, ingredients, image } = recipes.recipe;
       const title = "New title.";
       const recipeForUpdate = await Recipe.findOne({ description });
 
@@ -474,7 +474,7 @@ describe("Recipe testing", function () {
           description,
           preparing,
           ingredients,
-          url,
+          image,
           id: recipeForUpdate!._id,
         });
 
@@ -482,14 +482,14 @@ describe("Recipe testing", function () {
     });
 
     it("should not edit recipe for unauthenticated user", async function () {
-      const { description, preparing, ingredients, url } = recipes.recipe;
+      const { description, preparing, ingredients, image } = recipes.recipe;
       const title = "New title.";
       const response = await chai.request(app).put("/recipe/").send({
         title,
         description,
         preparing,
         ingredients,
-        url,
+        image,
         id: updateRecipeId,
       });
       expect(response).to.have.status(StatusCodes.UNAUTHORIZED);
