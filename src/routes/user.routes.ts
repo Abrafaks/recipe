@@ -19,15 +19,17 @@ const router = express.Router();
  *       - in: body
  *         name: user
  *         schema:
- *           $ref: '#/definitions/User'
+ *           $ref: '#components/schemas/User'
  *
  *     responses:
  *       200:
  *         description: User created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#components/schemas/UserDocument'
  *       400:
  *         description: Account with this email already exists.
- *       500:
- *         description: Internal server error
  */
 
 router.post(
@@ -50,10 +52,13 @@ router.post(
  *     responses:
  *       200:
  *         description: User logged in successfully
- *         examples:
- *           application/json: { token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MGY3ZTliOGNmNjBhZTAwMDQzMDdhYTEiLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjI2ODYwMDQxfQ.K-JUtYXCHlv4e1YQJYYi6bUISG_s0zdirSq0GBAshIo }
- *       500:
- *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               example: { token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MGY3ZTliOGNmNjBhZTAwMDQzMDdhYTEiLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjI2ODYwMDQxfQ.K-JUtYXCHlv4e1YQJYYi6bUISG_s0zdirSq0GBAshIo }
+ *       401:
+ *         description: Unauthorized
  */
 
 router.post(
