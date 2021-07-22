@@ -1,9 +1,10 @@
 import { Recipe, RecipeDocument } from "../models/recipe.model";
 
 type CreateRecipeBody = Omit<Recipe, "userId">;
+type CreateRecipeWithoutId = Omit<Recipe, "image">;
 
 export class RecipeService {
-  public createRecipe(recipe: Recipe): Promise<RecipeDocument> {
+  public createRecipe(recipe: Recipe): Promise<CreateRecipeWithoutId> {
     return new Recipe(recipe).save();
   }
 
@@ -31,12 +32,12 @@ export class RecipeService {
   public async updateRecipe(
     id: string,
     userId: string | null,
-    { title, description, preparing, ingredients, url }: CreateRecipeBody
+    { title, description, preparing, ingredients }: CreateRecipeBody
   ): Promise<boolean> {
     if (!userId) {
       const result = await Recipe.updateOne(
         { _id: id },
-        { title, description, preparing, ingredients, url }
+        { title, description, preparing, ingredients }
       );
 
       if (result.nModified === 1) {
@@ -45,7 +46,7 @@ export class RecipeService {
     } else {
       const result = await Recipe.updateOne(
         { _id: id, userId },
-        { title, description, preparing, ingredients, url }
+        { title, description, preparing, ingredients }
       );
 
       if (result.nModified === 1) {
