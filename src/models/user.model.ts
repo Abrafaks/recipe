@@ -15,11 +15,6 @@ import { Document, Schema, model } from "mongoose";
  *           type: string
  *           description: Strong password - min 8 chars, 1 uppercase, 1 lowercase, 1 sign and 1 number
  *           example: Password1!
- *         isAdmin:
- *           type: boolean
- *           description: Defines if user is admin.
- *           default: false
- *           example: false
  *       required:
  *         - email
  *         - password
