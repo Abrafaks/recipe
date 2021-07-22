@@ -13,8 +13,8 @@ const router = express.Router();
  *     security:
  *       - Bearer: []
  *     tags:
- *       - createRecipe
- *     description: Recipe creation
+ *       - recipe
+ *     description: Create recipe
  *     produces:
  *       - application/json
  *     parameters:
@@ -49,7 +49,7 @@ router.post(
  *     security:
  *       - Bearer: []
  *     tags:
- *       - getRecipeList
+ *       - recipe
  *     description: Read all recipes. limit, skip, name are optional. Used for pagination and searching
  *     produces:
  *       - application/json
@@ -99,7 +99,7 @@ router.get(
  *     security:
  *       - Bearer: []
  *     tags:
- *       - readRecipeById
+ *       - recipe
  *     description: Read recipe by id
  *     produces:
  *       - application/json
@@ -138,8 +138,8 @@ router.get(
  *     security:
  *       - Bearer: []
  *     tags:
- *       - updateRecipe
- *     description: Recipe update
+ *       - recipe
+ *     description: Update recipe
  *     produces:
  *       - application/json
  *     parameters:
