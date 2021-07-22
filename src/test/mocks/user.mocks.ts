@@ -1,4 +1,4 @@
-import { faker, chai, User } from "../config/server.config";
+import { faker, User, jwt } from "../config/server.config";
 
 let email = faker.internet.email();
 let password = "NormalPassword6!@#";
@@ -8,33 +8,33 @@ const user = {
   password,
 };
 
-email += "m";
-password += "m";
+email += "a@b.com";
 
 const recipeUser = {
   email,
-  password,
+  passwordHash: "$2b$10$xBnHYuKfT3HTt24zEEHDMe81xOqFtBlPrOkZ4uwEeXBuYbi1jUa3K!",
+};
+
+const finalUser = {
+  email,
+  password: "Password1!",
 };
 
 const createUser = async function () {
-  const response = await chai
-    .request("http://localhost:3000")
-    .post("/auth/register")
-    .set("content-type", "application/json")
-    .send({
-      email: recipeUser.email,
-      password: recipeUser.password,
-    });
+  return new User(recipeUser).save();
 };
 
 const getToken = async function () {
-  await createUser();
-
-  const response = await chai
-    .request("http://localhost:3000")
-    .post("/auth/login")
-    .auth(recipeUser.email, recipeUser.password);
-  return response.body.token;
+  const user = await createUser();
+  const { _id, isAdmin } = user;
+  const userId = _id;
+  return jwt.sign(
+    {
+      userId,
+      isAdmin,
+    },
+    process.env.JWT!
+  );
 };
 
 const deleteAllUsers = function () {
