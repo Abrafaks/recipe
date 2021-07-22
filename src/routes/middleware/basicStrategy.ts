@@ -11,14 +11,14 @@ const basicStrategy = new BasicStrategy(async (email, password, done) => {
         user.passwordHash
       );
       if (!passwordCorrect) {
-        return done("Invalid credentials", null);
+        return done(null, false);
       }
       return done(null, user);
     } else {
       return done(null, false);
     }
   } catch (err) {
-    return done(err, null);
+    return done(err, false);
   }
 });
 

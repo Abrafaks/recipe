@@ -12,7 +12,7 @@ export class RecipeService {
     skip: number,
     limit: number
   ): Promise<RecipeDocument[]> {
-    let regexp;
+    let regexp = new RegExp(".*", "gmi");
     if (name) {
       regexp = new RegExp(name, "gmi");
     }
