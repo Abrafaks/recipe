@@ -75,6 +75,15 @@ const validateData = [
   ingredients,
 ];
 
+const validateDataForUpdate = [
+  title.optional(),
+  description,
+  preparing.optional(),
+  preparingContent.optional(),
+  ingredientsContent.optional(),
+  ingredients.optional(),
+];
+
 const getRecipeListData = [paginationData, searchName];
 
 export class RecipeValidator {
@@ -82,7 +91,7 @@ export class RecipeValidator {
     return validateData;
   }
   public validateUpdateRecipeData(): ValidationChain[] {
-    return [...validateData, readId];
+    return [...validateDataForUpdate, readId];
   }
   public validateReadRecipeById(): ValidationChain {
     return readId;

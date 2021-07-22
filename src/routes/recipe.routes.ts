@@ -139,7 +139,7 @@ router.get(
  *       - Bearer: []
  *     tags:
  *       - recipe
- *     description: Update recipe
+ *     description: Update recipe. All fields are optional
  *     produces:
  *       - application/json
  *     parameters:
@@ -157,10 +157,6 @@ router.get(
  *     responses:
  *       200:
  *         description: Recipe updated successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#components/schemas/RecipeDocument'
  *       400:
  *         description: Bad request
  *       401:
