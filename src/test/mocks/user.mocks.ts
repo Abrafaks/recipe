@@ -8,11 +8,11 @@ const user = {
   password,
 };
 
-email += "a@b.com";
+email = "c@d.com";
 
 const recipeUser = {
   email,
-  passwordHash: "$2b$10$xBnHYuKfT3HTt24zEEHDMe81xOqFtBlPrOkZ4uwEeXBuYbi1jUa3K!",
+  passwordHash: "$2b$10$qaVKnj8yjoXkcrQ3GKXhYOcNVNZKvj46PfNp1LnlD7JP5hrBVXWJW",
 };
 
 const finalUser = {
@@ -28,17 +28,18 @@ const getToken = async function () {
   const user = await createUser();
   const { _id, isAdmin } = user;
   const userId = _id;
-  return jwt.sign(
+  const token = jwt.sign(
     {
       userId,
       isAdmin,
     },
     process.env.JWT!
   );
+  return { token, userId };
 };
 
 const deleteAllUsers = function () {
   return User.deleteMany();
 };
 
-export { user, getToken, deleteAllUsers };
+export { user, getToken, deleteAllUsers, createUser, finalUser };

@@ -4,25 +4,32 @@ import {
   app,
   StatusCodes,
   RecipeDocument,
+  Recipe,
+  User,
 } from "./config/server.config";
 import {
   recipes,
   deleteAllRecipes,
   addSomeRecipes,
 } from "./mocks/recipe.mocks";
-import { getToken } from "./mocks/user.mocks";
+import { getToken, deleteAllUsers } from "./mocks/user.mocks";
 
-let token = "Bearer ";
+let token = "";
 let _id: string;
 let updateRecipeId: string;
 
-before("Add user and get token", async function () {
-  token += await getToken();
-  _id = await addSomeRecipes();
+beforeEach("Add user and get token", async function () {
+  const data = await getToken();
+
+  token = "Bearer " + data.token;
+  const userId = data.userId;
+  _id = await addSomeRecipes(userId);
+  await addSomeRecipes(userId);
 });
 
-after("Delete all recipes", async function () {
+afterEach("Delete all recipes", async function () {
   await deleteAllRecipes();
+  await deleteAllUsers();
 });
 
 describe("Recipe testing", function () {
@@ -345,7 +352,7 @@ describe("Recipe testing", function () {
       expect(response).to.have.status(StatusCodes.UNAUTHORIZED);
     });
 
-    it("should return two recipes (testing limit)", async function () {
+    it("should return one recipes (testing limit)", async function () {
       const response = await chai
         .request(app)
         .get("/recipe/")
@@ -453,9 +460,11 @@ describe("Recipe testing", function () {
   });
 
   describe("Update recipe testing", function () {
-    it("should  edit recipe for user", async function () {
+    it("should edit recipe for user", async function () {
       const { description, preparing, ingredients, url } = recipes.recipe;
       const title = "New title.";
+      const recipeForUpdate = await Recipe.findOne({ description });
+
       const response = await chai
         .request(app)
         .put("/recipe/")
@@ -466,29 +475,10 @@ describe("Recipe testing", function () {
           preparing,
           ingredients,
           url,
-          id: updateRecipeId,
+          id: recipeForUpdate!._id,
         });
 
       expect(response).to.have.status(StatusCodes.OK);
-    });
-
-    it("should not edit recipe for user that it doesn't belong to", async function () {
-      const { description, preparing, ingredients, url } = recipes.recipe;
-      const title = "New title.";
-      const response = await chai
-        .request(app)
-        .put("/recipe/")
-        .set("Authorization", token)
-        .send({
-          title,
-          description,
-          preparing,
-          ingredients,
-          url,
-          id: _id,
-        });
-
-      expect(response).to.have.status(StatusCodes.BAD_REQUEST);
     });
 
     it("should not edit recipe for unauthenticated user", async function () {
