@@ -17,16 +17,6 @@ app.use(express.json());
 
 app.use(passport.initialize());
 
-// app.use(function (
-//   err: ErrorRequestHandler,
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) {
-//   if()
-//   console.log(err);
-// });
-
 app.listen(app.get("port"), () => {
   console.log(`Server is up on port ${app.get("port")}`);
 });
