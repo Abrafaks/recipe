@@ -19,10 +19,11 @@ const id = param("id")
   .isMongoId()
   .withMessage("Id must be valid mongodb id");
 
-const image = check("buffer").custom((value, { req }) => {
-  if (req.file.buffer) {
+const image = check("image").custom((value, { req }) => {
+  if (req.file?.buffer) {
     return true;
   }
+  return false;
 });
 
 export class ImageValidator {
