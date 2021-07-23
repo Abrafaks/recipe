@@ -12,7 +12,7 @@
     "deploy": "git add . && git commit -m Heroku && git push -f heroku production:main"
   },
   "keywords": [],
-  "author": "",
+  "author": "MM",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "5.0.1",
