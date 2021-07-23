@@ -80,7 +80,21 @@ router.get(
  *       201:
  *         description: Image added successfully
  *       400:
- *         description: Bad request
+ *         description: |
+ *           Bad request. Errors:
+ *           'Please upload png, jpeg or jpg.',
+ *           'Too many parts',
+ *           'File too large',
+ *           'Too many files',
+ *           'Field name too long',
+ *           'Field value too long',
+ *           'Too many fields',
+ *           'Unexpected field'
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               example: {error: "Too many fields"}
  *       401:
  *         description: Unauthorized
  */
@@ -95,7 +109,7 @@ router.post(
         err instanceof multer.MulterError ||
         err.message === "Please upload png, jpeg or jpg."
       ) {
-        return res.status(400).send(err.message);
+        return res.status(400).json({ error: err.message });
       }
       next();
     }),
@@ -108,7 +122,7 @@ router.post(
 /**
  * @swagger
  * /image/:id:
- *   post:
+ *   delete:
  *     security:
  *       - Bearer: []
  *     tags:
