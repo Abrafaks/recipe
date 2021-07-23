@@ -9,6 +9,7 @@ export class ImageController {
 
   public async addImage(req: Request, res: Response): Promise<Response> {
     try {
+      console.log("addimage");
       const { _id, isAdmin } = req.user!;
       const recipeId: string = matchedData(req).id;
       const image = await sharp(req.file?.buffer)
@@ -26,6 +27,7 @@ export class ImageController {
       }
       return res.status(400).send({ savedImage });
     } catch (err) {
+      console.log("error");
       console.log(err);
       return res.status(500).send();
     }

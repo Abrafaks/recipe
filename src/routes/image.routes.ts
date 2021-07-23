@@ -1,4 +1,6 @@
-import express from "express";
+import express, { Request, Response } from "express";
+import { NextFunction } from "express-serve-static-core";
+import multer, { ErrorCode } from "multer";
 import imageController from "../controllers/image.controller";
 import { Strategy, auth } from "./middleware/auth";
 import imageValidator, {
@@ -82,14 +84,25 @@ router.get(
  *       401:
  *         description: Unauthorized
  */
+const uploadImage = upload.single("image");
 
 router.post(
   "/:id",
   auth.authenticate([Strategy.Bearer]),
-  upload.single("image"),
+  (req: Request, res: Response, next: NextFunction) =>
+    uploadImage(req, res, (err) => {
+      if (
+        err instanceof multer.MulterError ||
+        err.message === "Please upload png, jpeg or jpg."
+      ) {
+        return res.status(400).send(err.message);
+      }
+      next();
+    }),
   imageValidator.validateAddImageData(),
   validate,
-  imageController.addImage
+  imageController.addImage,
+  (req: Request, res: Response) => imageController.addImage(req, res)
 );
 
 /**

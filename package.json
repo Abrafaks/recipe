@@ -6,7 +6,8 @@
     "start": "ts-node ./src/app.ts",
     "lint": "eslint '**/*.ts'",
     "lint-fix": "eslint --fix **/*.ts",
-    "test": "nyc --reporter=text-summary --reporter=text ts-mocha $(find . -path ./node_modules -prune -o -name '*.spec.ts') --timeout 20000 --exit"
+    "test": "nyc --reporter=text-summary --reporter=text ts-mocha $(find . -path ./node_modules -prune -o -name '*.spec.ts') --timeout 20000 --exit",
+    "start:debug": "node --nolazy --inspect=8089 -r ts-node/register ./src/app"
   },
   "keywords": [],
   "author": "",
