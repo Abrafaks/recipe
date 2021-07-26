@@ -57,10 +57,8 @@ export class RecipeController {
 
   public async updateRecipe(req: Request, res: Response): Promise<Response> {
     try {
-      const { title, description, preparing, ingredients } = matchedData(req, {
-        locations: ["body"],
-      });
-      const { id } = matchedData(req, { locations: ["params"] });
+      const { title, description, preparing, ingredients, id } =
+        matchedData(req);
       const { _id, isAdmin } = req.user!;
       let result: boolean;
 
