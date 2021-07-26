@@ -1,9 +1,4 @@
-import express, {
-  ErrorRequestHandler,
-  Request,
-  Response,
-  NextFunction,
-} from "express";
+import express from "express";
 import dotenv from "dotenv";
 import passport from "passport";
 import app from "./routes/routes";

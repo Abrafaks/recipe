@@ -10,6 +10,7 @@ export const validate = (
   if (errors.isEmpty()) {
     return next();
   }
+  console.log(req);
   return res.status(400).send({
     errors: errors.array(),
   });
