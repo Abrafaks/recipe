@@ -1,5 +1,4 @@
 import express from "express";
-import { User } from "../models/user.model";
 import userController from "../controllers/user.controller";
 import { Strategy, auth } from "./middleware/auth";
 import userValidator from "./middleware/validators/user.validator";
