@@ -10,7 +10,7 @@
     "devStart": "ts-node src/index.ts",
     "watch-node": "nodemon dist/index.js",
     "watch-ts": "tsc -w",
-    "deploy": "git add . && git commit --allow-empty -m 'Change script name' && git push -f heroku production:main",
+    "deploy": "git add . && git commit --allow-empty -m 'Change script name' && git push -f heroku main",
     "start:debug": "node --nolazy --inspect=8089 -r ts-node/register ./src/index"
   },
   "keywords": [],
