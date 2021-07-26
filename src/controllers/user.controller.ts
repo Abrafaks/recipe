@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Request, Response } from "express";
+import { StatusCodes } from "http-status-codes";
 import userService, { UserService } from "../services/user.service";
 
 interface UserAuthData {
@@ -18,7 +19,7 @@ export class UserController {
 
       return res.send({ token });
     } catch (err) {
-      return res.status(500).send();
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
     }
   }
 
@@ -30,7 +31,7 @@ export class UserController {
 
       if (existingUser) {
         return res
-          .status(400)
+          .status(StatusCodes.BAD_REQUEST)
           .json({ errorMessage: "Account with this email already exists." });
       }
 
@@ -38,7 +39,7 @@ export class UserController {
         await userService.createUserAndReturnToken(email, password)
       );
     } catch (err) {
-      return res.status(500).send();
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
     }
   }
 }

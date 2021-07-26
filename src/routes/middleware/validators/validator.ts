@@ -1,5 +1,6 @@
 import { validationResult } from "express-validator";
 import { Request, Response, NextFunction } from "express";
+import { StatusCodes } from "src/test/config/server.config";
 
 export const validate = (
   req: Request,
@@ -10,7 +11,7 @@ export const validate = (
   if (errors.isEmpty()) {
     return next();
   }
-  return res.status(400).send({
+  return res.status(StatusCodes.BAD_REQUEST).send({
     errors: errors.array(),
   });
 };

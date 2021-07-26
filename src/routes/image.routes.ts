@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import { NextFunction } from "express-serve-static-core";
 import multer, { ErrorCode } from "multer";
+import { StatusCodes } from "src/test/config/server.config";
 import imageController from "../controllers/image.controller";
 import { Strategy, auth } from "./middleware/auth";
 import imageValidator, {
@@ -109,7 +110,7 @@ router.post(
         err instanceof multer.MulterError ||
         err?.message === "Please upload png, jpeg or jpg."
       ) {
-        return res.status(400).json({ error: err.message });
+        return res.status(StatusCodes.BAD_REQUEST).json({ error: err.message });
       }
       next();
     }),
