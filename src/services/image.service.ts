@@ -33,7 +33,6 @@ export class ImageService {
     isAdmin: boolean
   ): Promise<ImageDocument | null> {
     const recipe = await this.readRecipeById(id, userId, isAdmin);
-
     if (!recipe) {
       return null;
     }

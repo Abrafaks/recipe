@@ -107,7 +107,7 @@ router.post(
     uploadImage(req, res, (err) => {
       if (
         err instanceof multer.MulterError ||
-        err.message === "Please upload png, jpeg or jpg."
+        err?.message === "Please upload png, jpeg or jpg."
       ) {
         return res.status(400).json({ error: err.message });
       }
