@@ -23,7 +23,6 @@ export class RecipeController {
       const savedRecipe = await recipeService.createRecipe(recipeData);
       return res.send(savedRecipe);
     } catch (err) {
-      console.log(err);
       return res.status(500).send();
     }
   }

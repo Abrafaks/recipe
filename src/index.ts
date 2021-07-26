@@ -1,4 +1,3 @@
-import express from "express";
 import dotenv from "dotenv";
 import passport from "passport";
 import app from "./routes/routes";
@@ -8,7 +7,6 @@ dotenv.config();
 import "./config/db_config";
 
 app.set("port", process.env.PORT || 3000);
-app.use(express.json());
 
 app.use(passport.initialize());
 

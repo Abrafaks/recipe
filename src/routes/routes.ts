@@ -7,6 +7,7 @@ import swaggerJSDoc from "swagger-jsdoc";
 import { swaggerOptions } from "../config/swagger";
 
 const app = express();
+app.use(express.json());
 
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
 
