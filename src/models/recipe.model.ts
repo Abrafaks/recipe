@@ -26,7 +26,7 @@ import { Document, Schema, model } from "mongoose";
  *             items:
  *               type: string
  *           description:  |
- *             Recipe ingredients. Proposed format is [['amount measure', 'ingredient'],['amount measure', 'ingredient']]
+ *             Recipe ingredients. Proposed format is [['amount measure', 'ingredient'], ['amount measure', 'ingredient']]
  *             but it is allowed to have only one item in nested array in case where amount and measure are not needed.
  *           example: [['1tbs', 'salt'], ['2 cups', 'water'], ['3 cups', 'flour']]
  *       required:
@@ -62,7 +62,7 @@ import { Document, Schema, model } from "mongoose";
  *             items:
  *               type: string
  *           description:  |
- *             Recipe ingredients. Proposed format is [['amount measure', 'ingredient'],['amount measure', 'ingredient']]
+ *             Recipe ingredients. Proposed format is [['amount measure', 'ingredient'], ['amount measure', 'ingredient']]
  *             but it is allowed to have only one item in nested array in case where amount and measure are not needed.
  *           example: [['1tbs', 'salt'], ['2 cups', 'water'], ['3 cups', 'flour']]
  *         _id:

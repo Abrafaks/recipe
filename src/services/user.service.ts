@@ -3,8 +3,6 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { User, UserDocument } from "../models/user.model";
 
-const rounds = 10;
-
 export class UserService {
   public async getUserByEmail(email: string): Promise<UserDocument | null> {
     return User.findOne({ email });
@@ -37,7 +35,7 @@ export class UserService {
     email: string,
     password: string
   ): Promise<UserDocument> {
-    const passwordHash = await this.hashPassword(password, rounds);
+    const passwordHash = await this.hashPassword(password, 10);
     const savedUser = await this.createUser(email, passwordHash);
     return savedUser;
   }
