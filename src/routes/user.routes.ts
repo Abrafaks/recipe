@@ -11,8 +11,8 @@ const router = express.Router();
  * /auth/register:
  *   post:
  *     tags:
- *       - register
- *     description: Account creation
+ *       - user
+ *     description: Account registration
  *     produces:
  *       - application/json
  *     parameters:
@@ -46,8 +46,8 @@ router.post(
  *     security:
  *       - Basic: []
  *     tags:
- *       - login
- *     description: Account creation
+ *       - user
+ *     description: Logging in
  *
  *     responses:
  *       200:

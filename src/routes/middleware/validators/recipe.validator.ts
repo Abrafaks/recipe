@@ -17,12 +17,6 @@ const description = body("description")
   .withMessage("Description length must be max 256")
   .optional();
 
-const url = body("url")
-  .notEmpty()
-  .withMessage("Url must not be empty")
-  .matches(/^(\/\w+)+\.\w+$/i)
-  .withMessage("Must be valid url");
-
 const id = body("id")
   .notEmpty()
   .withMessage("Id must not be empty")
@@ -79,7 +73,15 @@ const validateData = [
   preparingContent,
   ingredientsContent,
   ingredients,
-  url,
+];
+
+const validateDataForUpdate = [
+  title.optional(),
+  description,
+  preparing.optional(),
+  preparingContent.optional(),
+  ingredientsContent.optional(),
+  ingredients.optional(),
 ];
 
 const getRecipeListData = [paginationData, searchName];
@@ -89,7 +91,7 @@ export class RecipeValidator {
     return validateData;
   }
   public validateUpdateRecipeData(): ValidationChain[] {
-    return [...validateData, id];
+    return [...validateDataForUpdate, readId];
   }
   public validateReadRecipeById(): ValidationChain {
     return readId;
