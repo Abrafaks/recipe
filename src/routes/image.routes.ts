@@ -105,10 +105,7 @@ router.post(
   auth.authenticate([Strategy.Bearer]),
   (req: Request, res: Response, next: NextFunction) =>
     uploadImage(req, res, (err) => {
-      if (
-        err instanceof multer.MulterError ||
-        err.message === "Please upload png, jpeg or jpg."
-      ) {
+      if (err instanceof multer.MulterError) {
         return res.status(400).json({ error: err.message });
       }
       next();
