@@ -1,6 +1,12 @@
 import dotenv from "dotenv";
+import express from "express";
 import passport from "passport";
-import app from "./routes/routes";
+import routes from "./routes/routes";
+
+const app = express();
+
+app.use(express.json());
+app.use(routes);
 
 dotenv.config();
 
