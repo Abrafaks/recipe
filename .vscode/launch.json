@@ -1,0 +1,13 @@
+{
+  "version": "1.0.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Debug service",
+      "port": 8089,
+      "skipFiles": ["<node_internals>/**"]
+    }
+  ],
+  "compounds": []
+}

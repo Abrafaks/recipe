@@ -13,8 +13,8 @@ const router = express.Router();
  *     security:
  *       - Bearer: []
  *     tags:
- *       - createRecipe
- *     description: Recipe creation
+ *       - recipe
+ *     description: Create recipe
  *     produces:
  *       - application/json
  *     parameters:
@@ -49,7 +49,7 @@ router.post(
  *     security:
  *       - Bearer: []
  *     tags:
- *       - getRecipeList
+ *       - recipe
  *     description: Read all recipes. limit, skip, name are optional. Used for pagination and searching
  *     produces:
  *       - application/json
@@ -99,7 +99,7 @@ router.get(
  *     security:
  *       - Bearer: []
  *     tags:
- *       - readRecipeById
+ *       - recipe
  *     description: Read recipe by id
  *     produces:
  *       - application/json
@@ -133,13 +133,13 @@ router.get(
 
 /**
  * @swagger
- * /recipe/:
+ * /recipe/:id:
  *   put:
  *     security:
  *       - Bearer: []
  *     tags:
- *       - updateRecipe
- *     description: Recipe update
+ *       - recipe
+ *     description: Update recipe. All fields are optional
  *     produces:
  *       - application/json
  *     parameters:
@@ -157,10 +157,6 @@ router.get(
  *     responses:
  *       200:
  *         description: Recipe updated successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#components/schemas/RecipeDocument'
  *       400:
  *         description: Bad request
  *       401:
@@ -168,7 +164,7 @@ router.get(
  */
 
 router.put(
-  "/",
+  "/:id",
   auth.authenticate([Strategy.Bearer]),
   recipeValidator.validateUpdateRecipeData(),
   validate,
