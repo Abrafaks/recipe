@@ -9,7 +9,8 @@
     "postinstall": "tsc",
     "watch-node": "nodemon dist/index.js",
     "watch-ts": "tsc -w",
-    "deploy": "git add . && git commit --allow-empty -m Heroku && git push -f heroku production:main"
+    "deploy": "git add . && git commit --allow-empty -m Heroku && git push -f heroku production:main",
+    "start:debug": "node --nolazy --inspect=8089 -r ts-node/register ./src/index"
   },
   "keywords": [],
   "author": "",

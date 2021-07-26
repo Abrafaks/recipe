@@ -1,6 +1,15 @@
 import { body, param, ValidationChain, query } from "express-validator";
 
-const title = body("title")
+const updateTitle = body("title")
+  .notEmpty()
+  .withMessage("Title must not be empty")
+  .isString()
+  .withMessage("Title must be of type string")
+  .isLength({ min: 3, max: 80 })
+  .withMessage("Title's length must be between 3 and 80")
+  .optional();
+
+const createTitle = body("title")
   .notEmpty()
   .withMessage("Title must not be empty")
   .isString()
@@ -23,7 +32,14 @@ const id = body("id")
   .isMongoId()
   .withMessage("Id must be valid mongodb id");
 
-const preparing = body("preparing")
+const updatePreparing = body("preparing")
+  .notEmpty()
+  .withMessage("Preparing must not be empty")
+  .isArray()
+  .withMessage("Preparing must be array")
+  .optional();
+
+const createPreparing = body("preparing")
   .notEmpty()
   .withMessage("Preparing must not be empty")
   .isArray()
@@ -35,11 +51,18 @@ const preparingContent = body(["preparing[*]"])
   .isString()
   .withMessage("Preparing must be of type string");
 
-const ingredients = body(["ingredients", "ingredients[*]"])
+const createIngredients = body(["ingredients", "ingredients[*]"])
   .notEmpty()
   .withMessage("Ingredients must not be empty")
   .isArray()
   .withMessage("Ingredients must be array");
+
+const updateIngredients = body(["ingredients", "ingredients[*]"])
+  .notEmpty()
+  .withMessage("Ingredients must not be empty")
+  .isArray()
+  .withMessage("Ingredients must be array")
+  .optional();
 
 const ingredientsContent = body(["ingredients[*][*]"])
   .notEmpty()
@@ -66,32 +89,32 @@ const searchName = query("name")
   .withMessage("Name must be of type string")
   .optional();
 
-const validateData = [
-  title,
+const validateCreateData = [
+  createTitle,
   description,
-  preparing,
+  createPreparing,
   preparingContent,
   ingredientsContent,
-  ingredients,
+  createIngredients,
 ];
 
-const validateDataForUpdate = [
-  title.optional(),
+const validateUpdateData = [
+  updateTitle,
   description,
-  preparing.optional(),
+  updatePreparing,
   preparingContent.optional(),
   ingredientsContent.optional(),
-  ingredients.optional(),
+  updateIngredients,
 ];
 
 const getRecipeListData = [paginationData, searchName];
 
 export class RecipeValidator {
   public validateCreateRecipeData(): ValidationChain[] {
-    return validateData;
+    return validateCreateData;
   }
   public validateUpdateRecipeData(): ValidationChain[] {
-    return [...validateDataForUpdate, readId];
+    return [...validateUpdateData, readId];
   }
   public validateReadRecipeById(): ValidationChain {
     return readId;
