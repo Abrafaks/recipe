@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import { matchedData } from "express-validator";
 import { Recipe, RecipeDocument } from "../models/recipe.model";
 import recipeService, { RecipeService } from "../services/recipe.service";
-import { StatusCodes } from "src/test/config/server.config";
+import { StatusCodes } from "http-status-codes";
 
 export class RecipeController {
   constructor(private recipeService: RecipeService) {}
