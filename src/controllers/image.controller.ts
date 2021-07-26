@@ -5,12 +5,12 @@ import sharp from "sharp";
 import { matchedData } from "express-validator";
 
 export class ImageController {
-  constructor(private imageService: ImageService) {}
+  constructor(private readonly imageService: ImageService) {}
 
   public async addImage(req: Request, res: Response): Promise<Response> {
     try {
       const { _id, isAdmin } = req.user!;
-      const recipeId: string = matchedData(req).id;
+      const { id: recipeId } = matchedData(req).id;
       const image = await sharp(req.file?.buffer)
         .resize({ width: 250, height: 250 })
         .png()
@@ -48,10 +48,14 @@ export class ImageController {
 
   public async deleteImageById(req: Request, res: Response): Promise<Response> {
     try {
-      const { _id, isAdmin } = req.user!;
-      const { id } = matchedData(req);
+      const { _id: userId, isAdmin } = req.user!;
+      const { id: imageId } = matchedData(req);
 
-      const deletedImage = await imageService.deleteImageById(id, _id, isAdmin);
+      const deletedImage = await imageService.deleteImageById(
+        imageId,
+        userId,
+        isAdmin
+      );
 
       if (!deletedImage) {
         return res.status(400).send();
