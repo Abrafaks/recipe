@@ -30,6 +30,8 @@ const router = express.Router();
  *           application/json:
  *             schema:
  *               $ref: '#components/schemas/RecipeDocument'
+ *       400:
+ *         description: Bad request
  *       401:
  *         description: Unauthorized
  */

@@ -9,7 +9,6 @@ const updateTitle = body("title")
   .withMessage("Title's length must be between 3 and 80")
   .custom((value, { req }) => {
     if (value.match(/[a-zA-Z]/g).length > 2) {
-      console.log(value.match(/[a-zA-Z]/g));
       return true;
     }
     return false;
@@ -26,7 +25,6 @@ const createTitle = body("title")
   .withMessage("Title's length must be between 3 and 80")
   .custom((value, { req }) => {
     if (value.match(/[a-zA-Z]/g).length > 2) {
-      console.log(value.match(/[a-zA-Z]/g));
       return true;
     }
     return false;
