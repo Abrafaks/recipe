@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import { matchedData } from "express-validator";
 import { Recipe, RecipeDocument } from "../models/recipe.model";
 import recipeService, { RecipeService } from "../services/recipe.service";
+import { StatusCodes } from "http-status-codes";
 
 export class RecipeController {
   constructor(private recipeService: RecipeService) {}
@@ -23,7 +24,7 @@ export class RecipeController {
       const savedRecipe = await recipeService.createRecipe(recipeData);
       return res.send(savedRecipe);
     } catch (err) {
-      return res.status(500).send();
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
     }
   }
 
@@ -37,7 +38,7 @@ export class RecipeController {
       const recipes = await recipeService.getRecipeList(name, skip, limit);
       return res.json(recipes);
     } catch (err) {
-      return res.status(500).send();
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
     }
   }
 
@@ -51,7 +52,7 @@ export class RecipeController {
       const recipe = await recipeService.readRecipeById(id);
       return res.json(recipe);
     } catch (err) {
-      return res.status(500).send();
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
     }
   }
 
@@ -80,10 +81,10 @@ export class RecipeController {
       if (result) {
         return res.send();
       } else {
-        return res.status(400).send();
+        return res.status(StatusCodes.BAD_REQUEST).send();
       }
     } catch (err) {
-      return res.status(500).send();
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
     }
   }
 }
