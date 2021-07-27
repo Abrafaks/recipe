@@ -43,18 +43,28 @@ export class UserController {
   public async register(req: Request, res: Response): Promise<Response> {
     try {
       const { email, password } = req.body as UserAuthData;
-
+      let result;
       const existingUser = await userService.getUserByEmail(email);
 
       if (existingUser) {
-        return res
-          .status(StatusCodes.BAD_REQUEST)
-          .json({ errorMessage: "Account with this email already exists." });
+        if (existingUser.isDeleted) {
+          //create account and change password
+          result = res.send(
+            await userService.createDeletedUser(email, password)
+          );
+        } else {
+          return res
+            .status(StatusCodes.BAD_REQUEST)
+            .json({ errorMessage: "Account with this email already exists." });
+        }
       }
 
-      return res.send(
-        await userService.createUserAndReturnToken(email, password)
-      );
+      result = res.send(await userService.createNewUser(email, password));
+
+      if (result) {
+        return res.send(result);
+      }
+      return res.status(StatusCodes.BAD_REQUEST).send();
     } catch (err) {
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
     }

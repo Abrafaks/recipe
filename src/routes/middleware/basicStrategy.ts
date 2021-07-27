@@ -5,7 +5,6 @@ import userService from "../../services/user.service";
 const basicStrategy = new BasicStrategy(async (email, password, done) => {
   try {
     const user = await User.findOne({ email, isDeleted: false });
-    console.log(user);
     if (user) {
       const passwordCorrect = await userService.arePasswordsMatching(
         password,
