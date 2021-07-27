@@ -1,8 +1,13 @@
+import { Response } from "express";
 import { Recipe, RecipeDocument } from "../models/recipe.model";
 
 type CreateRecipeBody = Omit<Recipe, "userId">;
 type CreateRecipeWithoutId = Omit<Recipe, "image">;
 
+interface DeleteRecipe {
+  recipeId: string;
+  userId?: string;
+}
 export class RecipeService {
   public createRecipe(recipe: Recipe): Promise<CreateRecipeWithoutId> {
     return new Recipe(recipe).save();
@@ -66,6 +71,24 @@ export class RecipeService {
       }
     }
     return false;
+  }
+
+  public async deleteRecipeById({
+    recipeId,
+    userId,
+  }: DeleteRecipe): Promise<boolean> {
+    let query;
+    if (!userId) {
+      query = { _id: recipeId };
+    } else {
+      query = { _id: recipeId, userId };
+    }
+    const result = await Recipe.deleteOne(query);
+
+    if (result.n === 1) {
+      return true;
+    }
+    return true;
   }
 }
 

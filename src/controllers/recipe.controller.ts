@@ -105,6 +105,30 @@ export class RecipeController {
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
     }
   }
+
+  public async deleteRecipeById(
+    req: Request,
+    res: Response
+  ): Promise<Response> {
+    try {
+      const { id: recipeId } = matchedData(req);
+      const { _id: userId, isAdmin } = req.user!;
+      let query;
+      if (isAdmin) {
+        query = { recipeId };
+      } else {
+        query = { recipeId, userId };
+      }
+      const result = await recipeService.deleteRecipeById(query);
+      if (result) {
+        return res.send();
+      } else {
+        return res.status(StatusCodes.BAD_REQUEST).send();
+      }
+    } catch (err) {
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+    }
+  }
 }
 
 export default new RecipeController(recipeService);
