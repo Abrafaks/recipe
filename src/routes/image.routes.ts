@@ -19,7 +19,7 @@ const router = express.Router();
  *       - Bearer: []
  *     tags:
  *       - image
- *     description: Read all recipe images
+ *     description: Returns all recipe images
  *     produces:
  *       - application/json
  *     parameters:
@@ -28,7 +28,7 @@ const router = express.Router();
  *         schema:
  *           type: string
  *           example: 60f7ea20cf60ae0004307aa2
- *         description: Id of post
+ *         description: Id of recipe
  *
  *     responses:
  *       200:
@@ -65,7 +65,7 @@ router.get(
  *         schema:
  *           type: string
  *           example: 60f7ea20cf60ae0004307aa2
- *         description: Id of post
+ *         description: Id of recipe
  *       - in: form-data
  *         name: image
  *         schema:
@@ -135,7 +135,7 @@ router.post(
  *         schema:
  *           type: string
  *           example: 60f7ea20cf60ae0004307aa2
- *         description: Id of post
+ *         description: Id of image
  *
  *     responses:
  *       200:
