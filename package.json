@@ -5,9 +5,9 @@
     "node": "14.17.2"
   },
   "scripts": {
+    "build": "tsc",
     "start": "node dist/index.js",
     "devStart": "ts-node src/index.ts",
-    "build": "tsc",
     "watch-node": "nodemon dist/index.js",
     "watch-ts": "tsc -w",
     "deploy": "git add . && git commit --allow-empty -m 'Email validation, read user endpoints' && git push -f heroku main",
