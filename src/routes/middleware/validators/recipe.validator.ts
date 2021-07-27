@@ -108,7 +108,6 @@ const validateUpdateData = [
 ];
 
 const getRecipeListData = [paginationData, searchName];
-
 export class RecipeValidator {
   public validateCreateRecipeData(): ValidationChain[] {
     return validateCreateData;
@@ -121,6 +120,9 @@ export class RecipeValidator {
   }
   public validateGetRecipeList(): ValidationChain[] {
     return getRecipeListData;
+  }
+  public validateReadUserRecipesById(): ValidationChain {
+    return readId;
   }
 }
 
