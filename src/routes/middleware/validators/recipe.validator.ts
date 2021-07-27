@@ -7,6 +7,14 @@ const updateTitle = body("title")
   .withMessage("Title must be of type string")
   .isLength({ min: 3, max: 80 })
   .withMessage("Title's length must be between 3 and 80")
+  .custom((value, { req }) => {
+    if (value.match(/[a-zA-Z]/g).length > 2) {
+      console.log(value.match(/[a-zA-Z]/g));
+      return true;
+    }
+    return false;
+  })
+  .withMessage("Title must contain at least 3 letters")
   .optional();
 
 const createTitle = body("title")
@@ -15,9 +23,18 @@ const createTitle = body("title")
   .isString()
   .withMessage("Title must be of type string")
   .isLength({ min: 3, max: 80 })
-  .withMessage("Title's length must be between 3 and 80");
+  .withMessage("Title's length must be between 3 and 80")
+  .custom((value, { req }) => {
+    if (value.match(/[a-zA-Z]/g).length > 2) {
+      console.log(value.match(/[a-zA-Z]/g));
+      return true;
+    }
+    return false;
+  })
+  .withMessage("Title must contain at least 3 letters");
 
 const description = body("description")
+  .trim()
   .notEmpty()
   .withMessage("Description must not be empty")
   .isString()
@@ -46,6 +63,7 @@ const createPreparing = body("preparing")
   .withMessage("Preparing must be array");
 
 const preparingContent = body(["preparing[*]"])
+  .trim()
   .notEmpty()
   .withMessage("Preparing must not be empty")
   .isString()
@@ -65,6 +83,7 @@ const updateIngredients = body(["ingredients", "ingredients[*]"])
   .optional();
 
 const ingredientsContent = body(["ingredients[*][*]"])
+  .trim()
   .notEmpty()
   .withMessage("Ingredients must not be empty")
   .isString()
@@ -83,6 +102,7 @@ const paginationData = query(["skip", "limit"])
   .optional();
 
 const searchName = query("name")
+  .trim()
   .notEmpty()
   .withMessage("Name must not be empty")
   .isString()

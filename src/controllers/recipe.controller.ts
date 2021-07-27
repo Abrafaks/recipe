@@ -61,7 +61,6 @@ export class RecipeController {
         matchedData(req);
       const { _id, isAdmin } = req.user!;
       let result: boolean;
-
       if (isAdmin) {
         result = await recipeService.updateRecipe(id, null, {
           title,
