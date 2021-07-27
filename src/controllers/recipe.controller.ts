@@ -87,6 +87,24 @@ export class RecipeController {
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
     }
   }
+
+  public async readUserRecipesById(
+    req: Request,
+    res: Response
+  ): Promise<Response> {
+    try {
+      const { id: readUserId } = matchedData(req);
+
+      const recipes = await recipeService.readRecipeByUserId(readUserId);
+
+      if (!recipes) {
+        return res.status(StatusCodes.BAD_REQUEST).send();
+      }
+      return res.status(StatusCodes.OK).send(recipes);
+    } catch (err) {
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+    }
+  }
 }
 
 export default new RecipeController(recipeService);
