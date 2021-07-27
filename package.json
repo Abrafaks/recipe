@@ -11,7 +11,8 @@
     "watch-node": "nodemon dist/index.js",
     "watch-ts": "tsc -w",
     "deploy": "git add . && git commit --allow-empty -m 'Email validation, read user endpoints' && git push -f heroku main",
-    "start:debug": "node --nolazy --inspect=8089 -r ts-node/register ./src/index"
+    "start:debug": "node --nolazy --inspect=8089 -r ts-node/register ./src/index",
+    "test": "nyc --reporter=text-summary --reporter=text ts-mocha $(find . -path ./node_modules -prune -o -name '*.spec.ts') --timeout 20000 --exit"
   },
   "keywords": [],
   "author": "",
