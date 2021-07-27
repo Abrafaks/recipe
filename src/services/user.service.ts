@@ -4,6 +4,10 @@ import jwt from "jsonwebtoken";
 import { User, UserDocument } from "../models/user.model";
 
 export class UserService {
+  public async getUsers(): Promise<UserDocument[] | null> {
+    return User.find();
+  }
+
   public async getUserByEmail(email: string): Promise<UserDocument | null> {
     return User.findOne({ email });
   }
