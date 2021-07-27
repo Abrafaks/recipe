@@ -246,8 +246,6 @@ router.put(
 router.delete(
   "/:id",
   auth.authenticate([Strategy.Bearer]),
-  recipeValidator.validateUpdateRecipeData(),
-  validate,
   recipeController.deleteRecipeById
 );
 
