@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Request, Response } from "express";
+import { StatusCodes } from "http-status-codes";
 import userService, { UserService } from "../services/user.service";
 
 interface UserAuthData {
@@ -10,6 +11,22 @@ interface UserAuthData {
 export class UserController {
   constructor(private userService: UserService) {}
 
+  public async readAllUsers(req: Request, res: Response): Promise<Response> {
+    try {
+      const { _id } = req.user!;
+
+      const users = await userService.getUsers();
+
+      if (!users) {
+        res.status(StatusCodes.BAD_REQUEST).send();
+      }
+
+      return res.send(users);
+    } catch (err) {
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+    }
+  }
+
   public async login(req: Request, res: Response): Promise<Response> {
     try {
       const { _id, isAdmin } = req.user!;
@@ -18,7 +35,7 @@ export class UserController {
 
       return res.send({ token });
     } catch (err) {
-      return res.status(500).send();
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
     }
   }
 
@@ -30,7 +47,7 @@ export class UserController {
 
       if (existingUser) {
         return res
-          .status(400)
+          .status(StatusCodes.BAD_REQUEST)
           .json({ errorMessage: "Account with this email already exists." });
       }
 
@@ -38,7 +55,7 @@ export class UserController {
         await userService.createUserAndReturnToken(email, password)
       );
     } catch (err) {
-      return res.status(500).send();
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
     }
   }
 }

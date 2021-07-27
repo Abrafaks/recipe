@@ -1,16 +1,17 @@
 {
   "name": "recipe-app",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "engines": {
     "node": "14.17.2"
   },
   "scripts": {
+    "build": "tsc",
     "start": "node dist/index.js",
     "devStart": "nodemon src/index.ts",
     "postinstall": "tsc",
     "watch-node": "nodemon dist/index.js",
     "watch-ts": "tsc -w",
-    "deploy": "git add . && git commit --allow-empty -m Heroku && git push -f heroku production:main",
+    "deploy": "git add . && git commit --allow-empty -m 'Email validation, read user endpoints' && git push -f heroku main",
     "start:debug": "node --nolazy --inspect=8089 -r ts-node/register ./src/index"
   },
   "keywords": [],

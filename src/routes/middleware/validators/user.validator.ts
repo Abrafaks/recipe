@@ -1,6 +1,8 @@
 import { body, ValidationChain } from "express-validator";
 
-const email = body("email").isEmail().withMessage("Invalid email");
+const email = body("email")
+  .isEmail({ allow_utf8_local_part: false })
+  .withMessage("Invalid email");
 const password = body("password")
   .isStrongPassword()
   .withMessage(

@@ -29,6 +29,12 @@ export class RecipeService {
     return Recipe.findById(id);
   }
 
+  public async readRecipeByUserId(
+    userId: string
+  ): Promise<RecipeDocument[] | null> {
+    return Recipe.find({ userId });
+  }
+
   public async updateRecipe(
     id: string,
     userId: string | null,
