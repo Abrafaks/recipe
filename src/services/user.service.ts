@@ -5,11 +5,11 @@ import { User, UserDocument } from "../models/user.model";
 
 export class UserService {
   public async getUsers(): Promise<UserDocument[] | null> {
-    return User.find();
+    return User.find({ isDeleted: false });
   }
 
   public async getUserByEmail(email: string): Promise<UserDocument | null> {
-    return User.findOne({ email });
+    return User.findOne({ email, isDeleted: false });
   }
 
   public async hashPassword(password: string, rounds: number): Promise<string> {
@@ -49,6 +49,32 @@ export class UserService {
     hash: string
   ): Promise<boolean> {
     return bcrypt.compare(password, hash);
+  }
+
+  public async deleteUser(
+    userToDelete: string,
+    userId: string,
+    isAdmin: boolean
+  ): Promise<boolean> {
+    let query;
+    if (userToDelete) {
+      query = { _id: userId };
+    }
+    if (isAdmin) {
+      query = { _id: userToDelete };
+    }
+    const result = await User.updateOne(
+      query,
+      { isDeleted: true },
+      {
+        omitUndefined: true,
+      }
+    );
+
+    if (result.nModified === 1) {
+      return true;
+    }
+    return true;
   }
 }
 

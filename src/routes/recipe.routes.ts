@@ -231,7 +231,7 @@ router.put(
  *         name: id
  *         schema:
  *           type: string
- *         description: Id of recipe to update
+ *         description: Id of recipe to delete
  *         example: 60f7ea20cf60ae0004307aa2
  *
  *     responses:
