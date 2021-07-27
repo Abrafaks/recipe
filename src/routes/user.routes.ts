@@ -8,8 +8,8 @@ const router = express.Router();
 
 /**
  * @swagger
- * /auth/login:
- *   post:
+ * /auth/:
+ *   get:
  *     security:
  *       - Bearer: []
  *     tags:

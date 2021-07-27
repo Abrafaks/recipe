@@ -21,7 +21,7 @@ export class UserController {
         res.status(StatusCodes.BAD_REQUEST).send();
       }
 
-      return res.send({ users });
+      return res.send(users);
     } catch (err) {
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
     }
