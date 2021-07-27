@@ -67,4 +67,14 @@ const userSchema = new Schema<User>({
   isAdmin: { type: Boolean, required: true, default: false },
 });
 
+userSchema.methods.toJSON = function () {
+  const user = this;
+  const userObject = user.toObject();
+
+  delete userObject.passwordHash;
+  delete userObject.__v;
+
+  return userObject;
+};
+
 export const User = model<UserDocument>("user", userSchema);
