@@ -210,6 +210,8 @@ router.get(
 router.put(
   "/:id",
   auth.authenticate([Strategy.Bearer]),
+  recipeValidator.validateUpdateRecipeData(),
+  validate,
   recipeController.updateRecipe
 );
 
