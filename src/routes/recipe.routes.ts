@@ -135,6 +135,46 @@ router.get(
 
 /**
  * @swagger
+ * /recipe/user/:id:
+ *   get:
+ *     security:
+ *       - Bearer: []
+ *     tags:
+ *       - recipe
+ *     description: Read recipes of user by his id
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         description: Id of user
+ *         example: 60f7ea20cf60ae0004307aa2
+ *
+ *     responses:
+ *       200:
+ *         description: Recipes read successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#components/schemas/RecipeDocument'
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorized
+ */
+
+router.get(
+  "/user/:id",
+  auth.authenticate([Strategy.Bearer]),
+  recipeValidator.validateReadUserRecipesById(),
+  validate,
+  recipeController.readUserRecipesById
+);
+
+/**
+ * @swagger
  * /recipe/:id:
  *   put:
  *     security:

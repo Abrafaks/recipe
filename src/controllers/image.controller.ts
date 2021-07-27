@@ -3,6 +3,7 @@ import { Request, response, Response } from "express";
 import imageService, { ImageService } from "../services/image.service";
 import sharp from "sharp";
 import { matchedData } from "express-validator";
+import { StatusCodes } from "http-status-codes";
 
 export class ImageController {
   constructor(private readonly imageService: ImageService) {}
@@ -22,11 +23,11 @@ export class ImageController {
         isAdmin
       );
       if (savedImage) {
-        return res.status(201).send();
+        return res.status(StatusCodes.CREATED).send();
       }
-      return res.status(400).send();
+      return res.status(StatusCodes.BAD_REQUEST).send();
     } catch (err) {
-      return res.status(500).send();
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
     }
   }
 
@@ -40,9 +41,9 @@ export class ImageController {
       if (images) {
         return res.send({ images });
       }
-      return res.status(400).send();
+      return res.status(StatusCodes.BAD_REQUEST).send();
     } catch (err) {
-      return res.status(500).send();
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
     }
   }
 
@@ -58,11 +59,11 @@ export class ImageController {
       );
 
       if (!deletedImage) {
-        return res.status(400).send();
+        return res.status(StatusCodes.BAD_REQUEST).send();
       }
       return res.send();
     } catch (err) {
-      return res.status(500).send();
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
     }
   }
 }

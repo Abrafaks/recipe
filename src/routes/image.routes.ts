@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import { NextFunction } from "express-serve-static-core";
 import multer, { ErrorCode } from "multer";
+import { StatusCodes } from "http-status-codes";
 import imageController from "../controllers/image.controller";
 import { Strategy, auth } from "./middleware/auth";
 import imageValidator, {
@@ -18,7 +19,7 @@ const router = express.Router();
  *       - Bearer: []
  *     tags:
  *       - image
- *     description: Read all recipe images
+ *     description: Returns all recipe images
  *     produces:
  *       - application/json
  *     parameters:
@@ -27,7 +28,7 @@ const router = express.Router();
  *         schema:
  *           type: string
  *           example: 60f7ea20cf60ae0004307aa2
- *         description: Id of post
+ *         description: Id of recipe
  *
  *     responses:
  *       200:
@@ -64,7 +65,7 @@ router.get(
  *         schema:
  *           type: string
  *           example: 60f7ea20cf60ae0004307aa2
- *         description: Id of post
+ *         description: Id of recipe
  *       - in: form-data
  *         name: image
  *         schema:
@@ -109,7 +110,7 @@ router.post(
         err instanceof multer.MulterError ||
         err?.message === "Please upload png, jpeg or jpg."
       ) {
-        return res.status(400).json({ error: err.message });
+        return res.status(StatusCodes.BAD_REQUEST).json({ error: err.message });
       }
       next();
     }),
@@ -134,7 +135,7 @@ router.post(
  *         schema:
  *           type: string
  *           example: 60f7ea20cf60ae0004307aa2
- *         description: Id of post
+ *         description: Id of image
  *
  *     responses:
  *       200:
