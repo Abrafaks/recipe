@@ -50,7 +50,11 @@ export class RecipeController {
       const { id } = matchedData(req);
 
       const recipe = await recipeService.readRecipeById(id);
-      return res.json(recipe);
+
+      if (recipe) {
+        return res.json(recipe);
+      }
+      return res.status(StatusCodes.NOT_FOUND).send();
     } catch (err) {
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
     }

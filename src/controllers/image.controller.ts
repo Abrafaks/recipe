@@ -38,8 +38,8 @@ export class ImageController {
     try {
       const { id } = matchedData(req);
       const images = await imageService.readRecipeImages(id);
-      if (images) {
-        return res.send({ images });
+      if (images?.length !== 0) {
+        return res.send(images);
       }
       return res.status(StatusCodes.BAD_REQUEST).send();
     } catch (err) {
