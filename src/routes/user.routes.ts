@@ -8,6 +8,35 @@ const router = express.Router();
 
 /**
  * @swagger
+ * /auth/login:
+ *   post:
+ *     security:
+ *       - Bearer: []
+ *     tags:
+ *       - user
+ *     description: Read all users
+ *
+ *     responses:
+ *       200:
+ *         description: Users found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#components/schemas/UserDocument'
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorized
+ */
+
+router.get(
+  "/",
+  auth.authenticate([Strategy.Bearer]),
+  userController.readAllUsers
+);
+
+/**
+ * @swagger
  * /auth/register:
  *   post:
  *     tags:

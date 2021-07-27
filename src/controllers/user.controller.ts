@@ -11,6 +11,22 @@ interface UserAuthData {
 export class UserController {
   constructor(private userService: UserService) {}
 
+  public async readAllUsers(req: Request, res: Response): Promise<Response> {
+    try {
+      const { _id } = req.user!;
+
+      const users = await userService.getUsers();
+
+      if (!users) {
+        res.status(StatusCodes.BAD_REQUEST).send();
+      }
+
+      return res.send({ users });
+    } catch (err) {
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+    }
+  }
+
   public async login(req: Request, res: Response): Promise<Response> {
     try {
       const { _id, isAdmin } = req.user!;
