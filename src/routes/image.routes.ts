@@ -193,7 +193,7 @@ router.post(
  *         description: Id of image
  *
  *     responses:
- *       200:
+ *       204:
  *         description: Image deleted successfully
  *       400:
  *         description: Bad request
