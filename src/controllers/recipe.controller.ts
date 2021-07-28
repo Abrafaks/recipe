@@ -12,7 +12,6 @@ export class RecipeController {
     try {
       const { title, description, preparing, ingredients } = matchedData(req);
       const { _id } = req.user!;
-
       const recipeData: Recipe = {
         title,
         description,
@@ -22,7 +21,7 @@ export class RecipeController {
       };
 
       const savedRecipe = await recipeService.createRecipe(recipeData);
-      return res.send(savedRecipe);
+      return res.status(StatusCodes.CREATED).send(savedRecipe);
     } catch (err) {
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
     }
@@ -50,7 +49,11 @@ export class RecipeController {
       const { id } = matchedData(req);
 
       const recipe = await recipeService.readRecipeById(id);
-      return res.json(recipe);
+
+      if (recipe) {
+        return res.json(recipe);
+      }
+      return res.status(StatusCodes.NOT_FOUND).send();
     } catch (err) {
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
     }
@@ -61,7 +64,7 @@ export class RecipeController {
       const { title, description, preparing, ingredients, id } =
         matchedData(req);
       const { _id, isAdmin } = req.user!;
-      let result: boolean;
+      let result: RecipeDocument | null;
 
       if (isAdmin) {
         result = await recipeService.updateRecipe(id, null, {
@@ -79,7 +82,7 @@ export class RecipeController {
         });
       }
       if (result) {
-        return res.send();
+        return res.send(result);
       } else {
         return res.status(StatusCodes.BAD_REQUEST).send();
       }
@@ -98,9 +101,33 @@ export class RecipeController {
       const recipes = await recipeService.readRecipeByUserId(readUserId);
 
       if (!recipes) {
-        return res.status(StatusCodes.BAD_REQUEST).send();
+        return res.status(StatusCodes.NOT_FOUND).send();
       }
       return res.send(recipes);
+    } catch (err) {
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+    }
+  }
+
+  public async deleteRecipeById(
+    req: Request,
+    res: Response
+  ): Promise<Response> {
+    try {
+      const { id: recipeId } = matchedData(req);
+      const { _id: userId, isAdmin } = req.user!;
+      let query;
+      if (isAdmin) {
+        query = { recipeId };
+      } else {
+        query = { recipeId, userId };
+      }
+      const result = await recipeService.deleteRecipeById(query);
+      if (result) {
+        return res.status(StatusCodes.NO_CONTENT).send();
+      } else {
+        return res.status(StatusCodes.NOT_FOUND).send();
+      }
     } catch (err) {
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
     }

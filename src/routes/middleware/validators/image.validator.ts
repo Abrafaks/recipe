@@ -17,7 +17,7 @@ const id = param("id")
   .notEmpty()
   .withMessage("Id must not be empty")
   .isMongoId()
-  .withMessage("Id must be valid mongodb id");
+  .withMessage("Id must be valid");
 
 const image = check("image").custom((value, { req }) => {
   if (req.file?.buffer) {

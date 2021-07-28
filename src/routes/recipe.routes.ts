@@ -215,4 +215,38 @@ router.put(
   recipeController.updateRecipe
 );
 
+/**
+ * @swagger
+ * /recipe/:id:
+ *   delete:
+ *     security:
+ *       - Bearer: []
+ *     tags:
+ *       - recipe
+ *     description: Delete user's recipe. Admin can delete any recipe
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         description: Id of recipe to delete
+ *         example: 60f7ea20cf60ae0004307aa2
+ *
+ *     responses:
+ *       200:
+ *         description: Recipe deleted successfully
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorized
+ */
+
+router.delete(
+  "/:id",
+  auth.authenticate([Strategy.Bearer]),
+  recipeController.deleteRecipeById
+);
+
 export default router;

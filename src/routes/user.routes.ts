@@ -96,4 +96,43 @@ router.post(
   userController.login
 );
 
+/**
+ * @swagger
+ * /auth/:id/delete/:
+ *   put:
+ *     security:
+ *       - Bearer: []
+ *     tags:
+ *       - recipe
+ *     description:  |
+ *       Soft delete user. Admin can delete any user by specifying id in params.
+ *       Normal user will delete himself even if specifying other's user id in params.
+ *       Normal user doesn't have to specify his id in params.
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         description: Id of user to delete. If not specified, will delete current user
+ *         example: 60f7ea20cf60ae0004307aa2
+ *
+ *     responses:
+ *       200:
+ *         description: User deleted successfully
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorized
+ */
+
+router.put(
+  "/:id/delete/",
+  auth.authenticate([Strategy.Bearer]),
+  userValidator.validateUserToDelete(),
+  validate,
+  userController.deleteUserById
+);
+
 export default router;

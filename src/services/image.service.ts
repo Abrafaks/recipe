@@ -22,7 +22,6 @@ export class ImageService {
     if (isAdmin) {
       delete query.userId;
     }
-
     return Recipe.findOne(query);
   }
 

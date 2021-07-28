@@ -32,11 +32,11 @@ const createTitle = body("title")
   .withMessage("Title must contain at least 3 letters");
 
 const description = body("description")
-  .trim()
   .notEmpty()
   .withMessage("Description must not be empty")
   .isString()
   .withMessage("Description must be of type string")
+  .trim()
   .isLength({ max: 256 })
   .withMessage("Description length must be max 256")
   .optional();
@@ -45,7 +45,7 @@ const id = body("id")
   .notEmpty()
   .withMessage("Id must not be empty")
   .isMongoId()
-  .withMessage("Id must be valid mongodb id");
+  .withMessage("Id must be valid");
 
 const updatePreparing = body("preparing")
   .notEmpty()
@@ -61,11 +61,11 @@ const createPreparing = body("preparing")
   .withMessage("Preparing must be array");
 
 const preparingContent = body(["preparing[*]"])
-  .trim()
   .notEmpty()
   .withMessage("Preparing must not be empty")
   .isString()
-  .withMessage("Preparing must be of type string");
+  .withMessage("Preparing must be of type string")
+  .trim();
 
 const createIngredients = body(["ingredients", "ingredients[*]"])
   .notEmpty()
@@ -81,17 +81,17 @@ const updateIngredients = body(["ingredients", "ingredients[*]"])
   .optional();
 
 const ingredientsContent = body(["ingredients[*][*]"])
-  .trim()
   .notEmpty()
   .withMessage("Ingredients must not be empty")
   .isString()
-  .withMessage("Ingredients must be of type string");
+  .withMessage("Ingredients must be of type string")
+  .trim();
 
 const readId = param("id")
   .notEmpty()
   .withMessage("ID must not be empty")
   .isMongoId()
-  .withMessage("Id must be valid mongodb id");
+  .withMessage("Id must be valid");
 
 const paginationData = query(["skip", "limit"])
   .isInt({ min: 0 })
@@ -100,12 +100,12 @@ const paginationData = query(["skip", "limit"])
   .optional();
 
 const searchName = query("name")
-  .trim()
   .notEmpty()
   .withMessage("Name must not be empty")
   .isString()
   .withMessage("Name must be of type string")
-  .optional();
+  .optional()
+  .trim();
 
 const validateCreateData = [
   createTitle,

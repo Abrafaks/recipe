@@ -46,6 +46,7 @@ export interface User {
   email: string;
   passwordHash: string;
   isAdmin: boolean;
+  isDeleted: boolean;
 }
 
 export interface UserDocument extends User, Document {}
@@ -54,6 +55,7 @@ const userSchema = new Schema<User>({
   email: { type: String, required: true },
   passwordHash: { type: String, required: true },
   isAdmin: { type: Boolean, required: true, default: false },
+  isDeleted: { type: Boolean, required: true, default: false },
 });
 
 userSchema.methods.toJSON = function () {
