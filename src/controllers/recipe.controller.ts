@@ -126,7 +126,7 @@ export class RecipeController {
       if (result) {
         return res.status(StatusCodes.NO_CONTENT).send();
       } else {
-        return res.status(StatusCodes.BAD_REQUEST).send();
+        return res.status(StatusCodes.NOT_FOUND).send();
       }
     } catch (err) {
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();

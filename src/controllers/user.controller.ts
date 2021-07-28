@@ -49,11 +49,11 @@ export class UserController {
       if (existingUser) {
         if (existingUser.isDeleted) {
           result = await userService.createDeletedUser(email, password);
-        } else {
-          return res
-            .status(StatusCodes.BAD_REQUEST)
-            .json({ errorMessage: "Account with this email already exists." });
         }
+      } else {
+        return res
+          .status(StatusCodes.BAD_REQUEST)
+          .json({ errorMessage: "Account with this email already exists." });
       }
 
       result = await userService.createNewUser(email, password);
