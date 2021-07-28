@@ -98,7 +98,7 @@ router.post(
 
 /**
  * @swagger
- * /auth/:id:
+ * /auth/:id/delete/:
  *   put:
  *     security:
  *       - Bearer: []
@@ -128,7 +128,7 @@ router.post(
  */
 
 router.put(
-  "/delete/:id",
+  "/:id/delete/",
   auth.authenticate([Strategy.Bearer]),
   userValidator.validateUserToDelete(),
   validate,
