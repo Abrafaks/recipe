@@ -26,7 +26,7 @@ describe("User testing", function () {
           password: user.password,
         });
       expect(response.error).to.be.false;
-      expect(response).to.have.status(StatusCodes.OK);
+      expect(response).to.have.status(StatusCodes.CREATED);
       expect(response.body).to.not.be.null;
     });
 

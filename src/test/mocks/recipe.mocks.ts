@@ -25,14 +25,12 @@ const recipe = {
   description,
   preparing,
   ingredients,
-  image,
 };
 
 const recipeTitleEmpty = {
   description,
   preparing,
   ingredients,
-  image,
 };
 
 const recipeTitleNotString = {
@@ -40,7 +38,6 @@ const recipeTitleNotString = {
   description,
   preparing,
   ingredients,
-  image,
 };
 
 const recipeTitleTooShort = {
@@ -48,7 +45,6 @@ const recipeTitleTooShort = {
   description,
   preparing,
   ingredients,
-  image,
 };
 
 const recipeTitleTooLong = {
@@ -56,22 +52,19 @@ const recipeTitleTooLong = {
   description,
   preparing,
   ingredients,
-  image,
 };
 
 const recipeDescriptionEmpty = {
   title,
   preparing,
   ingredients,
-  image,
 };
 
 const recipeDescriptionNotString = {
-  title,
-  description: ["faker.lorem.sentences(50)"],
+  title: "THIS RECIPE ",
+  description: ["This", "is", "array"],
   preparing,
   ingredients,
-  image,
 };
 
 const recipeDescriptionTooLong = {
@@ -79,14 +72,12 @@ const recipeDescriptionTooLong = {
   description: faker.lorem.sentences(50),
   preparing,
   ingredients,
-  image,
 };
 
 const recipePreparingEmpty = {
   title,
   description,
   ingredients,
-  image,
 };
 
 const recipePreparingNotArray = {
@@ -94,7 +85,6 @@ const recipePreparingNotArray = {
   description,
   preparing: "Just do it.",
   ingredients,
-  image,
 };
 
 const recipePreparingContentNotString = {
@@ -102,7 +92,6 @@ const recipePreparingContentNotString = {
   description,
   preparing: [1, "3", { haha: true }, false],
   ingredients,
-  image,
 };
 
 const recipePreparingContentEmpty = {
@@ -110,14 +99,12 @@ const recipePreparingContentEmpty = {
   description,
   preparing: [],
   ingredients,
-  image,
 };
 
 const recipeIngredientsEmpty = {
   title,
   description,
   preparing,
-  image,
 };
 
 const recipeIngredients1NotArray = {
@@ -125,7 +112,6 @@ const recipeIngredients1NotArray = {
   description,
   preparing,
   ingredients: "just not array.",
-  image,
 };
 
 const recipeIngredients2NotArray = {
@@ -133,7 +119,6 @@ const recipeIngredients2NotArray = {
   description,
   preparing,
   ingredients: [1, 22, "asd"],
-  image,
 };
 
 const recipeIngredientsContentEmpty = {
@@ -141,7 +126,6 @@ const recipeIngredientsContentEmpty = {
   description,
   preparing,
   ingredients: [[], [], [], ["1tsb", "sugar"]],
-  image,
 };
 
 const recipeIngredientsContentNotString = {
@@ -154,7 +138,6 @@ const recipeIngredientsContentNotString = {
     [true, false],
     [1, 2],
   ],
-  image,
 };
 
 const recipes = {

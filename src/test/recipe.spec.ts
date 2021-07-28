@@ -47,14 +47,14 @@ describe("Recipe testing", function () {
         .send({
           ...recipes.recipe,
         });
-      expect(response).to.have.status(StatusCodes.OK);
+      expect(response).to.have.status(StatusCodes.CREATED);
       expect(response.body).to.not.be.null;
       expect(response.body).to.include.keys([
         "_id",
         "title",
+        "description",
         "preparing",
         "ingredients",
-        "image",
         "userId",
         "__v",
       ]);
@@ -162,7 +162,7 @@ describe("Recipe testing", function () {
         .send({
           ...recipes.recipeDescriptionEmpty,
         });
-      expect(response).to.have.status(StatusCodes.OK);
+      expect(response).to.have.status(StatusCodes.CREATED);
       expect(response.body).to.not.be.null;
     });
 
@@ -331,12 +331,11 @@ describe("Recipe testing", function () {
       expect(response).to.have.status(StatusCodes.OK);
 
       response.body.forEach(function (element: RecipeDocument) {
-        expect(element).to.include.keys([
+        expect(element).to.contain.all.keys([
           "_id",
           "title",
           "preparing",
           "ingredients",
-          "image",
           "userId",
           "__v",
         ]);
@@ -435,7 +434,6 @@ describe("Recipe testing", function () {
         "title",
         "preparing",
         "ingredients",
-        "image",
         "userId",
         "__v",
       ]);
@@ -461,37 +459,37 @@ describe("Recipe testing", function () {
 
   describe("Update recipe testing", function () {
     it("should edit recipe for user", async function () {
-      const { description, preparing, ingredients, image } = recipes.recipe;
+      const { description, preparing, ingredients } = recipes.recipe;
       const title = "New title.";
       const recipeForUpdate = await Recipe.findOne({ description });
 
       const response = await chai
         .request(app)
-        .put("/recipe/")
+        .put(`/recipe/${recipeForUpdate!._id}`)
         .set("Authorization", token)
         .send({
           title,
           description,
           preparing,
           ingredients,
-          image,
-          id: recipeForUpdate!._id,
         });
 
       expect(response).to.have.status(StatusCodes.OK);
     });
 
     it("should not edit recipe for unauthenticated user", async function () {
-      const { description, preparing, ingredients, image } = recipes.recipe;
+      const { description, preparing, ingredients } = recipes.recipe;
       const title = "New title.";
-      const response = await chai.request(app).put("/recipe/").send({
-        title,
-        description,
-        preparing,
-        ingredients,
-        image,
-        id: updateRecipeId,
-      });
+      const response = await chai
+        .request(app)
+        .put(`/recipe/${updateRecipeId}`)
+        .send({
+          title,
+          description,
+          preparing,
+          ingredients,
+          id: updateRecipeId,
+        });
       expect(response).to.have.status(StatusCodes.UNAUTHORIZED);
       expect(response.text).to.have.string("Unauthorized");
     });

@@ -6,6 +6,7 @@ let password = "NormalPassword6!@#";
 const user = {
   email,
   password,
+  isDeleted: false,
 };
 
 email = "c@d.com";
@@ -13,11 +14,13 @@ email = "c@d.com";
 const recipeUser = {
   email,
   passwordHash: "$2b$10$qaVKnj8yjoXkcrQ3GKXhYOcNVNZKvj46PfNp1LnlD7JP5hrBVXWJW",
+  isDeleted: false,
 };
 
 const finalUser = {
   email,
   password: "Password1!",
+  isDeleted: false,
 };
 
 const createUser = async function () {

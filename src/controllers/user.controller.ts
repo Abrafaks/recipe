@@ -49,9 +49,7 @@ export class UserController {
       if (existingUser) {
         if (existingUser.isDeleted) {
           //create account and change password
-          result = res.send(
-            await userService.createDeletedUser(email, password)
-          );
+          result = await userService.createDeletedUser(email, password);
         } else {
           return res
             .status(StatusCodes.BAD_REQUEST)
@@ -59,10 +57,10 @@ export class UserController {
         }
       }
 
-      result = res.send(await userService.createNewUser(email, password));
+      result = await userService.createNewUser(email, password);
 
       if (result) {
-        return res.send(result);
+        return res.status(StatusCodes.CREATED).send(result);
       }
       return res.status(StatusCodes.BAD_REQUEST).send();
     } catch (err) {

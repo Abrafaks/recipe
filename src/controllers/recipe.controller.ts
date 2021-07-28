@@ -12,7 +12,6 @@ export class RecipeController {
     try {
       const { title, description, preparing, ingredients } = matchedData(req);
       const { _id } = req.user!;
-
       const recipeData: Recipe = {
         title,
         description,
@@ -22,7 +21,7 @@ export class RecipeController {
       };
 
       const savedRecipe = await recipeService.createRecipe(recipeData);
-      return res.send(savedRecipe);
+      return res.status(StatusCodes.CREATED).send(savedRecipe);
     } catch (err) {
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
     }
@@ -65,7 +64,7 @@ export class RecipeController {
       const { title, description, preparing, ingredients, id } =
         matchedData(req);
       const { _id, isAdmin } = req.user!;
-      let result: boolean;
+      let result: RecipeDocument | null;
 
       if (isAdmin) {
         result = await recipeService.updateRecipe(id, null, {
@@ -83,7 +82,7 @@ export class RecipeController {
         });
       }
       if (result) {
-        return res.send();
+        return res.send(result);
       } else {
         return res.status(StatusCodes.BAD_REQUEST).send();
       }
