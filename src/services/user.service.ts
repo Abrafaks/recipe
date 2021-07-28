@@ -15,6 +15,10 @@ export class UserService {
     return User.findOne({ email });
   }
 
+  public async getCurrentUser(userId: string): Promise<UserDocument | null> {
+    return User.findById(userId);
+  }
+
   public async hashPassword(password: string, rounds: number): Promise<string> {
     return bcrypt.hash(password, rounds);
   }

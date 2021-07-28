@@ -23,8 +23,8 @@ const router = express.Router();
  *           application/json:
  *             schema:
  *               $ref: '#components/schemas/UserDocument'
- *       400:
- *         description: Bad request
+ *       404:
+ *         description: Not found
  *       401:
  *         description: Unauthorized
  */
@@ -33,6 +33,35 @@ router.get(
   "/",
   auth.authenticate([Strategy.Bearer]),
   userController.readAllUsers
+);
+
+/**
+ * @swagger
+ * /auth/me:
+ *   get:
+ *     security:
+ *       - Bearer: []
+ *     tags:
+ *       - user
+ *     description: Read current user
+ *
+ *     responses:
+ *       200:
+ *         description: User found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#components/schemas/UserDocument'
+ *       404:
+ *         description: Not found
+ *       401:
+ *         description: Unauthorized
+ */
+
+router.get(
+  "/me",
+  auth.authenticate([Strategy.Bearer]),
+  userController.readCurrentUser
 );
 
 /**
@@ -106,8 +135,7 @@ router.post(
  *       - recipe
  *     description:  |
  *       Soft delete user. Admin can delete any user by specifying id in params.
- *       Normal user will delete himself even if specifying other's user id in params.
- *       Normal user doesn't have to specify his id in params.
+ *       Normal user has to specify his id. (find your id in route GET /auth/me)
  *     produces:
  *       - application/json
  *     parameters:
@@ -134,5 +162,18 @@ router.put(
   validate,
   userController.deleteUserById
 );
+
+// DEVELOPMENT FEATURE
+// EMERGENCY ADMIN CREATION
+// DELETE ON PRODUCTION
+
+router.put("/createadmin", (req, res) => {
+  const admin = {
+    email: "admin@a.com",
+    passwordHash: "",
+    isDeleted: false,
+    isAdmin: true,
+  };
+});
 
 export default router;
