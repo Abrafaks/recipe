@@ -9,10 +9,7 @@ const password = body("password")
     "Password must have minimum length of 8 and contain at least 1 lowercase, 1 uppercase character, 1 symbol and 1 number"
   );
 
-const id = param("id")
-  .isMongoId()
-  .withMessage("Id must be valid MongoDB id")
-  .optional();
+const id = param("id").isMongoId().withMessage("Id must be valid").optional();
 
 export class UserValidator {
   public validateUser(): ValidationChain[] {

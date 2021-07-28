@@ -45,7 +45,7 @@ const id = body("id")
   .notEmpty()
   .withMessage("Id must not be empty")
   .isMongoId()
-  .withMessage("Id must be valid mongodb id");
+  .withMessage("Id must be valid");
 
 const updatePreparing = body("preparing")
   .notEmpty()
@@ -91,7 +91,7 @@ const readId = param("id")
   .notEmpty()
   .withMessage("ID must not be empty")
   .isMongoId()
-  .withMessage("Id must be valid mongodb id");
+  .withMessage("Id must be valid");
 
 const paginationData = query(["skip", "limit"])
   .isInt({ min: 0 })
