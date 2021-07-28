@@ -52,27 +52,35 @@ router.post(
  *       - Bearer: []
  *     tags:
  *       - recipe
- *     description: Read all recipes. limit, skip, name are optional. Used for pagination and searching
+ *     description:  |
+ *       Read all recipes. Title and description are optional.
+ *       Used for pagination and searching
  *     produces:
  *       - application/json
  *     parameters:
  *       - in: query
- *         name: name
+ *         name: title
  *         schema:
  *           type: string
- *         description: Name of recipes to search for
- *         example: Cookies
+ *         description: Filter by title
+ *         example: Chocolate cookies
  *       - in: query
- *         name: limit
+ *         name: description
+ *         schema:
+ *           type: string
+ *         description: Filter by description
+ *         example: Cookies always were my favorite food
+ *       - in: query
+ *         name: page
  *         schema:
  *           type: int
- *         description: How many recipes to display
- *         example: 10
+ *         description: Which page to display [starting from page 0]
+ *         example: 0
  *       - in: query
- *         name: skip
+ *         name: pageSize
  *         schema:
  *           type: int
- *         description: How many recipes to skip
+ *         description: How many recipes to display per page
  *         example: 20
  *
  *     responses:
@@ -81,7 +89,7 @@ router.post(
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#components/schemas/RecipeDocument'
+ *               $ref: '#components/schemas/RecipeQuery'
  *       400:
  *         description: Bad request
  *       401:

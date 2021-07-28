@@ -93,17 +93,24 @@ const readId = param("id")
   .isMongoId()
   .withMessage("Id must be valid");
 
-const paginationData = query(["skip", "limit"])
+const paginationData = query(["page", "pageSize"])
   .isInt({ min: 0 })
   .withMessage("Pagination data must be positive integer")
-  .toInt()
-  .optional();
+  .toInt();
 
-const searchName = query("name")
+const searchTitle = query("title")
   .notEmpty()
-  .withMessage("Name must not be empty")
+  .withMessage("Title must not be empty")
   .isString()
-  .withMessage("Name must be of type string")
+  .withMessage("Title must be of type string")
+  .optional()
+  .trim();
+
+const searchDescription = query("description")
+  .notEmpty()
+  .withMessage("Description must not be empty")
+  .isString()
+  .withMessage("Description must be of type string")
   .optional()
   .trim();
 
@@ -125,7 +132,7 @@ const validateUpdateData = [
   updateIngredients,
 ];
 
-const getRecipeListData = [paginationData, searchName];
+const getRecipeListData = [paginationData, searchTitle, searchDescription];
 export class RecipeValidator {
   public validateCreateRecipeData(): ValidationChain[] {
     return validateCreateData;

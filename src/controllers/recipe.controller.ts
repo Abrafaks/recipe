@@ -32,9 +32,16 @@ export class RecipeController {
     res: Response
   ): Promise<Response<RecipeDocument[]>> {
     try {
-      const { skip, limit, name } = matchedData(req);
+      const { title, description, page, pageSize } = matchedData(req);
 
-      const recipes = await recipeService.getRecipeList(name, skip, limit);
+      const recipes = await recipeService.getRecipeList(
+        title,
+        description,
+        page,
+        pageSize
+      );
+
+      // should I return 404 if no recipes with specified filtering were found?
       return res.json(recipes);
     } catch (err) {
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
