@@ -48,7 +48,6 @@ export class UserController {
 
       if (existingUser) {
         if (existingUser.isDeleted) {
-          //create account and change password
           result = await userService.createDeletedUser(email, password);
         } else {
           return res
