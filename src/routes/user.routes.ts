@@ -1,4 +1,5 @@
 import express from "express";
+import { User } from "../models/user.model";
 import userController from "../controllers/user.controller";
 import { Strategy, auth } from "./middleware/auth";
 import userValidator from "./middleware/validators/user.validator";
@@ -23,8 +24,8 @@ const router = express.Router();
  *           application/json:
  *             schema:
  *               $ref: '#components/schemas/UserDocument'
- *       400:
- *         description: Bad request
+ *       404:
+ *         description: Not found
  *       401:
  *         description: Unauthorized
  */
@@ -33,6 +34,35 @@ router.get(
   "/",
   auth.authenticate([Strategy.Bearer]),
   userController.readAllUsers
+);
+
+/**
+ * @swagger
+ * /auth/me:
+ *   get:
+ *     security:
+ *       - Bearer: []
+ *     tags:
+ *       - user
+ *     description: Read current user
+ *
+ *     responses:
+ *       200:
+ *         description: User found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#components/schemas/UserDocument'
+ *       404:
+ *         description: Not found
+ *       401:
+ *         description: Unauthorized
+ */
+
+router.get(
+  "/me",
+  auth.authenticate([Strategy.Bearer]),
+  userController.readCurrentUser
 );
 
 /**
@@ -103,11 +133,10 @@ router.post(
  *     security:
  *       - Bearer: []
  *     tags:
- *       - recipe
+ *       - user
  *     description:  |
  *       Soft delete user. Admin can delete any user by specifying id in params.
- *       Normal user will delete himself even if specifying other's user id in params.
- *       Normal user doesn't have to specify his id in params.
+ *       Normal user has to specify his id. (find your id in route GET /auth/me)
  *     produces:
  *       - application/json
  *     parameters:
@@ -134,5 +163,36 @@ router.put(
   validate,
   userController.deleteUserById
 );
+
+// DEVELOPMENT FEATURE
+// EMERGENCY ADMIN CREATION
+// DELETE ON PRODUCTION
+
+/**
+ * @swagger
+ * /auth/createadmin:
+ *   post:
+ *     tags:
+ *       - user
+ *     description:  |
+ *       Testowe. Tworzy admina. Passy na slacku.
+ *
+ */
+
+router.post("/createadmin", async (req, res) => {
+  const admin = {
+    email: "admin@a.com",
+    passwordHash:
+      "$2b$10$fohdZXj29Pi/7fBdoy8PW.iUXRribKhigUaMyt14wg5EhtGsMPgK2",
+    isDeleted: false,
+    isAdmin: true,
+  };
+
+  const saved = await new User(admin).save();
+  if (!saved) {
+    return res.status(400).send("A nie ma ju tego admina utworzonego?");
+  }
+  res.status(201).send(saved);
+});
 
 export default router;

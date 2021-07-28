@@ -14,8 +14,6 @@ export class UserController {
 
   public async readAllUsers(req: Request, res: Response): Promise<Response> {
     try {
-      const { _id } = req.user!;
-
       const users = await userService.getUsers();
 
       if (!users) {
@@ -23,6 +21,19 @@ export class UserController {
       }
 
       return res.send(users);
+    } catch (err) {
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+    }
+  }
+
+  public async readCurrentUser(req: Request, res: Response): Promise<Response> {
+    try {
+      const { _id } = req.user!;
+      const user = await userService.getCurrentUser(_id);
+      if (user) {
+        return res.send(user);
+      }
+      return res.status(StatusCodes.NOT_FOUND).send();
     } catch (err) {
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
     }
@@ -47,10 +58,6 @@ export class UserController {
       const existingUser = await userService.getUserByEmail(email);
 
       if (existingUser) {
-        if (existingUser.isDeleted) {
-          result = await userService.createDeletedUser(email, password);
-        }
-      } else {
         return res
           .status(StatusCodes.BAD_REQUEST)
           .json({ errorMessage: "Account with this email already exists." });
