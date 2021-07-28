@@ -86,7 +86,6 @@ router.get(
  *           image/png:
  *             schema:
  *               type: png
- *               example: photo xd
  *       400:
  *         description: No image found
  *       401:

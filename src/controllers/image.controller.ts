@@ -35,10 +35,13 @@ export class ImageController {
     try {
       const { recipeId } = matchedData(req);
 
-      const urls = await imageService.getUrls(recipeId);
-      if (!urls) {
+      const recipe = await imageService.getRecipe(recipeId);
+
+      if (!recipe) {
         return res.status(StatusCodes.NOT_FOUND).send();
       }
+
+      const urls = await imageService.getUrls(recipeId);
 
       return res.send(urls);
     } catch (err) {

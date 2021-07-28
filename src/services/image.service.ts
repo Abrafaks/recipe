@@ -62,12 +62,6 @@ export class ImageService {
   public async getUrls(recipeId: string): Promise<string[] | null> {
     let urls: Array<string> = [];
 
-    const recipe = await this.getRecipe(recipeId);
-
-    if (!recipe) {
-      return null;
-    }
-
     const images = await this.readRecipeImages(recipeId);
 
     images.forEach((element) => {
