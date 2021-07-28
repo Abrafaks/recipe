@@ -19,7 +19,7 @@ const router = express.Router();
  *       - Bearer: []
  *     tags:
  *       - image
- *     description: Returns all recipe images
+ *     description: Returns links to all recipe images
  *     produces:
  *       - application/json
  *     parameters:
@@ -36,7 +36,17 @@ const router = express.Router();
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#components/schemas/ImageDocument'
+ *               type: array
+ *               example:  |
+ *                [
+ *                "https://mooduprecipeapi.herokuapp.com/image/6101367483d3a334b3c3872c/display",
+ *                "https://mooduprecipeapi.herokuapp.com/image/6101367583d3a334b3c3872d/display",
+ *                "https://mooduprecipeapi.herokuapp.com/image/6101367783d3a334b3c3872e/display",
+ *                "https://mooduprecipeapi.herokuapp.com/image/6101367983d3a334b3c3872f/display",
+ *                "https://mooduprecipeapi.herokuapp.com/image/610143908ad6243873aa32aa/display",
+ *                "https://mooduprecipeapi.herokuapp.com/image/610143bf2cdc60388409e11c/display",
+ *                "https://mooduprecipeapi.herokuapp.com/image/610144165e525138ab94f705/display"
+ *                ]
  *       400:
  *         description: No images found
  *       401:
