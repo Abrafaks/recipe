@@ -42,8 +42,33 @@ export class ImageService {
     }).save();
   }
 
-  public async readRecipeImages(id: string) {
-    return Image.find({ recipeId: id });
+  public async readRecipeImages(recipeId: string) {
+    return Image.find({ recipeId });
+  }
+  public async readRecipeImage(imageId: string): Promise<Buffer | null> {
+    const image = await Image.findById(imageId);
+    if (!image) {
+      return null;
+    }
+
+    return image.image;
+  }
+
+  public async getUrls(recipeId: string): Promise<string[] | null> {
+    let urls: Array<string> = [];
+
+    const images = await this.readRecipeImages(recipeId);
+
+    if (images?.length === 0) {
+      return null;
+    }
+
+    images.forEach((element) => {
+      urls.push(
+        `https://mooduprecipeapi.herokuapp.com/image/${element._id}/display`
+      );
+    });
+    return urls;
   }
 
   public async deleteImageById(

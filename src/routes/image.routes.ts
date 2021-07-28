@@ -13,7 +13,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /image/:id:
+ * /image/:postId:
  *   get:
  *     security:
  *       - Bearer: []
@@ -44,10 +44,50 @@ const router = express.Router();
  */
 
 router.get(
-  "/:id",
+  "/:recipeId",
   imageValidator.validateReadRecipeImagesData(),
   validate,
   imageController.readRecipeImages
+);
+
+/**
+ * @swagger
+ * /image/:imageId/display:
+ *   get:
+ *     security:
+ *       - Bearer: []
+ *     tags:
+ *       - image
+ *     description: Returns recipe image as png file
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *           example: 60f7ea20cf60ae0004307aa2
+ *         description: Id of recipe
+ *
+ *     responses:
+ *       200:
+ *         description: Found image
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: png
+ *               example: photo xd
+ *       400:
+ *         description: No image found
+ *       401:
+ *         description: Unauthorized
+ */
+
+router.get(
+  "/:imageId/display",
+  imageValidator.validateReadRecipeImageData(),
+  validate,
+  imageController.readRecipeImage
 );
 
 /**
@@ -80,6 +120,11 @@ router.get(
  *     responses:
  *       201:
  *         description: Image added successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: { _id: "610143bf2cdc60388409e11c" }
  *       400:
  *         description: |
  *           Bad request. Errors:
