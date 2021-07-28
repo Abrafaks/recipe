@@ -78,13 +78,6 @@ export class RecipeService {
 
     const count = recipes.length;
 
-    // RETURNED VALUES:
-    // totalPages: number,
-    // firstPage: boolean,
-    // lastPage: boolean,
-    // totalElements: number,
-    // count: number,
-
     const paginationData = {
       recipes,
       page,
