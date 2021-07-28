@@ -36,6 +36,11 @@ import { Document, Schema, model } from "mongoose";
  *           description: Defines if user is admin
  *           default: false
  *           example: false
+ *         isDeleted:
+ *           type: boolean
+ *           description: Defines if user is deleted
+ *           default: false
+ *           example: false
  *         _id:
  *           type: string
  *           description: User MongoDb id
@@ -52,7 +57,7 @@ export interface User {
 export interface UserDocument extends User, Document {}
 
 const userSchema = new Schema<User>({
-  email: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
   passwordHash: { type: String, required: true },
   isAdmin: { type: Boolean, required: true, default: false },
   isDeleted: { type: Boolean, required: true, default: false },

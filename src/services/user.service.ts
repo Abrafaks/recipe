@@ -3,6 +3,9 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { User, UserDocument } from "../models/user.model";
 
+interface Query {
+  _id: string;
+}
 export class UserService {
   public async getUsers(): Promise<UserDocument[] | null> {
     return User.find({ isDeleted: false });
@@ -25,20 +28,6 @@ export class UserService {
     return user.save();
   }
 
-  public async reCreateUser(
-    email: string,
-    passwordHash: string
-  ): Promise<UserDocument | null> {
-    const result = await User.updateOne(
-      { email },
-      { passwordHash, isDeleted: false }
-    );
-    if (result.nModified === 1) {
-      return await User.findOne({ email });
-    }
-    return null;
-  }
-
   public createToken(userId: string, isAdmin: boolean): string {
     return jwt.sign(
       {
@@ -57,14 +46,6 @@ export class UserService {
     return await this.createUser(email, passwordHash);
   }
 
-  public async createDeletedUser(
-    email: string,
-    password: string
-  ): Promise<UserDocument | null> {
-    const passwordHash = await this.hashPassword(password, 10);
-    return await this.reCreateUser(email, passwordHash);
-  }
-
   public async arePasswordsMatching(
     password: string,
     hash: string
@@ -77,16 +58,18 @@ export class UserService {
     userId: string,
     isAdmin: boolean
   ): Promise<boolean> {
-    let query;
+    let query: Query = { _id: "" };
+
     if (userToDelete) {
       query = { _id: userId };
     }
     if (isAdmin) {
       query = { _id: userToDelete };
     }
+
     const result = await User.updateOne(
       query,
-      { isDeleted: true },
+      { isDeleted: true, email: query!._id },
       {
         omitUndefined: true,
       }

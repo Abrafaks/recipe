@@ -445,9 +445,7 @@ describe("Recipe testing", function () {
         .get("/recipe/" + _id + "invalid")
         .set("Authorization", token);
       expect(response).to.have.status(StatusCodes.BAD_REQUEST);
-      expect(response.body.errors[0].msg).to.have.string(
-        "Id must be valid mongodb id"
-      );
+      expect(response.body.errors[0].msg).to.have.string("Id must be valid");
     });
 
     it("should not return recipe for unauthenticated user", async function () {
