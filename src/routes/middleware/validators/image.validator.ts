@@ -21,15 +21,15 @@ const id = param("id")
 
 const recipeId = param("recipeId")
   .notEmpty()
-  .withMessage("Id must not be empty")
+  .withMessage("recipeId must not be empty")
   .isMongoId()
-  .withMessage("Id must be valid");
+  .withMessage("recipeId must be valid");
 
 const imageId = param("imageId")
   .notEmpty()
-  .withMessage("Id must not be empty")
+  .withMessage("recipeId must not be empty")
   .isMongoId()
-  .withMessage("Id must be valid");
+  .withMessage("recipeId must be valid");
 
 const image = check("image").custom((value, { req }) => {
   if (req.file?.buffer) {

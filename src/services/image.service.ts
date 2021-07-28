@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { recipes } from "src/test/mocks/recipe.mocks";
 import { Image, ImageDocument } from "../models/image.model";
 import { Recipe, RecipeDocument } from "../models/recipe.model";
 
@@ -54,19 +55,23 @@ export class ImageService {
     return image.image;
   }
 
+  public async getRecipe(recipeId: string): Promise<RecipeDocument | null> {
+    return Recipe.findById(recipeId);
+  }
+
   public async getUrls(recipeId: string): Promise<string[] | null> {
     let urls: Array<string> = [];
 
-    const images = await this.readRecipeImages(recipeId);
+    const recipe = await this.getRecipe(recipeId);
 
-    if (images?.length === 0) {
+    if (!recipe) {
       return null;
     }
 
+    const images = await this.readRecipeImages(recipeId);
+
     images.forEach((element) => {
-      urls.push(
-        `https://mooduprecipeapi.herokuapp.com/image/${element._id}/display`
-      );
+      urls.push(`${process.env.API_BASE_URL}/image/${element._id}/display`);
     });
     return urls;
   }

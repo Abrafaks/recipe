@@ -13,7 +13,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /image/:postId:
+ * /images/:recipeId:
  *   get:
  *     security:
  *       - Bearer: []
@@ -39,13 +39,13 @@ const router = express.Router();
  *               type: array
  *               example:  |
  *                [
- *                "https://mooduprecipeapi.herokuapp.com/image/6101367483d3a334b3c3872c/display",
- *                "https://mooduprecipeapi.herokuapp.com/image/6101367583d3a334b3c3872d/display",
- *                "https://mooduprecipeapi.herokuapp.com/image/6101367783d3a334b3c3872e/display",
- *                "https://mooduprecipeapi.herokuapp.com/image/6101367983d3a334b3c3872f/display",
- *                "https://mooduprecipeapi.herokuapp.com/image/610143908ad6243873aa32aa/display",
- *                "https://mooduprecipeapi.herokuapp.com/image/610143bf2cdc60388409e11c/display",
- *                "https://mooduprecipeapi.herokuapp.com/image/610144165e525138ab94f705/display"
+ *                "https://mooduprecipeapi.herokuapp.com/images/6101367483d3a334b3c3872c/display",
+ *                "https://mooduprecipeapi.herokuapp.com/images/6101367583d3a334b3c3872d/display",
+ *                "https://mooduprecipeapi.herokuapp.com/images/6101367783d3a334b3c3872e/display",
+ *                "https://mooduprecipeapi.herokuapp.com/images/6101367983d3a334b3c3872f/display",
+ *                "https://mooduprecipeapi.herokuapp.com/images/610143908ad6243873aa32aa/display",
+ *                "https://mooduprecipeapi.herokuapp.com/images/610143bf2cdc60388409e11c/display",
+ *                "https://mooduprecipeapi.herokuapp.com/images/610144165e525138ab94f705/display"
  *                ]
  *       400:
  *         description: No images found
@@ -62,7 +62,7 @@ router.get(
 
 /**
  * @swagger
- * /image/:imageId/display:
+ * /images/:imageId/display:
  *   get:
  *     security:
  *       - Bearer: []
@@ -83,7 +83,7 @@ router.get(
  *       200:
  *         description: Found image
  *         content:
- *           application/json:
+ *           image/png:
  *             schema:
  *               type: png
  *               example: photo xd
@@ -102,7 +102,7 @@ router.get(
 
 /**
  * @swagger
- * /image/:id:
+ * /images/:id:
  *   post:
  *     security:
  *       - Bearer: []
@@ -177,7 +177,7 @@ router.post(
 
 /**
  * @swagger
- * /image/:id:
+ * /images/:id:
  *   delete:
  *     security:
  *       - Bearer: []
