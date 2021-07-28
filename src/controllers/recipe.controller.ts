@@ -101,7 +101,7 @@ export class RecipeController {
       const recipes = await recipeService.readRecipeByUserId(readUserId);
 
       if (!recipes) {
-        return res.status(StatusCodes.BAD_REQUEST).send();
+        return res.status(StatusCodes.NOT_FOUND).send();
       }
       return res.send(recipes);
     } catch (err) {
@@ -124,7 +124,7 @@ export class RecipeController {
       }
       const result = await recipeService.deleteRecipeById(query);
       if (result) {
-        return res.send();
+        return res.status(StatusCodes.NO_CONTENT).send();
       } else {
         return res.status(StatusCodes.BAD_REQUEST).send();
       }
