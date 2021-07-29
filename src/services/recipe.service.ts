@@ -70,7 +70,7 @@ export class RecipeService {
     if (page === totalPages) {
       lastPage = false;
     }
-    console.log(skip);
+
     const recipes = await Recipe.find(query, null, {
       skip,
       limit: pageSize,
