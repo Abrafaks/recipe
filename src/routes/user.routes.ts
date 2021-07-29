@@ -186,11 +186,13 @@ router.post("/createadmin", async (req, res) => {
     isAdmin: true,
   };
 
-  const saved = await new User(admin).save();
-  if (!saved) {
+  const isTaken = await User.findById({ email: "admin@a.com" });
+  if (isTaken) {
     return res.status(400).send("A nie ma ju tego admina utworzonego?");
   }
-  res.status(201).send(saved);
+  const saved = await new User(admin).save();
+
+  return res.status(201).send(saved);
 });
 
 export default router;
