@@ -123,10 +123,10 @@ export class RecipeController {
         query = { recipeId, userId };
       }
       const result = await recipeService.deleteRecipeById(query);
-      if (!result) {
-        return res.status(StatusCodes.NOT_FOUND).send();
-      } else {
+      if (result.recipeDeleted) {
         return res.status(StatusCodes.NO_CONTENT).send({ result });
+      } else {
+        return res.status(StatusCodes.NOT_FOUND).send();
       }
     } catch (err) {
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();

@@ -235,8 +235,17 @@ router.put(
  *         example: 60f7ea20cf60ae0004307aa2
  *
  *     responses:
- *       200:
+ *       204:
  *         description: Recipe deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               example:  |
+ *                 {
+ *                 recipeDeleted: true,
+ *                 recipeImagesDeleted: true,
+ *                 }
  *       400:
  *         description: Bad request
  *       401:

@@ -8,6 +8,11 @@ interface DeleteRecipe {
   recipeId: string;
   userId?: string;
 }
+
+interface DeleteRecipeResult {
+  recipeDeleted: boolean;
+  recipeImagesDeleted: boolean;
+}
 export class RecipeService {
   public createRecipe(recipe: Recipe): Promise<CreateRecipeWithoutId> {
     return new Recipe(recipe).save();
@@ -84,7 +89,11 @@ export class RecipeService {
   public async deleteRecipeById({
     recipeId,
     userId,
-  }: DeleteRecipe): Promise<boolean | string> {
+  }: DeleteRecipe): Promise<DeleteRecipeResult> {
+    const deleteRecipeResult: DeleteRecipeResult = {
+      recipeDeleted: false,
+      recipeImagesDeleted: false,
+    };
     let query;
     if (!userId) {
       query = { _id: recipeId };
@@ -95,12 +104,14 @@ export class RecipeService {
 
     if (result.n === 1) {
       if (await this.deleteRecipeImages(recipeId)) {
-        return "Deleted recipe and it's images";
+        deleteRecipeResult.recipeDeleted = true;
+        deleteRecipeResult.recipeImagesDeleted = true;
       } else {
-        return "Deleted recipe and failed to delete images";
+        deleteRecipeResult.recipeDeleted = true;
+        deleteRecipeResult.recipeImagesDeleted = false;
       }
     }
-    return false;
+    return deleteRecipeResult;
   }
 }
 
