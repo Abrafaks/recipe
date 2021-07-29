@@ -34,7 +34,6 @@ export class ImageController {
   ): Promise<Response> {
     try {
       const { recipeId } = matchedData(req);
-
       const recipe = await imageService.getRecipe(recipeId);
 
       if (!recipe) {
