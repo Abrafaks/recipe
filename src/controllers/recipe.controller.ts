@@ -41,7 +41,6 @@ export class RecipeController {
         pageSize
       );
 
-      // should I return 404 if no recipes with specified filtering were found?
       return res.json(recipes);
     } catch (err) {
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
