@@ -10,7 +10,7 @@ import jwt from "jsonwebtoken";
 dotenv.config();
 process.env.MONGODB_CONNECTION_STRING = "mongodb://localhost:27017/recipe-test";
 
-import app from "../..";
+import app from "../../index";
 
 chai.use(chaiHttp);
 
