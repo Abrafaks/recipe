@@ -17,12 +17,12 @@ export class UserController {
       const users = await userService.getUsers();
 
       if (!users) {
-        res.status(StatusCodes.BAD_REQUEST).send();
+        res.sendStatus(StatusCodes.BAD_REQUEST);
       }
 
       return res.send(users);
     } catch (err) {
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+      return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -33,7 +33,7 @@ export class UserController {
 
       return res.send(user);
     } catch (err) {
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+      return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -45,7 +45,7 @@ export class UserController {
 
       return res.send({ token });
     } catch (err) {
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+      return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -66,9 +66,9 @@ export class UserController {
       if (result) {
         return res.status(StatusCodes.CREATED).send(result);
       }
-      return res.status(StatusCodes.BAD_REQUEST).send();
+      return res.sendStatus(StatusCodes.BAD_REQUEST);
     } catch (err) {
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+      return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -83,12 +83,12 @@ export class UserController {
         isAdmin
       );
       if (result) {
-        return res.status(StatusCodes.NO_CONTENT).send();
+        return res.sendStatus(StatusCodes.NO_CONTENT);
       } else {
-        return res.status(StatusCodes.BAD_REQUEST).send();
+        return res.sendStatus(StatusCodes.BAD_REQUEST);
       }
     } catch (err) {
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+      return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 }

@@ -42,8 +42,31 @@ export class ImageService {
     }).save();
   }
 
-  public async readRecipeImages(id: string) {
-    return Image.find({ recipeId: id });
+  public async readRecipeImages(recipeId: string) {
+    return Image.find({ recipeId });
+  }
+  public async readRecipeImage(imageId: string): Promise<Buffer | null> {
+    const image = await Image.findById(imageId);
+    if (!image) {
+      return null;
+    }
+
+    return image.image;
+  }
+
+  public async getRecipe(recipeId: string): Promise<RecipeDocument | null> {
+    return Recipe.findById(recipeId);
+  }
+
+  public async getUrls(recipeId: string): Promise<string[] | null> {
+    let urls: Array<string> = [];
+
+    const images = await this.readRecipeImages(recipeId);
+
+    images.forEach((element) => {
+      urls.push(`${process.env.API_BASE_URL}/image/${element._id}/display`);
+    });
+    return urls;
   }
 
   public async deleteImageById(

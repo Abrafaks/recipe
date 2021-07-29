@@ -13,7 +13,7 @@ const swaggerSpec = swaggerJSDoc(swaggerOptions);
 router.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 router.use("/auth", userRoutes);
 router.use("/recipe", recipeRoutes);
-router.use("/image", imageRoutes);
+router.use("/images", imageRoutes);
 router.use("*", (req: Request, res: Response) => {
   res.status(404).send("Page not found.");
 });

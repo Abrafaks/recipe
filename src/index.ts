@@ -1,10 +1,12 @@
 import dotenv from "dotenv";
 import express from "express";
+import helmet from "helmet";
 import passport from "passport";
 import routes from "./routes/routes";
 
 const app = express();
 
+app.use(helmet());
 app.use(express.json());
 app.use(routes);
 

@@ -13,13 +13,13 @@ const router = express.Router();
 
 /**
  * @swagger
- * /image/:id:
+ * /images/:recipeId:
  *   get:
  *     security:
  *       - Bearer: []
  *     tags:
  *       - image
- *     description: Returns all recipe images
+ *     description: Returns links to all recipe images
  *     produces:
  *       - application/json
  *     parameters:
@@ -36,7 +36,17 @@ const router = express.Router();
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#components/schemas/ImageDocument'
+ *               type: array
+ *               example:  |
+ *                [
+ *                  "https://mooduprecipeapi.herokuapp.com/images/6101367483d3a334b3c3872c/display",
+ *                  "https://mooduprecipeapi.herokuapp.com/images/6101367583d3a334b3c3872d/display",
+ *                  "https://mooduprecipeapi.herokuapp.com/images/6101367783d3a334b3c3872e/display",
+ *                  "https://mooduprecipeapi.herokuapp.com/images/6101367983d3a334b3c3872f/display",
+ *                  "https://mooduprecipeapi.herokuapp.com/images/610143908ad6243873aa32aa/display",
+ *                  "https://mooduprecipeapi.herokuapp.com/images/610143bf2cdc60388409e11c/display",
+ *                  "https://mooduprecipeapi.herokuapp.com/images/610144165e525138ab94f705/display"
+ *                ]
  *       400:
  *         description: No images found
  *       401:
@@ -44,7 +54,7 @@ const router = express.Router();
  */
 
 router.get(
-  "/:id",
+  "/:recipeId",
   imageValidator.validateReadRecipeImagesData(),
   validate,
   imageController.readRecipeImages
@@ -52,7 +62,46 @@ router.get(
 
 /**
  * @swagger
- * /image/:id:
+ * /images/:imageId/display:
+ *   get:
+ *     security:
+ *       - Bearer: []
+ *     tags:
+ *       - image
+ *     description: Returns recipe image as png file
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *           example: 60f7ea20cf60ae0004307aa2
+ *         description: Id of recipe
+ *
+ *     responses:
+ *       200:
+ *         description: Found image
+ *         content:
+ *           image/png:
+ *             schema:
+ *               type: png
+ *       400:
+ *         description: No image found
+ *       401:
+ *         description: Unauthorized
+ */
+
+router.get(
+  "/:imageId/display",
+  imageValidator.validateReadRecipeImageData(),
+  validate,
+  imageController.readRecipeImage
+);
+
+/**
+ * @swagger
+ * /images/:id:
  *   post:
  *     security:
  *       - Bearer: []
@@ -80,6 +129,11 @@ router.get(
  *     responses:
  *       201:
  *         description: Image added successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: { _id: "610143bf2cdc60388409e11c" }
  *       400:
  *         description: |
  *           Bad request. Errors:
@@ -122,7 +176,7 @@ router.post(
 
 /**
  * @swagger
- * /image/:id:
+ * /images/:id:
  *   delete:
  *     security:
  *       - Bearer: []
@@ -138,7 +192,7 @@ router.post(
  *         description: Id of image
  *
  *     responses:
- *       200:
+ *       204:
  *         description: Image deleted successfully
  *       400:
  *         description: Bad request

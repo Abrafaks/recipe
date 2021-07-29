@@ -12,8 +12,9 @@ export class ImageController {
     try {
       const { _id, isAdmin } = req.user!;
       const { id: recipeId } = matchedData(req);
+      const imageResize = 500;
       const image = await sharp(req.file?.buffer)
-        .resize({ width: 250, height: 250 })
+        .resize(imageResize)
         .png()
         .toBuffer();
       const savedImage = await imageService.addRecipeImage(
@@ -23,11 +24,11 @@ export class ImageController {
         isAdmin
       );
       if (savedImage) {
-        return res.status(StatusCodes.CREATED).send();
+        return res.status(StatusCodes.CREATED).send({ _id: savedImage._id });
       }
-      return res.status(StatusCodes.BAD_REQUEST).send();
+      return res.sendStatus(StatusCodes.BAD_REQUEST);
     } catch (err) {
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+      return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -36,14 +37,32 @@ export class ImageController {
     res: Response
   ): Promise<Response> {
     try {
-      const { id } = matchedData(req);
-      const images = await imageService.readRecipeImages(id);
-      if (images?.length !== 0) {
-        return res.send(images);
+      const { recipeId } = matchedData(req);
+      const recipe = await imageService.getRecipe(recipeId);
+
+      if (!recipe) {
+        return res.sendStatus(StatusCodes.NOT_FOUND);
       }
-      return res.status(StatusCodes.NOT_FOUND).send();
+
+      const urls = await imageService.getUrls(recipeId);
+
+      return res.send(urls);
     } catch (err) {
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+      return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  public async readRecipeImage(req: Request, res: Response): Promise<Response> {
+    try {
+      const { imageId } = matchedData(req);
+      const buffer = await imageService.readRecipeImage(imageId);
+      if (buffer) {
+        res.set("Content-Type", "image/png");
+        return res.send(buffer);
+      }
+      return res.sendStatus(StatusCodes.NOT_FOUND);
+    } catch (err) {
+      return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -59,11 +78,11 @@ export class ImageController {
       );
 
       if (!deletedImage) {
-        return res.status(StatusCodes.BAD_REQUEST).send();
+        return res.sendStatus(StatusCodes.BAD_REQUEST);
       }
-      return res.status(StatusCodes.NO_CONTENT).send();
+      return res.sendStatus(StatusCodes.NO_CONTENT);
     } catch (err) {
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+      return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 }
