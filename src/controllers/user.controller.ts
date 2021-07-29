@@ -30,9 +30,11 @@ export class UserController {
     try {
       const { _id } = req.user!;
       const user = await userService.getCurrentUser(_id);
+
       if (user) {
         return res.send(user);
       }
+
       return res.status(StatusCodes.NOT_FOUND).send();
     } catch (err) {
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();

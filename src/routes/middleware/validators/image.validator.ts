@@ -19,6 +19,18 @@ const id = param("id")
   .isMongoId()
   .withMessage("Id must be valid");
 
+const recipeId = param("recipeId")
+  .notEmpty()
+  .withMessage("recipeId must not be empty")
+  .isMongoId()
+  .withMessage("recipeId must be valid");
+
+const imageId = param("imageId")
+  .notEmpty()
+  .withMessage("imageId must not be empty")
+  .isMongoId()
+  .withMessage("imageId must be valid");
+
 const image = check("image").custom((value, { req }) => {
   if (req.file?.buffer) {
     return true;
@@ -31,7 +43,10 @@ export class ImageValidator {
     return [id, image];
   }
   public validateReadRecipeImagesData(): ValidationChain {
-    return id;
+    return recipeId;
+  }
+  public validateReadRecipeImageData(): ValidationChain {
+    return imageId;
   }
   public validateDeleteRecipeByIdData(): ValidationChain {
     return id;
