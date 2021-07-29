@@ -12,7 +12,11 @@ export class ImageController {
     try {
       const { _id, isAdmin } = req.user!;
       const { id: recipeId } = matchedData(req);
-      const image = await sharp(req.file?.buffer).resize(500).png().toBuffer();
+      const imageResize = 500;
+      const image = await sharp(req.file?.buffer)
+        .resize(imageResize)
+        .png()
+        .toBuffer();
       const savedImage = await imageService.addRecipeImage(
         recipeId,
         image,
