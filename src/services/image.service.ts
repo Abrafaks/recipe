@@ -46,12 +46,12 @@ export class ImageService {
     return Image.find({ recipeId });
   }
   public async readRecipeImage(imageId: string): Promise<Buffer | null> {
-    const image = await Image.findById(imageId);
+    const { image } = (await Image.findById(imageId)) || {};
     if (!image) {
       return null;
     }
 
-    return image.image;
+    return image;
   }
 
   public async getRecipe(recipeId: string): Promise<RecipeDocument | null> {
