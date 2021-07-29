@@ -243,8 +243,8 @@ router.put(
  *               type: object
  *               example:  |
  *                 {
- *                 recipeDeleted: true,
- *                 recipeImagesDeleted: true,
+ *                   recipeDeleted: true,
+ *                   recipeImagesDeleted: true,
  *                 }
  *       400:
  *         description: Bad request

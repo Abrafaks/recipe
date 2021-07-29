@@ -78,7 +78,7 @@ export class RecipeService {
 
   public async deleteRecipeImages(recipeId: string): Promise<boolean> {
     const count = await Image.countDocuments({ recipeId });
-    const deletedCount = (await Image.deleteMany({ recipeId }))?.deletedCount;
+    const { deletedCount } = await Image.deleteMany({ recipeId });
     return count === deletedCount;
   }
 
