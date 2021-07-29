@@ -6,6 +6,22 @@ import { Recipe, RecipeDocument } from "../models/recipe.model";
 type CreateRecipeBody = Omit<Recipe, "userId">;
 type CreateRecipeWithoutId = Omit<Recipe, "image">;
 
+interface PaginationData {
+  recipes: RecipeDocument[];
+  page: number;
+  pageSize: number;
+  totalPages: number;
+  firstPage: boolean;
+  lastPage: boolean;
+  totalElements: number;
+  count: number;
+}
+
+interface QueryData {
+  title?: RegExp;
+  description?: RegExp;
+}
+
 interface DeleteRecipe {
   recipeId: string;
   userId?: string;
@@ -15,21 +31,65 @@ export class RecipeService {
     return new Recipe(recipe).save();
   }
 
+  public async countDocuments(query: QueryData): Promise<number> {
+    return Recipe.countDocuments(query);
+  }
+
   public async getRecipeList(
-    name: string | undefined,
-    skip: number,
-    limit: number
-  ): Promise<RecipeDocument[]> {
-    let regexp = new RegExp(".*", "gmi");
-    if (name) {
-      regexp = new RegExp(name, "gmi");
+    title: string | undefined,
+    description: string | undefined,
+    page: number,
+    pageSize: number
+  ): Promise<PaginationData> {
+    let query: QueryData = {},
+      skip: number,
+      regexp = new RegExp(".*", "gmi"),
+      firstPage: boolean = false,
+      lastPage: boolean = false;
+
+    if (title) {
+      regexp = new RegExp(title, "gmi");
+      query.title = regexp;
     }
-    const recipes = await Recipe.find({ title: regexp }, null, {
+
+    if (description) {
+      regexp = new RegExp(description, "gmi");
+      query.description = regexp;
+    }
+
+    const totalElements = await this.countDocuments(query);
+
+    skip = pageSize * page;
+
+    const totalPages = Math.ceil(totalElements / pageSize);
+
+    if (page === 0) {
+      firstPage = true;
+    }
+
+    if (page === totalPages) {
+      lastPage = false;
+    }
+
+    const recipes = await Recipe.find(query, null, {
       skip,
-      limit,
+      limit: pageSize,
     });
 
-    return recipes;
+    const count = recipes.length;
+
+    const paginationData = {
+      recipes,
+      page,
+      pageSize,
+      totalPages,
+      firstPage,
+      lastPage,
+      totalElements,
+      count,
+    };
+
+    return paginationData;
   }
 
   public async readRecipeById(id: string): Promise<RecipeDocument | null> {
