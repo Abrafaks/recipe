@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { recipes } from "src/test/mocks/recipe.mocks";
 import { Image, ImageDocument } from "../models/image.model";
 import { Recipe, RecipeDocument } from "../models/recipe.model";
 
