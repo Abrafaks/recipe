@@ -26,9 +26,9 @@ export class ImageController {
       if (savedImage) {
         return res.status(StatusCodes.CREATED).send({ _id: savedImage._id });
       }
-      return res.status(StatusCodes.BAD_REQUEST).send();
+      return res.sendStatus(StatusCodes.BAD_REQUEST);
     } catch (err) {
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+      return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -41,14 +41,14 @@ export class ImageController {
       const recipe = await imageService.getRecipe(recipeId);
 
       if (!recipe) {
-        return res.status(StatusCodes.NOT_FOUND).send();
+        return res.sendStatus(StatusCodes.NOT_FOUND);
       }
 
       const urls = await imageService.getUrls(recipeId);
 
       return res.send(urls);
     } catch (err) {
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+      return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -60,9 +60,9 @@ export class ImageController {
         res.set("Content-Type", "image/png");
         return res.send(buffer);
       }
-      return res.status(StatusCodes.NOT_FOUND).send();
+      return res.sendStatus(StatusCodes.NOT_FOUND);
     } catch (err) {
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+      return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -78,11 +78,11 @@ export class ImageController {
       );
 
       if (!deletedImage) {
-        return res.status(StatusCodes.BAD_REQUEST).send();
+        return res.sendStatus(StatusCodes.BAD_REQUEST);
       }
-      return res.status(StatusCodes.NO_CONTENT).send();
+      return res.sendStatus(StatusCodes.NO_CONTENT);
     } catch (err) {
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+      return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 }
