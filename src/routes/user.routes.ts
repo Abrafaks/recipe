@@ -186,9 +186,9 @@ router.post("/createadmin", async (req, res) => {
     isAdmin: true,
   };
 
-  const isTaken = await User.findById({ email: "admin@a.com" });
+  const isTaken = await User.findById({ email: admin.email });
   if (isTaken) {
-    return res.status(400).send("A nie ma ju tego admina utworzonego?");
+    return res.status(400).send("A nie ma juz tego admina utworzonego?");
   }
   const saved = await new User(admin).save();
 
