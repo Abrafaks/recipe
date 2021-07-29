@@ -23,7 +23,7 @@ export class RecipeController {
       const savedRecipe = await recipeService.createRecipe(recipeData);
       return res.status(StatusCodes.CREATED).send(savedRecipe);
     } catch (err) {
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+      return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -43,7 +43,7 @@ export class RecipeController {
 
       return res.json(recipes);
     } catch (err) {
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+      return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -59,9 +59,9 @@ export class RecipeController {
       if (recipe) {
         return res.json(recipe);
       }
-      return res.status(StatusCodes.NOT_FOUND).send();
+      return res.sendStatus(StatusCodes.NOT_FOUND);
     } catch (err) {
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+      return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -90,10 +90,11 @@ export class RecipeController {
       if (result) {
         return res.send(result);
       } else {
-        return res.status(StatusCodes.FORBIDDEN).send();
+
+        return res.sendStatus(StatusCodes.BAD_REQUEST);
       }
     } catch (err) {
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+      return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -107,11 +108,11 @@ export class RecipeController {
       const recipes = await recipeService.readRecipeByUserId(readUserId);
 
       if (!recipes) {
-        return res.status(StatusCodes.NOT_FOUND).send();
+        return res.sendStatus(StatusCodes.NOT_FOUND);
       }
       return res.send(recipes);
     } catch (err) {
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+      return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -129,13 +130,14 @@ export class RecipeController {
         query = { recipeId, userId };
       }
       const result = await recipeService.deleteRecipeById(query);
-      if (result.recipeDeleted) {
-        return res.status(StatusCodes.NO_CONTENT).send({ result });
+
+      if (result) {
+        return res.sendStatus(StatusCodes.NO_CONTENT);
       } else {
-        return res.status(StatusCodes.NOT_FOUND).send();
+        return res.sendStatus(StatusCodes.NOT_FOUND);
       }
     } catch (err) {
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+      return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 }
