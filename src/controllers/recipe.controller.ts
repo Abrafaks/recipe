@@ -84,7 +84,7 @@ export class RecipeController {
       if (result) {
         return res.send(result);
       } else {
-        return res.status(StatusCodes.BAD_REQUEST).send();
+        return res.status(StatusCodes.FORBIDDEN).send();
       }
     } catch (err) {
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
@@ -123,10 +123,10 @@ export class RecipeController {
         query = { recipeId, userId };
       }
       const result = await recipeService.deleteRecipeById(query);
-      if (result) {
-        return res.status(StatusCodes.NO_CONTENT).send();
-      } else {
+      if (!result) {
         return res.status(StatusCodes.NOT_FOUND).send();
+      } else {
+        return res.status(StatusCodes.NO_CONTENT).send({ result });
       }
     } catch (err) {
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();

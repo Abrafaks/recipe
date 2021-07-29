@@ -1,6 +1,4 @@
-import { Response } from "express";
-import { User } from "src/models/user.model";
-import { user } from "src/test/mocks/user.mocks";
+import { Image } from "../models/image.model";
 import { Recipe, RecipeDocument } from "../models/recipe.model";
 
 type CreateRecipeBody = Omit<Recipe, "userId">;
@@ -73,10 +71,20 @@ export class RecipeService {
     return null;
   }
 
+  public async deleteRecipeImages(recipeId: string): Promise<boolean> {
+    const count = await Image.countDocuments({ recipeId });
+    const deleted = await Image.deleteMany({ recipeId });
+    const deletedCount = deleted?.deletedCount;
+    if (count === deletedCount) {
+      return true;
+    }
+    return false;
+  }
+
   public async deleteRecipeById({
     recipeId,
     userId,
-  }: DeleteRecipe): Promise<boolean> {
+  }: DeleteRecipe): Promise<boolean | string> {
     let query;
     if (!userId) {
       query = { _id: recipeId };
@@ -86,9 +94,13 @@ export class RecipeService {
     const result = await Recipe.deleteOne(query);
 
     if (result.n === 1) {
-      return true;
+      if (await this.deleteRecipeImages(recipeId)) {
+        return "Deleted recipe and it's images";
+      } else {
+        return "Deleted recipe and failed to delete images";
+      }
     }
-    return true;
+    return false;
   }
 }
 
