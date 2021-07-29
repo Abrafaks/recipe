@@ -188,7 +188,7 @@ router.post("/createadmin", async (req, res) => {
 
   const isTaken = await User.findById({ email: admin.email });
   if (isTaken) {
-    return res.status(400).send({"There is such account already."});
+    return res.status(400).send({ error: "There is such account already." });
   }
   const saved = await new User(admin).save();
 
