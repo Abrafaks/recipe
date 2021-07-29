@@ -27,9 +27,9 @@ const recipeId = param("recipeId")
 
 const imageId = param("imageId")
   .notEmpty()
-  .withMessage("recipeId must not be empty")
+  .withMessage("imageId must not be empty")
   .isMongoId()
-  .withMessage("recipeId must be valid");
+  .withMessage("imageId must be valid");
 
 const image = check("image").custom((value, { req }) => {
   if (req.file?.buffer) {
