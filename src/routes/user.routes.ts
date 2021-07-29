@@ -53,8 +53,6 @@ router.get(
  *           application/json:
  *             schema:
  *               $ref: '#components/schemas/UserDocument'
- *       404:
- *         description: Not found
  *       401:
  *         description: Unauthorized
  */

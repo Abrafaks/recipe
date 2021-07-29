@@ -29,11 +29,8 @@ export class UserController {
   public async readCurrentUser(req: Request, res: Response): Promise<Response> {
     try {
       const { _id } = req.user!;
-      const user = await userService.getCurrentUser(_id);
-      if (user) {
-        return res.send(user);
-      }
-      return res.status(StatusCodes.NOT_FOUND).send();
+
+      return res.send(await userService.getCurrentUser(_id));
     } catch (err) {
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
     }
