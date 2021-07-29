@@ -77,6 +77,7 @@ router.get(
  *         name: user
  *         schema:
  *           $ref: '#components/schemas/User'
+ *           required: true
  *
  *     responses:
  *       200:
@@ -144,6 +145,7 @@ router.post(
  *           type: string
  *         description: Id of user to delete. If not specified, will delete current user
  *         example: 60f7ea20cf60ae0004307aa2
+ *         required: true
  *
  *     responses:
  *       204:

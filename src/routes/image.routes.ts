@@ -29,6 +29,7 @@ const router = express.Router();
  *           type: string
  *           example: 60f7ea20cf60ae0004307aa2
  *         description: Id of recipe
+ *         required: true
  *
  *     responses:
  *       200:
@@ -78,6 +79,7 @@ router.get(
  *           type: string
  *           example: 60f7ea20cf60ae0004307aa2
  *         description: Id of recipe
+ *         required: true
  *
  *     responses:
  *       200:
@@ -115,6 +117,7 @@ router.get(
  *           type: string
  *           example: 60f7ea20cf60ae0004307aa2
  *         description: Id of recipe
+ *         required: true
  *       - in: form-data
  *         name: image
  *         schema:
@@ -125,6 +128,7 @@ router.get(
  *             00 00 18 86 69 43 43 50 49 43 43 20 50 72 6f 66 69
  *             ... 115777 more bytes>
  *         description: Image buffer
+ *         required: true
  *
  *     responses:
  *       201:
@@ -153,6 +157,7 @@ router.get(
  *       401:
  *         description: Unauthorized
  */
+
 const uploadImage = upload.single("image");
 
 router.post(
@@ -170,8 +175,7 @@ router.post(
     }),
   imageValidator.validateAddImageData(),
   validate,
-  imageController.addImage,
-  (req: Request, res: Response) => imageController.addImage(req, res)
+  imageController.addImage
 );
 
 /**
@@ -190,6 +194,7 @@ router.post(
  *           type: string
  *           example: 60f7ea20cf60ae0004307aa2
  *         description: Id of image
+ *         required: true
  *
  *     responses:
  *       204:

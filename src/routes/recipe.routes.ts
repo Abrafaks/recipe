@@ -22,6 +22,7 @@ const router = express.Router();
  *         name: recipe
  *         schema:
  *           $ref: '#components/schemas/Recipe'
+ *         required: true
  *
  *     responses:
  *       200:
@@ -76,12 +77,14 @@ router.post(
  *           type: int
  *         description: Which page to display [starting from page 0]
  *         example: 0
+ *         required: true
  *       - in: query
  *         name: pageSize
  *         schema:
  *           type: int
  *         description: How many recipes to display per page
  *         example: 20
+ *         required: true
  *
  *     responses:
  *       200:
@@ -122,6 +125,7 @@ router.get(
  *           type: string
  *         description: Id of recipe for reading
  *         example: 60f7ea20cf60ae0004307aa2
+ *         required: true
  *
  *     responses:
  *       200:
@@ -241,6 +245,7 @@ router.put(
  *           type: string
  *         description: Id of recipe to delete
  *         example: 60f7ea20cf60ae0004307aa2
+ *         required: true
  *
  *     responses:
  *       204:

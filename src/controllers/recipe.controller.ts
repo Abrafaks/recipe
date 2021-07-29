@@ -33,7 +33,6 @@ export class RecipeController {
   ): Promise<Response<RecipeDocument[]>> {
     try {
       const { title, description, page, pageSize } = matchedData(req);
-
       const recipes = await recipeService.getRecipeList(
         title,
         description,
@@ -90,7 +89,6 @@ export class RecipeController {
       if (result) {
         return res.send(result);
       } else {
-
         return res.sendStatus(StatusCodes.BAD_REQUEST);
       }
     } catch (err) {
