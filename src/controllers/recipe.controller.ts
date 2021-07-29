@@ -90,6 +90,7 @@ export class RecipeController {
       if (result) {
         return res.send(result);
       } else {
+
         return res.sendStatus(StatusCodes.BAD_REQUEST);
       }
     } catch (err) {
@@ -129,6 +130,7 @@ export class RecipeController {
         query = { recipeId, userId };
       }
       const result = await recipeService.deleteRecipeById(query);
+
       if (result) {
         return res.sendStatus(StatusCodes.NO_CONTENT);
       } else {

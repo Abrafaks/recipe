@@ -1,6 +1,4 @@
-import { Response } from "express";
-import { User } from "src/models/user.model";
-import { user } from "src/test/mocks/user.mocks";
+import { Image } from "../models/image.model";
 import { Recipe, RecipeDocument } from "../models/recipe.model";
 
 type CreateRecipeBody = Omit<Recipe, "userId">;
@@ -25,6 +23,11 @@ interface QueryData {
 interface DeleteRecipe {
   recipeId: string;
   userId?: string;
+}
+
+interface DeleteRecipeResult {
+  recipeDeleted: boolean;
+  recipeImagesDeleted: boolean;
 }
 export class RecipeService {
   public createRecipe(recipe: Recipe): Promise<CreateRecipeWithoutId> {
@@ -133,10 +136,20 @@ export class RecipeService {
     return null;
   }
 
+  public async deleteRecipeImages(recipeId: string): Promise<boolean> {
+    const count = await Image.countDocuments({ recipeId });
+    const { deletedCount } = await Image.deleteMany({ recipeId });
+    return count === deletedCount;
+  }
+
   public async deleteRecipeById({
     recipeId,
     userId,
-  }: DeleteRecipe): Promise<boolean> {
+  }: DeleteRecipe): Promise<DeleteRecipeResult> {
+    const deleteRecipeResult: DeleteRecipeResult = {
+      recipeDeleted: false,
+      recipeImagesDeleted: false,
+    };
     let query;
     if (!userId) {
       query = { _id: recipeId };
@@ -146,9 +159,15 @@ export class RecipeService {
     const result = await Recipe.deleteOne(query);
 
     if (result.n === 1) {
-      return true;
+      if (await this.deleteRecipeImages(recipeId)) {
+        deleteRecipeResult.recipeDeleted = true;
+        deleteRecipeResult.recipeImagesDeleted = true;
+      } else {
+        deleteRecipeResult.recipeDeleted = true;
+        deleteRecipeResult.recipeImagesDeleted = false;
+      }
     }
-    return true;
+    return deleteRecipeResult;
   }
 }
 
