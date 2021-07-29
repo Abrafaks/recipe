@@ -6,10 +6,6 @@ import {
   finalUser,
 } from "./mocks/user.mocks";
 
-beforeEach("Add user and get token", async function () {
-  await createUser();
-});
-
 afterEach("Delete all users", async function () {
   await deleteAllUsers();
 });
@@ -17,6 +13,7 @@ afterEach("Delete all users", async function () {
 describe("User testing", function () {
   describe("Create user", function () {
     it("should create user", async function () {
+      console.log(user);
       const response = await chai
         .request(app)
         .post("/auth/register")
