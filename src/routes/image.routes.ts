@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import { NextFunction } from "express-serve-static-core";
-import multer, { ErrorCode } from "multer";
+import multer from "multer";
 import { StatusCodes } from "http-status-codes";
 import imageController from "../controllers/image.controller";
 import { Strategy, auth } from "./middleware/auth";
