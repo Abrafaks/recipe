@@ -64,11 +64,12 @@ export class UserService {
   ): Promise<boolean> {
     let query: Query = { _id: "" };
 
-    if (userToDelete) {
-      query = { _id: userId };
-    }
     if (isAdmin) {
       query = { _id: userToDelete };
+    } else {
+      if (userToDelete === userId) {
+        query = { _id: userId };
+      }
     }
 
     const result = await User.updateOne(
