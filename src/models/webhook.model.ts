@@ -11,10 +11,6 @@ import { Document, Schema, model } from "mongoose";
  *           type: string
  *           description: Url specifying where to send request
  *           example: https://webhook.site/#!/d09b19ef-df5c-4bbf-8dc9-852128733fb2/5d5efc9e-df18-44e6-870f-891c0bb1f99b
- *         event:
- *           type: string
- *           description: Event type
- *           example: CREATE_RECIPE
  *       required:
  *         - url
  *         - event
@@ -31,10 +27,6 @@ import { Document, Schema, model } from "mongoose";
  *           type: string
  *           description: Url specifying where to send request
  *           example: https://webhook.site/#!/d09b19ef-df5c-4bbf-8dc9-852128733fb2/5d5efc9e-df18-44e6-870f-891c0bb1f99b
- *         event:
- *           type: string
- *           description: Event type
- *           example: CREATE_RECIPE
  *         userId:
  *           type: string
  *           description: Id of user that webhook belongs to
@@ -48,7 +40,6 @@ import { Document, Schema, model } from "mongoose";
 export interface Webhook {
   url: string;
   userId: string;
-  event: string;
 }
 
 export interface WebhookDocument extends Webhook, Document {}
@@ -56,7 +47,6 @@ export interface WebhookDocument extends Webhook, Document {}
 const webhookSchema = new Schema<Webhook>({
   url: { type: String, required: true },
   userId: { type: String, required: true },
-  event: { type: String, required: true },
 });
 
 webhookSchema.methods.toJSON = function () {
