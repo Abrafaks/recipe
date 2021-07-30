@@ -55,7 +55,7 @@ router.post(
  *       - Bearer: []
  *     tags:
  *       - webhooks
- *     description: Reading user's webhook
+ *     description: Read user's webhook
  *
  *     responses:
  *       200:
@@ -82,7 +82,7 @@ router.get(
  *       - Bearer: []
  *     tags:
  *       - webhooks
- *     description: Updating user's webhook
+ *     description: Update user's webhook
  *     produces:
  *       - application/json
  *     parameters:
@@ -91,6 +91,12 @@ router.get(
  *         schema:
  *           $ref: '#components/schemas/Webhook'
  *         required: true
+ *       - in: path
+ *         name: webhookId
+ *         type: string
+ *         required: true
+ *         description: Id of webhook to delete
+ *         example: 60f7e9b8cf60ae0004307aa1
  *
  *     responses:
  *       200:
@@ -113,6 +119,42 @@ router.put(
   webhookValidator.validateUpdateWebhook(),
   validate,
   webhookController.updateWebhook
+);
+
+/**
+ * @swagger
+ * /webhooks/:
+ *   delete:
+ *     security:
+ *       - Bearer: []
+ *     tags:
+ *       - webhooks
+ *     description: Delete user's webhook
+ *     parameters:
+ *       - in: path
+ *         name: webhookId
+ *         type: string
+ *         required: true
+ *         description: Id of webhook to delete
+ *         example: 60f7e9b8cf60ae0004307aa1
+ *
+ *     responses:
+ *       204:
+ *         description: Webhook deleted successfully
+ *       400:
+ *         description: Bad request.
+ *       401:
+ *         description: Unauthorized.
+ *
+ *
+ */
+
+router.delete(
+  "/:webhookId",
+  auth.authenticate([Strategy.Bearer]),
+  webhookValidator.validateDeleteWebhook(),
+  validate,
+  webhookController.deleteWebhook
 );
 
 export default router;

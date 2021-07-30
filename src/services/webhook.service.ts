@@ -50,6 +50,18 @@ export class WebhookService {
     }
     return null;
   }
+
+  public async deleteWebhook(
+    webhookId: string,
+    userId: string
+  ): Promise<boolean> {
+    const updated = await Webhook.deleteOne({ _id: webhookId, userId });
+
+    if (updated.deletedCount === 1) {
+      return true;
+    }
+    return false;
+  }
 }
 
 export default new WebhookService();

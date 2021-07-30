@@ -66,6 +66,25 @@ export class WebhookController {
       return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
+
+  public async deleteWebhook(req: Request, res: Response): Promise<Response> {
+    const { _id: userId } = req.user!;
+    const { webhookId } = matchedData(req);
+
+    try {
+      const updatedWebhook = await webhookService.deleteWebhook(
+        webhookId,
+        userId
+      );
+
+      if (updatedWebhook) {
+        return res.sendStatus(StatusCodes.NO_CONTENT);
+      }
+      return res.sendStatus(StatusCodes.BAD_REQUEST);
+    } catch (err) {
+      return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  }
 }
 
 export default new WebhookController(webhookService);
