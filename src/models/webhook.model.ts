@@ -46,10 +46,9 @@ import { Document, Schema, model } from "mongoose";
  */
 
 export interface Webhook {
-  email: string;
-  passwordHash: string;
-  isAdmin: boolean;
-  isDeleted: boolean;
+  url: string;
+  userId: string;
+  event: string;
 }
 
 export interface WebhookDocument extends Webhook, Document {}
