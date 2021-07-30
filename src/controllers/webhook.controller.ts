@@ -4,56 +4,48 @@ import { matchedData } from "express-validator";
 import { StatusCodes } from "http-status-codes";
 import webhookService, { WebhookService } from "../services/webhook.service";
 
-interface UserAuthData {
-  email: string;
-  password: string;
-}
-
 export class WebhookController {
-  constructor(private userService: WebhookService) {}
+  constructor(private webhookService: WebhookService) {}
 
   public async addWebhook(req: Request, res: Response): Promise<Response> {
     try {
-      const { email, password } = req.body as UserAuthData;
-      let result;
-      const existingUser = await userService.getUserByEmail(email);
+      const { _id: userId } = req.user!;
+      const { url } = matchedData(req);
 
-      if (existingUser) {
+      const existingWebhook = await webhookService.getWebhook({
+        userId,
+        url,
+      });
+
+      if (existingWebhook) {
         return res
           .status(StatusCodes.BAD_REQUEST)
-          .json({ errorMessage: "Account with this email already exists." });
+          .send({ error: "Webhook with this url exists for this user." });
       }
 
-      result = await userService.createNewUser(email, password);
+      const result = await webhookService.addWebhook(userId, url);
 
       if (result) {
         return res.status(StatusCodes.CREATED).send(result);
       }
       return res.sendStatus(StatusCodes.BAD_REQUEST);
     } catch (err) {
+      console.log(err);
       return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 
-  public async deleteUserById(req: Request, res: Response): Promise<Response> {
+  public async readWebhooks(req: Request, res: Response): Promise<Response> {
     try {
-      const { id: userToDelete } = matchedData(req);
-      const { _id: userId, isAdmin } = req.user!;
+      const { _id: userId } = req.user!;
 
-      const result = await userService.deleteUser(
-        userToDelete,
-        userId,
-        isAdmin
-      );
-      if (result) {
-        return res.sendStatus(StatusCodes.NO_CONTENT);
-      } else {
-        return res.sendStatus(StatusCodes.BAD_REQUEST);
-      }
+      const result = await webhookService.getWebhooks(userId);
+
+      return res.send(result);
     } catch (err) {
       return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 }
 
-export default new WebhookController(webHookService);
+export default new WebhookController(webhookService);
