@@ -64,7 +64,7 @@ export class ImageService {
     const images = await this.readRecipeImages(recipeId);
 
     images.forEach((element) => {
-      urls.push(`${process.env.API_BASE_URL}/image/${element._id}/display`);
+      urls.push(`${process.env.API_BASE_URL}/images/${element._id}/display`);
     });
     return urls;
   }
