@@ -1,7 +1,4 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import { User, UserDocument } from "../models/user.model";
 import { Webhook, WebhookDocument } from "../models/webhook.model";
 
 interface WebhookQuery {
@@ -20,6 +17,12 @@ export class WebhookService {
     return Webhook.find({ userId });
   }
 
+  public async getWebhookById(
+    webhookId: string
+  ): Promise<WebhookDocument | null> {
+    return Webhook.findById(webhookId);
+  }
+
   public async addWebhook(
     userId: string,
     url: string
@@ -30,6 +33,22 @@ export class WebhookService {
     });
 
     return webhook.save();
+  }
+
+  public async updateWebhook(
+    webhookId: string,
+    userId: string,
+    url: string
+  ): Promise<WebhookDocument | null> {
+    const updated = await Webhook.updateOne(
+      { _id: webhookId, userId },
+      { url }
+    );
+
+    if (updated.nModified === 1) {
+      return this.getWebhookById(webhookId);
+    }
+    return null;
   }
 }
 

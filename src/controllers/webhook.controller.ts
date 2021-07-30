@@ -46,6 +46,26 @@ export class WebhookController {
       return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
+
+  public async updateWebhook(req: Request, res: Response): Promise<Response> {
+    const { _id: userId } = req.user!;
+    const { url, webhookId } = matchedData(req);
+
+    try {
+      const updatedWebhook = await webhookService.updateWebhook(
+        webhookId,
+        userId,
+        url
+      );
+
+      if (updatedWebhook) {
+        return res.send(updatedWebhook);
+      }
+      return res.sendStatus(StatusCodes.BAD_REQUEST);
+    } catch (err) {
+      return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  }
 }
 
 export default new WebhookController(webhookService);

@@ -74,4 +74,45 @@ router.get(
   webhookController.readWebhooks
 );
 
+/**
+ * @swagger
+ * /webhooks/:
+ *   put:
+ *     security:
+ *       - Bearer: []
+ *     tags:
+ *       - webhooks
+ *     description: Updating user's webhook
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: webhook
+ *         schema:
+ *           $ref: '#components/schemas/Webhook'
+ *         required: true
+ *
+ *     responses:
+ *       200:
+ *         description: Webhook updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#components/schemas/WebhookDocument'
+ *       400:
+ *         description: Bad request.
+ *       401:
+ *         description: Unauthorized.
+ *
+ *
+ */
+
+router.put(
+  "/:webhookId",
+  auth.authenticate([Strategy.Bearer]),
+  webhookValidator.validateUpdateWebhook(),
+  validate,
+  webhookController.updateWebhook
+);
+
 export default router;
