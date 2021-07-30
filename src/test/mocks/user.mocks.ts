@@ -24,7 +24,9 @@ const finalUser = {
 };
 
 const createUser = async function () {
-  return new User(recipeUser).save();
+  const user = await new User(recipeUser).save();
+  process.env.userId = user._id;
+  return user;
 };
 
 const getToken = async function () {
