@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import { matchedData } from "express-validator";
 import { Recipe, RecipeDocument } from "../models/recipe.model";
 import recipeService, { RecipeService } from "../services/recipe.service";
+import webhookService from "../services/webhook.service";
 import { StatusCodes } from "http-status-codes";
 
 export class RecipeController {
@@ -21,7 +22,11 @@ export class RecipeController {
       };
 
       const savedRecipe = await recipeService.createRecipe(recipeData);
-      return res.status(StatusCodes.CREATED).send(savedRecipe);
+      if (savedRecipe) {
+        webhookService.webhookHandler(_id, "CREATE_RECIPE", savedRecipe);
+        return res.status(StatusCodes.CREATED).send(savedRecipe);
+      }
+      return res.sendStatus(StatusCodes.BAD_REQUEST);
     } catch (err) {
       return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }
@@ -87,6 +92,8 @@ export class RecipeController {
         });
       }
       if (result) {
+        webhookService.webhookHandler(_id, "UPDATE_RECIPE", result);
+
         return res.send(result);
       } else {
         return res.sendStatus(StatusCodes.BAD_REQUEST);
@@ -130,6 +137,8 @@ export class RecipeController {
       const result = await recipeService.deleteRecipeById(query);
 
       if (result) {
+        webhookService.webhookHandler(userId, "DELETE_RECIPE", { recipeId });
+
         return res.sendStatus(StatusCodes.NO_CONTENT);
       } else {
         return res.sendStatus(StatusCodes.NOT_FOUND);

@@ -9,6 +9,11 @@ interface WebhookQuery {
   url: string;
 }
 
+interface RecipeId {
+  recipeId: string;
+  event?: string;
+}
+
 export class WebhookService {
   public async getWebhook(
     query: WebhookQuery
@@ -69,7 +74,7 @@ export class WebhookService {
   public async webhookHandler(
     userId: string,
     event: string,
-    recipe: RecipeDocument
+    recipe: RecipeDocument | RecipeId
   ): Promise<boolean> {
     const webhooks = await this.getWebhooks(userId);
 
@@ -83,7 +88,6 @@ export class WebhookService {
         const response = await axios.post(`${webhook.url}`, {
           recipeWithEvent,
         });
-        console.log(response);
       });
 
       return true;
