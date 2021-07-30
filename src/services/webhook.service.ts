@@ -1,4 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import axios from "axios";
+import { RecipeDocument } from "src/models/recipe.model";
+import { UserDocument } from "src/models/user.model";
 import { Webhook, WebhookDocument } from "../models/webhook.model";
 
 interface WebhookQuery {
@@ -58,6 +61,31 @@ export class WebhookService {
     const updated = await Webhook.deleteOne({ _id: webhookId, userId });
 
     if (updated.deletedCount === 1) {
+      return true;
+    }
+    return false;
+  }
+
+  public async webhookHandler(
+    userId: string,
+    event: string,
+    recipe: RecipeDocument
+  ): Promise<boolean> {
+    const webhooks = await this.getWebhooks(userId);
+
+    const recipeWithEvent = {
+      ...recipe,
+      event,
+    };
+
+    if (webhooks.length > 0) {
+      webhooks.map(async (webhook) => {
+        const response = await axios.post(`${webhook.url}`, {
+          recipeWithEvent,
+        });
+        console.log(response);
+      });
+
       return true;
     }
     return false;
