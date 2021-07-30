@@ -24,7 +24,7 @@ import { Document, Schema, model } from "mongoose";
  * @swagger
  * components:
  *   schemas:
- *     Webhook:
+ *     WebhookDocument:
  *       type: object
  *       properties:
  *         url:
