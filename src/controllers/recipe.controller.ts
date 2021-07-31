@@ -126,7 +126,7 @@ export class RecipeController {
     res: Response
   ): Promise<Response> {
     try {
-      const { id: recipeId } = matchedData(req);
+      const { recipeId } = matchedData(req);
       const { _id: userId, isAdmin } = req.user!;
       let query;
       if (isAdmin) {
@@ -136,8 +136,8 @@ export class RecipeController {
       }
       const result = await recipeService.deleteRecipeById(query);
 
-      if (result) {
-        webhookService.webhookHandler(userId, "DELETE_RECIPE", { recipeId });
+      if (result.recipeDeleted && result.recipeImagesDeleted) {
+        webhookService.webhookHandler(userId, "DELETE_RECIPE", null, recipeId);
 
         return res.sendStatus(StatusCodes.NO_CONTENT);
       } else {

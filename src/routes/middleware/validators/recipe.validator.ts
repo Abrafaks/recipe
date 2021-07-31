@@ -93,6 +93,12 @@ const readId = param("id")
   .isMongoId()
   .withMessage("Id must be valid");
 
+const recipeId = param("recipeId")
+  .notEmpty()
+  .withMessage("ID must not be empty")
+  .isMongoId()
+  .withMessage("Id must be valid");
+
 const paginationData = query(["page", "pageSize"])
   .isInt({ min: 0 })
   .withMessage("Pagination data must be positive integer")
@@ -139,6 +145,9 @@ export class RecipeValidator {
   }
   public validateUpdateRecipeData(): ValidationChain[] {
     return [...validateUpdateData, readId];
+  }
+  public validateDeleteRecipeData(): ValidationChain {
+    return recipeId;
   }
   public validateReadRecipeById(): ValidationChain {
     return readId;

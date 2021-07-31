@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import axios from "axios";
+import { LeanDocument } from "mongoose";
 import { RecipeDocument } from "src/models/recipe.model";
 import { UserDocument } from "src/models/user.model";
 import { Webhook, WebhookDocument } from "../models/webhook.model";
@@ -9,9 +10,10 @@ interface WebhookQuery {
   url: string;
 }
 
-interface RecipeId {
-  recipeId: string;
-  event?: string;
+interface RecipeWithEvent {
+  event: string;
+  recipe?: LeanDocument<RecipeDocument>;
+  recipeId?: string;
 }
 
 export class WebhookService {
@@ -74,20 +76,28 @@ export class WebhookService {
   public async webhookHandler(
     userId: string,
     event: string,
-    recipe: RecipeDocument | RecipeId
+    recipe: RecipeDocument | null,
+    recipeId?: string
   ): Promise<boolean> {
     const webhooks = await this.getWebhooks(userId);
-
-    const recipeWithEvent = {
-      ...recipe,
-      event,
-    };
-
+    let recipeWithEvent: RecipeWithEvent;
     if (webhooks.length > 0) {
+      if (recipe) {
+        const newRecipe = recipe.toJSON();
+
+        recipeWithEvent = {
+          ...newRecipe,
+          event,
+        };
+      } else {
+        recipeWithEvent = {
+          recipeId,
+          event,
+        };
+      }
+
       webhooks.map(async (webhook) => {
-        const response = await axios.post(`${webhook.url}`, {
-          recipeWithEvent,
-        });
+        const response = await axios.post(`${webhook.url}`, recipeWithEvent);
       });
 
       return true;
