@@ -229,7 +229,7 @@ router.put(
 
 /**
  * @swagger
- * /recipe/:id:
+ * /recipe/:recipeId:
  *   delete:
  *     security:
  *       - Bearer: []
@@ -248,7 +248,7 @@ router.put(
  *         required: true
  *
  *     responses:
- *       204:
+ *       200:
  *         description: Recipe deleted successfully
  *         content:
  *           application/json:
@@ -266,8 +266,10 @@ router.put(
  */
 
 router.delete(
-  "/:id",
+  "/:recipeId",
   auth.authenticate([Strategy.Bearer]),
+  recipeValidator.validateDeleteRecipeData(),
+  validate,
   recipeController.deleteRecipeById
 );
 

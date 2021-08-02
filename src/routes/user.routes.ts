@@ -148,7 +148,7 @@ router.post(
  *         required: true
  *
  *     responses:
- *       204:
+ *       200:
  *         description: User deleted successfully
  *       400:
  *         description: Bad request

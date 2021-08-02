@@ -3,10 +3,14 @@ import { Request, Response } from "express";
 import { matchedData } from "express-validator";
 import { Recipe, RecipeDocument } from "../models/recipe.model";
 import recipeService, { RecipeService } from "../services/recipe.service";
+import webhookService, { WebhookService } from "../services/webhook.service";
 import { StatusCodes } from "http-status-codes";
 
 export class RecipeController {
-  constructor(private recipeService: RecipeService) {}
+  constructor(
+    private recipeService: RecipeService,
+    private webhookService: WebhookService
+  ) {}
 
   public async createRecipe(req: Request, res: Response): Promise<Response> {
     try {
@@ -21,6 +25,8 @@ export class RecipeController {
       };
 
       const savedRecipe = await recipeService.createRecipe(recipeData);
+
+      webhookService.webhookHandler(_id, "create_recipe", savedRecipe);
       return res.status(StatusCodes.CREATED).send(savedRecipe);
     } catch (err) {
       return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
@@ -87,6 +93,8 @@ export class RecipeController {
         });
       }
       if (result) {
+        webhookService.webhookHandler(_id, "update_recipe", result);
+
         return res.send(result);
       } else {
         return res.sendStatus(StatusCodes.BAD_REQUEST);
@@ -119,7 +127,7 @@ export class RecipeController {
     res: Response
   ): Promise<Response> {
     try {
-      const { id: recipeId } = matchedData(req);
+      const { recipeId } = matchedData(req);
       const { _id: userId, isAdmin } = req.user!;
       let query;
       if (isAdmin) {
@@ -129,8 +137,10 @@ export class RecipeController {
       }
       const result = await recipeService.deleteRecipeById(query);
 
-      if (result) {
-        return res.sendStatus(StatusCodes.NO_CONTENT);
+      if (result.recipeDeleted && result.recipeImagesDeleted) {
+        webhookService.webhookHandler(userId, "delete_recipe", null, recipeId);
+
+        return res.sendStatus(StatusCodes.OK);
       } else {
         return res.sendStatus(StatusCodes.NOT_FOUND);
       }
@@ -140,4 +150,4 @@ export class RecipeController {
   }
 }
 
-export default new RecipeController(recipeService);
+export default new RecipeController(recipeService, webhookService);

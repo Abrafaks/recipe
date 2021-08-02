@@ -2,7 +2,6 @@ import { Image } from "../models/image.model";
 import { Recipe, RecipeDocument } from "../models/recipe.model";
 
 type CreateRecipeBody = Omit<Recipe, "userId">;
-type CreateRecipeWithoutId = Omit<Recipe, "image">;
 
 interface PaginationData {
   recipes: RecipeDocument[];
@@ -30,7 +29,7 @@ interface DeleteRecipeResult {
   recipeImagesDeleted: boolean;
 }
 export class RecipeService {
-  public createRecipe(recipe: Recipe): Promise<CreateRecipeWithoutId> {
+  public createRecipe(recipe: Recipe): Promise<RecipeDocument> {
     return new Recipe(recipe).save();
   }
 
@@ -158,15 +157,14 @@ export class RecipeService {
     }
     const result = await Recipe.deleteOne(query);
 
-    if (result.n === 1) {
-      if (await this.deleteRecipeImages(recipeId)) {
-        deleteRecipeResult.recipeDeleted = true;
-        deleteRecipeResult.recipeImagesDeleted = true;
-      } else {
-        deleteRecipeResult.recipeDeleted = true;
-        deleteRecipeResult.recipeImagesDeleted = false;
-      }
+    deleteRecipeResult.recipeDeleted = Boolean(result?.n === 1);
+
+    if (deleteRecipeResult.recipeDeleted) {
+      deleteRecipeResult.recipeImagesDeleted = await this.deleteRecipeImages(
+        recipeId
+      );
     }
+
     return deleteRecipeResult;
   }
 }

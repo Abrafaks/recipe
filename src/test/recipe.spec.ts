@@ -13,18 +13,21 @@ import {
   addSomeRecipes,
 } from "./mocks/recipe.mocks";
 import { getToken, deleteAllUsers } from "./mocks/user.mocks";
+import { addWebhook } from "./mocks/webhook.mocks";
 
-let token = "";
 let _id: string;
 let updateRecipeId: string;
+let token: string;
 
-beforeEach("Add user and get token", async function () {
+beforeEach("Add webhook, user and get token", async function () {
   const data = await getToken();
 
   token = "Bearer " + data.token;
+  process.env.token = token;
   const userId = data.userId;
   _id = await addSomeRecipes(userId);
   await addSomeRecipes(userId);
+  await addWebhook();
 });
 
 afterEach("Delete all recipes", async function () {
@@ -326,20 +329,11 @@ describe("Recipe testing", function () {
       const response = await chai
         .request(app)
         .get("/recipe/")
-        .set("Authorization", token);
+        .set("Authorization", token)
+        .query({ page: 0, pageSize: 15 });
 
       expect(response).to.have.status(StatusCodes.OK);
-
-      response.body.forEach(function (element: RecipeDocument) {
-        expect(element).to.contain.all.keys([
-          "_id",
-          "title",
-          "preparing",
-          "ingredients",
-          "userId",
-          "__v",
-        ]);
-      });
+      expect(response).to.be.an("object");
     });
 
     it("should not return all recipes for unauthenticated user", async function () {
@@ -351,74 +345,59 @@ describe("Recipe testing", function () {
       expect(response).to.have.status(StatusCodes.UNAUTHORIZED);
     });
 
-    it("should return one recipes (testing limit)", async function () {
+    it("should return recipe by valid title", async function () {
       const response = await chai
         .request(app)
         .get("/recipe/")
         .set("Authorization", token)
-        .query({ skip: 2, limit: 2 });
+        .query({ page: 0, pageSize: 15, title: recipes.recipe.title });
 
       expect(response).to.have.status(StatusCodes.OK);
-      expect(response.body.length).to.equal(2);
+      expect(response.body.recipes[0].title).to.be.equal(recipes.recipe.title);
     });
 
-    it("should return no recipes (testing skip)", async function () {
+    it("should not return recipe by invalid title (no such title with this title)", async function () {
       const response = await chai
         .request(app)
         .get("/recipe/")
         .set("Authorization", token)
-        .query({ skip: 4 });
+        .query({
+          page: 0,
+          pageSize: 15,
+          title: "some recipe title with this long name",
+        });
 
       expect(response).to.have.status(StatusCodes.OK);
-      expect(response.body.length).to.equal(0);
+      expect(response.body.recipes.length).to.be.equal(0);
     });
 
-    it("should return recipe by valid name", async function () {
+    it("should not return recipe by invalid title (not string)", async function () {
       const response = await chai
         .request(app)
         .get("/recipe/")
         .set("Authorization", token)
-        .query({ name: recipes.recipe.title });
-
-      expect(response).to.have.status(StatusCodes.OK);
-      expect(response.body[0].title).to.be.equal(recipes.recipe.title);
-      expect(response.body.length).to.be.equal(2);
-    });
-
-    it("should not return recipe by invalid name (no such title with this name)", async function () {
-      const response = await chai
-        .request(app)
-        .get("/recipe/")
-        .set("Authorization", token)
-        .query({ name: "some recipe title with this long name" });
-
-      expect(response).to.have.status(StatusCodes.OK);
-      expect(response.body.length).to.be.equal(0);
-    });
-
-    it("should not return recipe by invalid name (not string)", async function () {
-      const response = await chai
-        .request(app)
-        .get("/recipe/")
-        .set("Authorization", token)
-        .query({ name: { name: "some recipe title with this long name" } });
+        .query({
+          page: 0,
+          pageSize: 15,
+          title: { name: "some recipe title with this long name" },
+        });
 
       expect(response).to.have.status(StatusCodes.BAD_REQUEST);
       expect(response.body.errors[0].msg).to.have.string(
-        "Name must be of type string"
+        "Title must be of type string"
       );
     });
 
-    it("should not return recipe by invalid name (empty)", async function () {
+    it("should not return recipe by invalid title (empty)", async function () {
       const response = await chai
         .request(app)
         .get("/recipe/")
         .set("Authorization", token)
-        .query({ name: "" });
+        .query({ page: 0, pageSize: 15, title: "" });
 
       expect(response).to.have.status(StatusCodes.BAD_REQUEST);
       expect(response.body.errors[0].msg).to.have.string(
-        "Name must not be empty"
+        "Title must not be empty"
       );
     });
   });
