@@ -107,7 +107,7 @@ describe("User testing", function () {
       expect(response.body).to.not.be.null;
     });
 
-    it("should not update webhook with same data", async function () {
+    it("should update webhook with same data", async function () {
       const response = await chai
         .request(app)
         .put(`/webhooks/${process.env.webhookId}`)
@@ -117,7 +117,7 @@ describe("User testing", function () {
           url: "https://trello.com/b/S495BUmj/recipesssss",
         });
 
-      expect(response).to.have.status(StatusCodes.BAD_REQUEST);
+      expect(response).to.have.status(StatusCodes.OK);
     });
 
     it("should not update webhook for unauthenticated user", async function () {

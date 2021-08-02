@@ -59,7 +59,6 @@ describe("Recipe testing", function () {
         "preparing",
         "ingredients",
         "userId",
-        "__v",
       ]);
       updateRecipeId = response.body._id;
     });
@@ -414,7 +413,6 @@ describe("Recipe testing", function () {
         "preparing",
         "ingredients",
         "userId",
-        "__v",
       ]);
     });
 
