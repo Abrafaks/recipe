@@ -109,9 +109,6 @@ router.get(
  *           application/json:
  *             schema:
  *               $ref: '#components/schemas/WebhookDocument'
- *     responses:
- *       200:
- *         description: Webhook updated successfully
  *       400:
  *         description: Bad request.
  *       401:

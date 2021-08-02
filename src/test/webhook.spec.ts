@@ -67,19 +67,20 @@ describe("User testing", function () {
     it("should read my webhooks", async function () {
       const response = await chai
         .request(app)
-        .get("/webhooks")
+        .get(`/webhooks/${process.env.userId}`)
         .set("content-type", "application/json")
         .set("Authorization", `${process.env.token}`)
         .send();
-      expect(response.error).to.be.false;
+
       expect(response).to.have.status(StatusCodes.OK);
+      expect(response.error).to.be.false;
       expect(response.body).to.not.be.null;
     });
 
-    it("should read unauthenticated user webhooks", async function () {
+    it("should not read unauthenticated user webhooks", async function () {
       const response = await chai
         .request(app)
-        .get("/webhooks")
+        .get(`/webhooks/${process.env.userId}`)
         .set("content-type", "application/json")
         .set("Authorization", `${process.env.token}hehe`)
         .send({
