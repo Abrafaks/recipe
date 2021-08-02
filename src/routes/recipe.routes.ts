@@ -173,8 +173,8 @@ router.get(
  *           application/json:
  *             schema:
  *               $ref: '#components/schemas/RecipeDocument'
- *       400:
- *         description: Bad request
+ *       404:
+ *         description: Not found
  *       401:
  *         description: Unauthorized
  */
