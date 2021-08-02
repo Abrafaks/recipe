@@ -167,4 +167,13 @@ const recipeSchema = new Schema<Recipe>({
   userId: { type: String, required: true },
 });
 
+recipeSchema.methods.toJSON = function () {
+  const recipe = this;
+  const recipeObject = recipe.toObject();
+
+  delete recipeObject.__v;
+
+  return recipeObject;
+};
+
 export const Recipe = model<RecipeDocument>("recipe", recipeSchema);
