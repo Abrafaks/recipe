@@ -56,6 +56,7 @@ const router = express.Router();
 
 router.get(
   "/:recipeId",
+  auth.authenticate([Strategy.Bearer]),
   imageValidator.validateReadRecipeImagesData(),
   validate,
   imageController.readRecipeImages
@@ -96,6 +97,7 @@ router.get(
 
 router.get(
   "/:imageId/display",
+  auth.authenticate([Strategy.Bearer]),
   imageValidator.validateReadRecipeImageData(),
   validate,
   imageController.readRecipeImage
