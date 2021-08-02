@@ -161,7 +161,7 @@ export class WebhookService {
         };
       }
 
-      webhooks.map(async (webhook) => {
+      webhooks.map(async (webhook: WebhookDocument) => {
         const response = await axios.post(`${webhook.url}`, recipeWithEvent);
       });
 
