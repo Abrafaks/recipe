@@ -13,7 +13,6 @@ import { Document, Schema, model } from "mongoose";
  *           example: https://webhook.site/#!/d09b19ef-df5c-4bbf-8dc9-852128733fb2/5d5efc9e-df18-44e6-870f-891c0bb1f99b
  *       required:
  *         - url
- *         - event
  */
 
 /**
