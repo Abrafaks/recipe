@@ -47,14 +47,15 @@ export class WebhookController {
   }
 
   public async updateWebhook(req: Request, res: Response): Promise<Response> {
-    const { _id: userId } = req.user!;
+    const { _id: userId, isAdmin } = req.user!;
     const { url, webhookId } = matchedData(req);
 
     try {
       const updatedWebhook = await webhookService.updateWebhook(
         webhookId,
         userId,
-        url
+        url,
+        isAdmin
       );
 
       if (updatedWebhook) {
@@ -67,13 +68,14 @@ export class WebhookController {
   }
 
   public async deleteWebhook(req: Request, res: Response): Promise<Response> {
-    const { _id: userId } = req.user!;
+    const { _id: userId, isAdmin } = req.user!;
     const { webhookId } = matchedData(req);
 
     try {
       const updatedWebhook = await webhookService.deleteWebhook(
         webhookId,
-        userId
+        userId,
+        isAdmin
       );
 
       if (updatedWebhook) {

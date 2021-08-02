@@ -6,6 +6,11 @@ interface WebhookQuery {
   url: string;
 }
 
+interface UpdateDeleteQuery {
+  _id: string;
+  userId?: string;
+}
+
 export class WebhookService {
   public async getWebhook(
     query: WebhookQuery
@@ -38,12 +43,16 @@ export class WebhookService {
   public async updateWebhook(
     webhookId: string,
     userId: string,
-    url: string
+    url: string,
+    isAdmin: boolean
   ): Promise<WebhookDocument | null> {
-    const updated = await Webhook.updateOne(
-      { _id: webhookId, userId },
-      { url }
-    );
+    let query: UpdateDeleteQuery = { _id: webhookId };
+
+    if (!isAdmin) {
+      query = { _id: webhookId, userId };
+    }
+
+    const updated = await Webhook.updateOne(query, { url });
 
     if (updated.nModified === 1) {
       return this.getWebhookById(webhookId);
@@ -53,9 +62,16 @@ export class WebhookService {
 
   public async deleteWebhook(
     webhookId: string,
-    userId: string
+    userId: string,
+    isAdmin: boolean
   ): Promise<boolean> {
-    const updated = await Webhook.deleteOne({ _id: webhookId, userId });
+    let query: UpdateDeleteQuery = { _id: webhookId };
+
+    if (!isAdmin) {
+      query = { _id: webhookId, userId };
+    }
+
+    const updated = await Webhook.deleteOne(query);
 
     if (updated.deletedCount === 1) {
       return true;
