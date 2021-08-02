@@ -6,6 +6,13 @@ import { User, UserDocument } from "../models/user.model";
 interface Query {
   _id: string;
 }
+
+interface DeleteUserResult {
+  FORBIDDEN: boolean;
+  NOT_FOUND: boolean;
+  OK: boolean;
+}
+
 export class UserService {
   public async getUsers(): Promise<UserDocument[] | null> {
     return User.find({ isDeleted: false });
@@ -61,14 +68,22 @@ export class UserService {
     userToDelete: string,
     userId: string,
     isAdmin: boolean
-  ): Promise<boolean> {
+  ): Promise<DeleteUserResult> {
     let query: Query = { _id: "" };
+    let deleteUserResult: DeleteUserResult = {
+      FORBIDDEN: false,
+      NOT_FOUND: false,
+      OK: false,
+    };
 
     if (isAdmin) {
       query = { _id: userToDelete };
     } else {
-      if (userToDelete === userId) {
+      if (userToDelete === userId.toString()) {
         query = { _id: userId };
+      } else {
+        deleteUserResult.FORBIDDEN = true;
+        return deleteUserResult;
       }
     }
 
@@ -81,9 +96,11 @@ export class UserService {
     );
 
     if (result.nModified === 1) {
-      return true;
+      deleteUserResult.OK = true;
+      return deleteUserResult;
     }
-    return true;
+    deleteUserResult.NOT_FOUND = true;
+    return deleteUserResult;
   }
 }
 

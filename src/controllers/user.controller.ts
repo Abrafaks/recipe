@@ -77,18 +77,27 @@ export class UserController {
       const { id: userToDelete } = matchedData(req);
       const { _id: userId, isAdmin } = req.user!;
 
-      const result = await userService.deleteUser(
+      const deletedUser = await userService.deleteUser(
         userToDelete,
         userId,
         isAdmin
       );
 
-      if (result) {
-        return res.sendStatus(StatusCodes.OK);
-      } else {
-        return res.sendStatus(StatusCodes.BAD_REQUEST);
+      if (deletedUser.FORBIDDEN) {
+        return res.sendStatus(StatusCodes.FORBIDDEN);
       }
+
+      if (deletedUser.NOT_FOUND) {
+        return res.sendStatus(StatusCodes.NOT_FOUND);
+      }
+
+      if (deletedUser.OK) {
+        return res.send();
+      }
+
+      return res.sendStatus(StatusCodes.BAD_REQUEST);
     } catch (err) {
+      console.log(err);
       return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }

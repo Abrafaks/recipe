@@ -169,6 +169,9 @@ router.post(
         err instanceof multer.MulterError ||
         err?.message === "Please upload png, jpeg or jpg."
       ) {
+        if (err.message === "File too large") {
+          err.message = "File too large. Max limit is 1MB";
+        }
         return res.status(StatusCodes.BAD_REQUEST).json({ error: err.message });
       }
       next();

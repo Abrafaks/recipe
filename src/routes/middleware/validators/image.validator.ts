@@ -3,7 +3,7 @@ import multer from "multer";
 
 export const upload = multer({
   limits: {
-    fileSize: 1000000,
+    fileSize: 1024 * 1024,
   },
   fileFilter(req, file, cb) {
     if (!file.originalname.match(/\.(png|jpg|jpeg)$/)) {
