@@ -1,5 +1,6 @@
 import { Image } from "../models/image.model";
 import { Recipe, RecipeDocument } from "../models/recipe.model";
+import { User } from "../models/user.model";
 
 type CreateRecipeBody = Omit<Recipe, "userId">;
 
@@ -101,6 +102,10 @@ export class RecipeService {
   public async readRecipeByUserId(
     userId: string
   ): Promise<RecipeDocument[] | null> {
+    const existingUser = await User.findById(userId);
+    if (!existingUser) {
+      return null;
+    }
     return Recipe.find({ userId });
   }
 
