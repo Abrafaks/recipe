@@ -23,10 +23,10 @@ export class WebhookService {
     readUserId: string,
     isAdmin: boolean
   ): Promise<WebhookDocument[] | null> {
-    if (!isAdmin && userId !== readUserId) {
+    if (!isAdmin && userId.toString() !== readUserId) {
       return null;
     }
-    return Webhook.find({ readUserId });
+    return Webhook.find({ userId: readUserId });
   }
 
   public async getWebhookById(

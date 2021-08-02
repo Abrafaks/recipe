@@ -8,7 +8,7 @@ const userId = param("userId").isMongoId().withMessage("Invalid id");
 
 const createWebhookData = [url];
 
-const creadWebhooksData = [userId];
+const readWebhooksData = [userId];
 
 const updateWebhookData = [url, webhookId];
 

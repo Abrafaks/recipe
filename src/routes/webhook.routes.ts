@@ -49,7 +49,7 @@ router.post(
 
 /**
  * @swagger
- * /webhooks/:
+ * /webhooks/:userId:
  *   get:
  *     security:
  *       - Bearer: []
@@ -66,10 +66,12 @@ router.post(
  *               $ref: '#components/schemas/WebhookDocument'
  *       401:
  *         description: Unauthorized.
+ *       403:
+ *         description: Forbidden - user is not admin and tries to read other user's webhooks.
  */
 
 router.get(
-  "/userId",
+  "/:userId",
   auth.authenticate([Strategy.Bearer]),
   webhookValidator.validateReadWebhooks(),
   validate,
