@@ -140,7 +140,7 @@ export class RecipeController {
       if (result.recipeDeleted && result.recipeImagesDeleted) {
         webhookService.webhookHandler(userId, "delete_recipe", null, recipeId);
 
-        return res.sendStatus(StatusCodes.NO_CONTENT);
+        return res.sendStatus(StatusCodes.OK);
       } else {
         return res.sendStatus(StatusCodes.NOT_FOUND);
       }

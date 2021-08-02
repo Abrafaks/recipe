@@ -142,7 +142,7 @@ describe("User testing", function () {
         .set("Authorization", `${process.env.token}`);
 
       expect(response.error).to.be.false;
-      expect(response).to.have.status(StatusCodes.NO_CONTENT);
+      expect(response).to.have.status(StatusCodes.OK);
       expect(response.body).to.not.be.null;
     });
 

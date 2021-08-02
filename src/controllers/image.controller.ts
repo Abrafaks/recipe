@@ -80,7 +80,7 @@ export class ImageController {
       if (!deletedImage) {
         return res.sendStatus(StatusCodes.BAD_REQUEST);
       }
-      return res.sendStatus(StatusCodes.NO_CONTENT);
+      return res.sendStatus(StatusCodes.OK);
     } catch (err) {
       return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }

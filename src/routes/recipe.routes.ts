@@ -248,7 +248,7 @@ router.put(
  *         required: true
  *
  *     responses:
- *       204:
+ *       200:
  *         description: Recipe deleted successfully
  *         content:
  *           application/json:

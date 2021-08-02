@@ -83,7 +83,7 @@ export class UserController {
         isAdmin
       );
       if (result) {
-        return res.sendStatus(StatusCodes.NO_CONTENT);
+        return res.sendStatus(StatusCodes.OK);
       } else {
         return res.sendStatus(StatusCodes.BAD_REQUEST);
       }
