@@ -3,11 +3,14 @@ import { Request, Response } from "express";
 import { matchedData } from "express-validator";
 import { Recipe, RecipeDocument } from "../models/recipe.model";
 import recipeService, { RecipeService } from "../services/recipe.service";
-import webhookService from "../services/webhook.service";
+import webhookService, { WebhookService } from "../services/webhook.service";
 import { StatusCodes } from "http-status-codes";
 
 export class RecipeController {
-  constructor(private recipeService: RecipeService) {}
+  constructor(
+    private recipeService: RecipeService,
+    private webhookService: WebhookService
+  ) {}
 
   public async createRecipe(req: Request, res: Response): Promise<Response> {
     try {
@@ -23,7 +26,7 @@ export class RecipeController {
 
       const savedRecipe = await recipeService.createRecipe(recipeData);
       if (savedRecipe) {
-        webhookService.webhookHandler(_id, "CREATE_RECIPE", savedRecipe);
+        webhookService.webhookHandler(_id, "create_recipe", savedRecipe);
         return res.status(StatusCodes.CREATED).send(savedRecipe);
       }
       return res.sendStatus(StatusCodes.BAD_REQUEST);
@@ -92,7 +95,7 @@ export class RecipeController {
         });
       }
       if (result) {
-        webhookService.webhookHandler(_id, "UPDATE_RECIPE", result);
+        webhookService.webhookHandler(_id, "update_recipe", result);
 
         return res.send(result);
       } else {
@@ -137,7 +140,7 @@ export class RecipeController {
       const result = await recipeService.deleteRecipeById(query);
 
       if (result.recipeDeleted && result.recipeImagesDeleted) {
-        webhookService.webhookHandler(userId, "DELETE_RECIPE", null, recipeId);
+        webhookService.webhookHandler(userId, "delete_recipe", null, recipeId);
 
         return res.sendStatus(StatusCodes.NO_CONTENT);
       } else {
@@ -149,4 +152,4 @@ export class RecipeController {
   }
 }
 
-export default new RecipeController(recipeService);
+export default new RecipeController(recipeService, webhookService);

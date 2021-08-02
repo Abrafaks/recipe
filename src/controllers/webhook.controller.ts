@@ -25,10 +25,7 @@ export class WebhookController {
 
       const result = await webhookService.addWebhook(userId, url);
 
-      if (result) {
-        return res.status(StatusCodes.CREATED).send(result);
-      }
-      return res.sendStatus(StatusCodes.BAD_REQUEST);
+      return res.status(StatusCodes.CREATED).send(result);
     } catch (err) {
       return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }
