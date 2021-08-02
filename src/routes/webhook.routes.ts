@@ -109,12 +109,17 @@ router.get(
  *           application/json:
  *             schema:
  *               $ref: '#components/schemas/WebhookDocument'
+ *     responses:
+ *       200:
+ *         description: Webhook updated successfully
  *       400:
  *         description: Bad request.
  *       401:
  *         description: Unauthorized.
  *       403:
- *         description: Forbidden.
+ *         description: Forbidden - there is webhook, but it's not yours.
+ *       404:
+ *         description: Not found - there is not such webhook in entire db.
  *
  *
  */
