@@ -33,25 +33,34 @@ export class WebhookController {
 
   public async readWebhooks(req: Request, res: Response): Promise<Response> {
     try {
-      const { _id: userId } = req.user!;
+      const { _id: userId, isAdmin } = req.user!;
+      const { userId: readUserId } = matchedData(req);
 
-      const result = await webhookService.getWebhooks(userId);
+      const result = await webhookService.getWebhooks(
+        userId,
+        readUserId,
+        isAdmin
+      );
+      if (result) {
+        return res.send(result);
+      }
 
-      return res.send(result);
+      return res.status(StatusCodes.FORBIDDEN).send();
     } catch (err) {
       return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 
   public async updateWebhook(req: Request, res: Response): Promise<Response> {
-    const { _id: userId } = req.user!;
+    const { _id: userId, isAdmin } = req.user!;
     const { url, webhookId } = matchedData(req);
 
     try {
       const updatedWebhook = await webhookService.updateWebhook(
         webhookId,
         userId,
-        url
+        url,
+        isAdmin
       );
 
       if (updatedWebhook) {
@@ -64,13 +73,14 @@ export class WebhookController {
   }
 
   public async deleteWebhook(req: Request, res: Response): Promise<Response> {
-    const { _id: userId } = req.user!;
+    const { _id: userId, isAdmin } = req.user!;
     const { webhookId } = matchedData(req);
 
     try {
       const updatedWebhook = await webhookService.deleteWebhook(
         webhookId,
-        userId
+        userId,
+        isAdmin
       );
 
       if (updatedWebhook) {

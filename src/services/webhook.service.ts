@@ -15,6 +15,10 @@ interface RecipeWithEvent {
   recipe?: LeanDocument<RecipeDocument>;
   recipeId?: string;
 }
+interface UpdateDeleteQuery {
+  _id: string;
+  userId?: string;
+}
 
 export class WebhookService {
   public async getWebhook(
@@ -23,8 +27,15 @@ export class WebhookService {
     return Webhook.findOne(query);
   }
 
-  public async getWebhooks(userId: string): Promise<WebhookDocument[]> {
-    return Webhook.find({ userId });
+  public async getWebhooks(
+    userId: string,
+    readUserId: string,
+    isAdmin: boolean
+  ): Promise<WebhookDocument[] | null> {
+    if (!isAdmin && userId.toString() !== readUserId) {
+      return null;
+    }
+    return Webhook.find({ userId: readUserId });
   }
 
   public async getWebhookById(
@@ -48,12 +59,16 @@ export class WebhookService {
   public async updateWebhook(
     webhookId: string,
     userId: string,
-    url: string
+    url: string,
+    isAdmin: boolean
   ): Promise<WebhookDocument | null> {
-    const updated = await Webhook.updateOne(
-      { _id: webhookId, userId },
-      { url }
-    );
+    let query: UpdateDeleteQuery = { _id: webhookId };
+
+    if (!isAdmin) {
+      query = { _id: webhookId, userId };
+    }
+
+    const updated = await Webhook.updateOne(query, { url });
 
     if (updated.nModified === 1) {
       return this.getWebhookById(webhookId);
@@ -63,9 +78,16 @@ export class WebhookService {
 
   public async deleteWebhook(
     webhookId: string,
-    userId: string
+    userId: string,
+    isAdmin: boolean
   ): Promise<boolean> {
-    const updated = await Webhook.deleteOne({ _id: webhookId, userId });
+    let query: UpdateDeleteQuery = { _id: webhookId };
+
+    if (!isAdmin) {
+      query = { _id: webhookId, userId };
+    }
+
+    const updated = await Webhook.deleteOne(query);
 
     if (updated.deletedCount === 1) {
       return true;
@@ -79,9 +101,9 @@ export class WebhookService {
     recipe: RecipeDocument | null,
     recipeId?: string
   ): Promise<boolean> {
-    const webhooks = await this.getWebhooks(userId);
+    const webhooks = await this.getWebhooks(userId, userId, false);
     let recipeWithEvent: RecipeWithEvent;
-    if (webhooks.length > 0) {
+    if (webhooks && webhooks.length > 0) {
       if (recipe) {
         const newRecipe = recipe.toJSON();
 

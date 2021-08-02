@@ -10,7 +10,7 @@ import { Document, Schema, model } from "mongoose";
  *         url:
  *           type: string
  *           description: Url specifying where to send request
- *           example: https://webhook.site/#!/d09b19ef-df5c-4bbf-8dc9-852128733fb2/5d5efc9e-df18-44e6-870f-891c0bb1f99b
+ *           example: https://webhook.site/d09b19ef-df5c-4bbf-8dc9-852128733fb2
  *       required:
  *         - url
  */
@@ -25,7 +25,7 @@ import { Document, Schema, model } from "mongoose";
  *         url:
  *           type: string
  *           description: Url specifying where to send request
- *           example: https://webhook.site/#!/d09b19ef-df5c-4bbf-8dc9-852128733fb2/5d5efc9e-df18-44e6-870f-891c0bb1f99b
+ *           example: https://webhook.site/d09b19ef-df5c-4bbf-8dc9-852128733fb2
  *         userId:
  *           type: string
  *           description: Id of user that webhook belongs to
