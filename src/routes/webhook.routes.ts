@@ -69,8 +69,10 @@ router.post(
  */
 
 router.get(
-  "/",
+  "/userId",
   auth.authenticate([Strategy.Bearer]),
+  webhookValidator.validateReadWebhooks(),
+  validate,
   webhookController.readWebhooks
 );
 

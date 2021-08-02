@@ -18,8 +18,15 @@ export class WebhookService {
     return Webhook.findOne(query);
   }
 
-  public async getWebhooks(userId: string): Promise<WebhookDocument[]> {
-    return Webhook.find({ userId });
+  public async getWebhooks(
+    userId: string,
+    readUserId: string,
+    isAdmin: boolean
+  ): Promise<WebhookDocument[] | null> {
+    if (!isAdmin && userId !== readUserId) {
+      return null;
+    }
+    return Webhook.find({ readUserId });
   }
 
   public async getWebhookById(
