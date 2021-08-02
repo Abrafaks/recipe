@@ -25,11 +25,9 @@ export class RecipeController {
       };
 
       const savedRecipe = await recipeService.createRecipe(recipeData);
-      if (savedRecipe) {
-        webhookService.webhookHandler(_id, "create_recipe", savedRecipe);
-        return res.status(StatusCodes.CREATED).send(savedRecipe);
-      }
-      return res.sendStatus(StatusCodes.BAD_REQUEST);
+
+      webhookService.webhookHandler(_id, "create_recipe", savedRecipe);
+      return res.status(StatusCodes.CREATED).send(savedRecipe);
     } catch (err) {
       return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }
