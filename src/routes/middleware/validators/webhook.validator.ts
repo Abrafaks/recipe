@@ -8,7 +8,7 @@ const userId = param("userId").isMongoId().withMessage("Invalid id");
 
 const createWebhookData = [url];
 
-const readWebhooksData = [userId];
+const getWebhooksData = [userId];
 
 const updateWebhookData = [url, webhookId];
 
@@ -19,8 +19,8 @@ export class WebhookValidator {
     return createWebhookData;
   }
 
-  public validateReadWebhooks(): ValidationChain[] {
-    return readWebhooksData;
+  public validateGetWebhooks(): ValidationChain[] {
+    return getWebhooksData;
   }
 
   public validateUpdateWebhook(): ValidationChain[] {

@@ -31,7 +31,7 @@ export class WebhookController {
     }
   }
 
-  public async readWebhooks(req: Request, res: Response): Promise<Response> {
+  public async getWebhooks(req: Request, res: Response): Promise<Response> {
     try {
       const { _id: userId, isAdmin } = req.user!;
       const { userId: readUserId } = matchedData(req);
