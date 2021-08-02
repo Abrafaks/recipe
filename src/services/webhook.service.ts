@@ -2,7 +2,7 @@
 import axios from "axios";
 import { LeanDocument } from "mongoose";
 import { RecipeDocument } from "src/models/recipe.model";
-import { UserDocument } from "src/models/user.model";
+import { User, UserDocument } from "src/models/user.model";
 import { Webhook, WebhookDocument } from "../models/webhook.model";
 
 interface WebhookQuery {
@@ -18,6 +18,12 @@ interface RecipeWithEvent {
 interface UpdateDeleteQuery {
   _id: string;
   userId?: string;
+}
+
+interface UpdateWebhookResult {
+  webhook?: WebhookDocument | null;
+  webhookExists: boolean;
+  webhookUpdated: boolean;
 }
 
 export class WebhookService {
@@ -61,19 +67,35 @@ export class WebhookService {
     userId: string,
     url: string,
     isAdmin: boolean
-  ): Promise<WebhookDocument | null> {
-    let query: UpdateDeleteQuery = { _id: webhookId };
+  ): Promise<UpdateWebhookResult> {
+    let query: UpdateDeleteQuery = { _id: webhookId, userId };
+    let updateWebhookResult: UpdateWebhookResult = {
+      webhookExists: false,
+      webhookUpdated: false,
+    };
+    const myWebhook = await Webhook.findOne(query);
 
-    if (!isAdmin) {
-      query = { _id: webhookId, userId };
+    if (isAdmin) {
+      query = { _id: webhookId };
     }
+
+    // Im'm not admin and webhook belongs to me
+    if (!isAdmin && myWebhook) {
+      updateWebhookResult.webhookExists = true;
+      return updateWebhookResult;
+    }
+
+    // If I'm not admin, webhook belongs to me, so if webhook
+    // doesn't update - there's nothing to update
 
     const updated = await Webhook.updateOne(query, { url });
 
-    if (updated.nModified === 1) {
-      return this.getWebhookById(webhookId);
+    updateWebhookResult.webhookUpdated = updated.nModified === 1;
+
+    if (updateWebhookResult.webhookUpdated) {
+      updateWebhookResult.webhook = await this.getWebhookById(webhookId);
     }
-    return null;
+    return updateWebhookResult;
   }
 
   public async deleteWebhook(

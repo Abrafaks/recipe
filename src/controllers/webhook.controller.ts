@@ -63,10 +63,17 @@ export class WebhookController {
         isAdmin
       );
 
-      if (updatedWebhook) {
+      if (!updatedWebhook.webhookExists) {
+        return res.sendStatus(StatusCodes.FORBIDDEN);
+      }
+
+      if (updatedWebhook.webhookUpdated) {
         return res.send(updatedWebhook);
       }
-      return res.sendStatus(StatusCodes.BAD_REQUEST);
+
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .send({ error: "Nothing to update" });
     } catch (err) {
       return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }

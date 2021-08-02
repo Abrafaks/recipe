@@ -157,15 +157,14 @@ export class RecipeService {
     }
     const result = await Recipe.deleteOne(query);
 
-    if (result.n === 1) {
-      if (await this.deleteRecipeImages(recipeId)) {
-        deleteRecipeResult.recipeDeleted = true;
-        deleteRecipeResult.recipeImagesDeleted = true;
-      } else {
-        deleteRecipeResult.recipeDeleted = true;
-        deleteRecipeResult.recipeImagesDeleted = false;
-      }
+    deleteRecipeResult.recipeDeleted = Boolean(result?.n === 1);
+
+    if (deleteRecipeResult.recipeDeleted) {
+      deleteRecipeResult.recipeImagesDeleted = await this.deleteRecipeImages(
+        recipeId
+      );
     }
+
     return deleteRecipeResult;
   }
 }

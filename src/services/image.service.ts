@@ -7,8 +7,6 @@ interface Query {
   userId?: string;
 }
 
-const rounds = 10;
-
 export class ImageService {
   public async readRecipeById(
     id: string,
