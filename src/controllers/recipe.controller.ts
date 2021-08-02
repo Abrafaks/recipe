@@ -75,7 +75,6 @@ export class RecipeController {
       const { title, description, preparing, ingredients, id } =
         matchedData(req);
       const { _id: userId, isAdmin } = req.user!;
-      let result: RecipeDocument | null;
 
       const updatedRecipe = await recipeService.updateRecipe(
         id,

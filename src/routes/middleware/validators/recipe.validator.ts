@@ -99,9 +99,18 @@ const recipeId = param("recipeId")
   .isMongoId()
   .withMessage("Id must be valid");
 
-const paginationData = query(["page", "pageSize"])
-  .isInt({ min: 0 })
-  .withMessage("Pagination data must be positive integer")
+const page = query("page")
+  .isInt({ min: 0, max: 1000000000 })
+  .withMessage(
+    "Pagination data must be positive integer, that is lower than 1000000000"
+  )
+  .toInt();
+
+const pageSize = query("pageSize")
+  .isInt({ min: 0, max: 100 })
+  .withMessage(
+    "Pagination data must be positive integer value between 0 and 100"
+  )
   .toInt();
 
 const searchTitle = query("title")
@@ -138,7 +147,7 @@ const validateUpdateData = [
   updateIngredients,
 ];
 
-const getRecipeListData = [paginationData, searchTitle, searchDescription];
+const getRecipeListData = [page, pageSize, searchTitle, searchDescription];
 export class RecipeValidator {
   public validateCreateRecipeData(): ValidationChain[] {
     return validateCreateData;

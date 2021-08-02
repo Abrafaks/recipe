@@ -75,14 +75,14 @@ router.post(
  *         name: page
  *         schema:
  *           type: int
- *         description: Which page to display [starting from page 0]
+ *         description: Which page to display [ min 0, max 100 ]
  *         example: 0
  *         required: true
  *       - in: query
  *         name: pageSize
  *         schema:
  *           type: int
- *         description: How many recipes to display per page
+ *         description: How many recipes to display per page [ max 1 000 000 000 ]
  *         example: 20
  *         required: true
  *

@@ -73,7 +73,6 @@ export class RecipeService {
     }
 
     const totalElements = await this.countDocuments(query);
-
     skip = pageSize * page;
 
     const totalPages = Math.ceil(totalElements / pageSize);
