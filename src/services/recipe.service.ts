@@ -1,5 +1,6 @@
 import { Image } from "../models/image.model";
 import { Recipe, RecipeDocument } from "../models/recipe.model";
+import { User } from "../models/user.model";
 
 type CreateRecipeBody = Omit<Recipe, "userId">;
 
@@ -27,6 +28,18 @@ interface DeleteRecipe {
 interface DeleteRecipeResult {
   recipeDeleted: boolean;
   recipeImagesDeleted: boolean;
+}
+
+interface UpdateDeleteQuery {
+  _id: string;
+  userId?: string;
+}
+
+interface UpdateRecipeResult {
+  recipe?: RecipeDocument | null;
+  NOT_FOUND: boolean;
+  FORBIDDEN: boolean;
+  OK: boolean;
 }
 export class RecipeService {
   public createRecipe(recipe: Recipe): Promise<RecipeDocument> {
@@ -101,38 +114,57 @@ export class RecipeService {
   public async readRecipeByUserId(
     userId: string
   ): Promise<RecipeDocument[] | null> {
+    const existingUser = await User.findById(userId);
+    if (!existingUser) {
+      return null;
+    }
     return Recipe.find({ userId });
   }
 
   public async updateRecipe(
-    id: string,
-    userId: string | null,
+    recipeId: string,
+    userId: string,
+    isAdmin: boolean,
     { title, description, preparing, ingredients }: CreateRecipeBody
-  ): Promise<RecipeDocument | null> {
-    let result;
-    if (!userId) {
-      result = await Recipe.updateOne(
-        { _id: id },
-        { title, description, preparing, ingredients },
-        {
-          omitUndefined: true,
-        }
-      );
-    } else {
-      result = await Recipe.updateOne(
-        { _id: id, userId },
-        { title, description, preparing, ingredients },
-        {
-          omitUndefined: true,
-        }
-      );
+  ): Promise<UpdateRecipeResult> {
+    let query: UpdateDeleteQuery = { _id: recipeId, userId };
+    let updateRecipeResult: UpdateRecipeResult = {
+      FORBIDDEN: false,
+      NOT_FOUND: false,
+      OK: false,
+    };
+
+    const recipe = await Recipe.findById(recipeId);
+
+    if (!recipe) {
+      updateRecipeResult.NOT_FOUND = true;
+      return updateRecipeResult;
     }
 
-    if (result.nModified === 1) {
-      return await Recipe.findOne({ _id: id });
+    if (!isAdmin && recipe.userId !== userId.toString()) {
+      updateRecipeResult.FORBIDDEN = true;
+      return updateRecipeResult;
     }
 
-    return null;
+    if (isAdmin) {
+      query = { _id: recipeId };
+    }
+
+    const updated = await Recipe.updateOne(
+      query,
+      { title, description, preparing, ingredients },
+      {
+        omitUndefined: true,
+      }
+    );
+
+    updateRecipeResult.OK = updated.ok === 1;
+
+    if (updateRecipeResult.OK) {
+      updateRecipeResult.recipe = await Recipe.findOne({ _id: recipeId });
+    }
+
+    return updateRecipeResult;
   }
 
   public async deleteRecipeImages(recipeId: string): Promise<boolean> {

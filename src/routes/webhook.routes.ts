@@ -80,7 +80,7 @@ router.get(
 
 /**
  * @swagger
- * /webhooks/:
+ * /webhooks/:webhookId:
  *   put:
  *     security:
  *       - Bearer: []
@@ -99,7 +99,7 @@ router.get(
  *         name: webhookId
  *         type: string
  *         required: true
- *         description: Id of webhook to delete
+ *         description: Id of webhook to update
  *         example: 60f7e9b8cf60ae0004307aa1
  *
  *     responses:
@@ -131,7 +131,7 @@ router.put(
 
 /**
  * @swagger
- * /webhooks/:
+ * /webhooks/:webhookId:
  *   delete:
  *     security:
  *       - Bearer: []

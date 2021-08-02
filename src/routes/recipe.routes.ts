@@ -173,8 +173,8 @@ router.get(
  *           application/json:
  *             schema:
  *               $ref: '#components/schemas/RecipeDocument'
- *       400:
- *         description: Bad request
+ *       404:
+ *         description: Not found
  *       401:
  *         description: Unauthorized
  */
@@ -214,9 +214,14 @@ router.get(
  *       200:
  *         description: Recipe updated successfully
  *       400:
- *         description: Bad request
+ *         description: Bad request.
  *       401:
- *         description: Unauthorized
+ *         description: Unauthorized.
+ *       403:
+ *         description: Forbidden - there is recipe, but it's not yours.
+ *       404:
+ *         description: Not found - there is not such recipe in entire db.
+ *
  */
 
 router.put(
