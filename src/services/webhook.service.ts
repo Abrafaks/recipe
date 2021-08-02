@@ -20,12 +20,15 @@ interface UpdateDeleteQuery {
   userId?: string;
 }
 
-interface UpdateWebhookResult {
-  webhook?: WebhookDocument | null;
-  webhookExists: boolean;
-  webhookUpdated: boolean;
+interface DeleteWebhookResult {
+  NOT_FOUND: boolean;
+  FORBIDDEN: boolean;
+  OK: boolean;
 }
 
+interface UpdateWebhookResult extends DeleteWebhookResult {
+  webhook?: WebhookDocument | null;
+}
 export class WebhookService {
   public async getWebhook(
     query: WebhookQuery
@@ -70,25 +73,32 @@ export class WebhookService {
   ): Promise<UpdateWebhookResult> {
     let query: UpdateDeleteQuery = { _id: webhookId, userId };
     let updateWebhookResult: UpdateWebhookResult = {
-      webhookExists: false,
-      webhookUpdated: false,
+      FORBIDDEN: false,
+      NOT_FOUND: false,
+      OK: false,
     };
-    const myWebhook = await Webhook.findOne(query);
+
+    const webhook = await Webhook.findById(webhookId);
+
+    if (!webhook) {
+      updateWebhookResult.NOT_FOUND = true;
+      return updateWebhookResult;
+    }
+
+    if (!isAdmin && webhook.userId !== userId.toString()) {
+      updateWebhookResult.FORBIDDEN = true;
+      return updateWebhookResult;
+    }
 
     if (isAdmin) {
       query = { _id: webhookId };
     }
 
-    if (!isAdmin && myWebhook) {
-      updateWebhookResult.webhookExists = true;
-      return updateWebhookResult;
-    }
-
     const updated = await Webhook.updateOne(query, { url });
 
-    updateWebhookResult.webhookUpdated = updated.nModified === 1;
+    updateWebhookResult.OK = updated.nModified === 1;
 
-    if (updateWebhookResult.webhookUpdated) {
+    if (updateWebhookResult.OK) {
       updateWebhookResult.webhook = await this.getWebhookById(webhookId);
     }
     return updateWebhookResult;
@@ -98,19 +108,34 @@ export class WebhookService {
     webhookId: string,
     userId: string,
     isAdmin: boolean
-  ): Promise<boolean> {
-    let query: UpdateDeleteQuery = { _id: webhookId };
+  ): Promise<DeleteWebhookResult> {
+    let query: UpdateDeleteQuery = { _id: webhookId, userId };
+    let deleteWebhookResult: DeleteWebhookResult = {
+      FORBIDDEN: false,
+      NOT_FOUND: false,
+      OK: false,
+    };
 
-    if (!isAdmin) {
-      query = { _id: webhookId, userId };
+    const webhook = await Webhook.findById(webhookId);
+
+    if (!webhook) {
+      deleteWebhookResult.NOT_FOUND = true;
+      return deleteWebhookResult;
     }
 
-    const updated = await Webhook.deleteOne(query);
-
-    if (updated.deletedCount === 1) {
-      return true;
+    if (!isAdmin && webhook.userId !== userId.toString()) {
+      deleteWebhookResult.FORBIDDEN = true;
+      return deleteWebhookResult;
     }
-    return false;
+
+    if (isAdmin) {
+      query = { _id: webhookId };
+    }
+
+    const deleted = await Webhook.deleteOne(query);
+    deleteWebhookResult.OK = deleted.deletedCount === 1;
+
+    return deleteWebhookResult;
   }
 
   public async webhookHandler(

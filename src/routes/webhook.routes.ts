@@ -113,6 +113,8 @@ router.get(
  *         description: Bad request.
  *       401:
  *         description: Unauthorized.
+ *       403:
+ *         description: Forbidden.
  *
  *
  */
@@ -143,13 +145,16 @@ router.put(
  *         example: 60f7e9b8cf60ae0004307aa1
  *
  *     responses:
- *       204:
+ *       200:
  *         description: Webhook deleted successfully
  *       400:
  *         description: Bad request.
  *       401:
  *         description: Unauthorized.
- *
+ *       403:
+ *         description: Forbidden - there is webhook, but it's not yours.
+ *       404:
+ *         description: Not found - there is not such webhook in entire db.
  *
  */
 

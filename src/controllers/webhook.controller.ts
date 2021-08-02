@@ -63,12 +63,16 @@ export class WebhookController {
         isAdmin
       );
 
-      if (!updatedWebhook.webhookExists) {
+      if (updatedWebhook.FORBIDDEN) {
         return res.sendStatus(StatusCodes.FORBIDDEN);
       }
 
-      if (updatedWebhook.webhookUpdated) {
-        return res.send(updatedWebhook);
+      if (updatedWebhook.NOT_FOUND) {
+        return res.sendStatus(StatusCodes.NOT_FOUND);
+      }
+
+      if (updatedWebhook.OK && updatedWebhook.webhook) {
+        return res.send(updatedWebhook.webhook);
       }
 
       return res
@@ -84,15 +88,24 @@ export class WebhookController {
     const { webhookId } = matchedData(req);
 
     try {
-      const updatedWebhook = await webhookService.deleteWebhook(
+      const deletedWebhook = await webhookService.deleteWebhook(
         webhookId,
         userId,
         isAdmin
       );
 
-      if (updatedWebhook) {
-        return res.sendStatus(StatusCodes.NO_CONTENT);
+      if (deletedWebhook.NOT_FOUND) {
+        return res.sendStatus(StatusCodes.NOT_FOUND);
       }
+
+      if (deletedWebhook.FORBIDDEN) {
+        return res.sendStatus(StatusCodes.FORBIDDEN);
+      }
+
+      if (deletedWebhook.OK) {
+        return res.send();
+      }
+
       return res.sendStatus(StatusCodes.BAD_REQUEST);
     } catch (err) {
       return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
