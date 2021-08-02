@@ -74,31 +74,40 @@ export class RecipeController {
     try {
       const { title, description, preparing, ingredients, id } =
         matchedData(req);
-      const { _id, isAdmin } = req.user!;
+      const { _id: userId, isAdmin } = req.user!;
       let result: RecipeDocument | null;
 
-      if (isAdmin) {
-        result = await recipeService.updateRecipe(id, null, {
+      const updatedRecipe = await recipeService.updateRecipe(
+        id,
+        userId,
+        isAdmin,
+        {
           title,
           description,
           preparing,
           ingredients,
-        });
-      } else {
-        result = await recipeService.updateRecipe(id, _id, {
-          title,
-          description,
-          preparing,
-          ingredients,
-        });
-      }
-      if (result) {
-        webhookService.webhookHandler(_id, "update_recipe", result);
+        }
+      );
 
-        return res.send(result);
-      } else {
-        return res.sendStatus(StatusCodes.BAD_REQUEST);
+      if (updatedRecipe.FORBIDDEN) {
+        return res.sendStatus(StatusCodes.FORBIDDEN);
       }
+
+      if (updatedRecipe.NOT_FOUND) {
+        return res.sendStatus(StatusCodes.NOT_FOUND);
+      }
+
+      if (updatedRecipe.OK && updatedRecipe.recipe) {
+        webhookService.webhookHandler(
+          userId,
+          "update_recipe",
+          updatedRecipe.recipe
+        );
+
+        return res.send(updatedRecipe.recipe);
+      }
+
+      return res.sendStatus(StatusCodes.BAD_REQUEST);
     } catch (err) {
       return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }
