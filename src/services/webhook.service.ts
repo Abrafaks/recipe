@@ -146,7 +146,7 @@ export class WebhookService {
   ): Promise<boolean> {
     const webhooks = await this.getWebhooks(userId, userId, false);
     let recipeWithEvent: RecipeWithEvent;
-    if (webhooks && webhooks.length > 0) {
+    if (webhooks?.length) {
       if (recipe) {
         const newRecipe = recipe.toJSON();
 
