@@ -79,14 +79,10 @@ export class WebhookService {
       query = { _id: webhookId };
     }
 
-    // Im'm not admin and webhook belongs to me
     if (!isAdmin && myWebhook) {
       updateWebhookResult.webhookExists = true;
       return updateWebhookResult;
     }
-
-    // If I'm not admin, webhook belongs to me, so if webhook
-    // doesn't update - there's nothing to update
 
     const updated = await Webhook.updateOne(query, { url });
 
