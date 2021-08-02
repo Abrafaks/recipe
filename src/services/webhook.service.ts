@@ -96,7 +96,7 @@ export class WebhookService {
 
     const updated = await Webhook.updateOne(query, { url });
 
-    updateWebhookResult.OK = updated.nModified === 1;
+    updateWebhookResult.OK = updated.ok === 1;
 
     if (updateWebhookResult.OK) {
       updateWebhookResult.webhook = await this.getWebhookById(webhookId);
