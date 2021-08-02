@@ -7,6 +7,13 @@ interface Query {
   userId?: string;
 }
 
+interface AddImageResult {
+  FORBIDDEN: boolean;
+  NOT_FOUND: boolean;
+  OK: boolean;
+  imageId?: string;
+}
+
 export class ImageService {
   public async readRecipeById(
     id: string,
@@ -28,16 +35,33 @@ export class ImageService {
     image: Buffer,
     userId: string,
     isAdmin: boolean
-  ): Promise<ImageDocument | null> {
+  ): Promise<AddImageResult> {
+    const addImageResult: AddImageResult = {
+      OK: false,
+      FORBIDDEN: false,
+      NOT_FOUND: false,
+    };
+
     const recipe = await this.readRecipeById(id, userId, isAdmin);
+
     if (!recipe) {
-      return null;
+      addImageResult.NOT_FOUND = true;
+      return addImageResult;
     }
 
-    return new Image({
+    if (!isAdmin && recipe.userId !== userId.toString()) {
+      addImageResult.FORBIDDEN = true;
+      return addImageResult;
+    }
+
+    const savedImage = await new Image({
       recipeId: recipe._id,
       image,
     }).save();
+
+    addImageResult.OK = true;
+    addImageResult.imageId = savedImage._id;
+    return addImageResult;
   }
 
   public async readRecipeImages(recipeId: string) {

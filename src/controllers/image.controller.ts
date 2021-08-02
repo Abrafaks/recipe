@@ -23,8 +23,17 @@ export class ImageController {
         _id,
         isAdmin
       );
-      if (savedImage) {
-        return res.status(StatusCodes.CREATED).send({ _id: savedImage._id });
+
+      if (savedImage.FORBIDDEN) {
+        return res.sendStatus(StatusCodes.FORBIDDEN);
+      }
+
+      if (savedImage.NOT_FOUND) {
+        return res.sendStatus(StatusCodes.NOT_FOUND);
+      }
+
+      if (savedImage.OK) {
+        return res.send({ _id: savedImage.imageId });
       }
       return res.sendStatus(StatusCodes.BAD_REQUEST);
     } catch (err) {
