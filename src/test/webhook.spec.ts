@@ -167,4 +167,12 @@ describe("User testing", function () {
       expect(response).to.have.status(StatusCodes.UNAUTHORIZED);
     });
   });
+
+  describe("Request interception", function () {
+    it("should send POST request to given address after creating recipe", async function () {});
+
+    it("should send POST request to given address after updating recipe", async function () {});
+
+    it("should send POST request to given address after deleting recipe", async function () {});
+  });
 });
