@@ -11,7 +11,7 @@ let updateRecipeId: string;
 let token: string;
 
 describe("Recipe testing", function () {
-  beforeEach("Add webhook, user and get token", async function () {
+  beforeEach("Add user and get token", async function () {
     const data = await getToken();
 
     token = "Bearer " + data.token;

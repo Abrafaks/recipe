@@ -197,7 +197,7 @@ describe("Webhook testing", function () {
     });
   });
 
-  describe("Request interception", function () {
+  describe("sendWebhookNotification testing", function () {
     const sandbox = sinon.createSandbox();
     let recipe: RecipeDocument;
 
