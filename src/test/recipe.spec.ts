@@ -1,19 +1,10 @@
-import {
-  chai,
-  expect,
-  app,
-  StatusCodes,
-  RecipeDocument,
-  Recipe,
-  User,
-} from "./config/server.config";
+import { chai, expect, app, StatusCodes, Recipe } from "./config/server.config";
 import {
   recipes,
   deleteAllRecipes,
   addSomeRecipes,
 } from "./mocks/recipe.mocks";
 import { getToken, deleteAllUsers } from "./mocks/user.mocks";
-import { addWebhook } from "./mocks/webhook.mocks";
 
 let _id: string;
 let updateRecipeId: string;

@@ -138,7 +138,7 @@ export class WebhookService {
     return deleteWebhookResult;
   }
 
-  public async webhookHandler(
+  public async sendWebhookNotification(
     userId: string,
     event: string,
     recipe: LeanDocument<RecipeDocument> | null,

@@ -7,7 +7,7 @@ import faker from "faker";
 import sinon from "sinon";
 import { User } from "../../models/user.model";
 import { Recipe, RecipeDocument } from "../../models/recipe.model";
-import { Webhook } from "../../models/webhook.model";
+import { Webhook, WebhookDocument } from "../../models/webhook.model";
 import jwt from "jsonwebtoken";
 dotenv.config();
 process.env.MONGODB_CONNECTION_STRING = "mongodb://localhost:27017/recipe-test";
@@ -22,6 +22,7 @@ export {
   sinon,
   mongoose,
   Webhook,
+  WebhookDocument,
   User,
   Recipe,
   RecipeDocument,

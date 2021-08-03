@@ -30,7 +30,7 @@ export class RecipeController {
 
       savedRecipe._id = savedRecipe._id.toString();
 
-      webhookService.webhookHandler(_id, "create_recipe", savedRecipe);
+      webhookService.sendWebhookNotification(_id, "create_recipe", savedRecipe);
       return res.status(StatusCodes.CREATED).send(savedRecipe);
     } catch (err) {
       return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
@@ -103,7 +103,11 @@ export class RecipeController {
       if (updatedRecipe.OK && updatedRecipe.recipe) {
         const jsonedRecipe = updatedRecipe.recipe?.toJSON();
         jsonedRecipe._id = jsonedRecipe._id.toString();
-        webhookService.webhookHandler(userId, "update_recipe", jsonedRecipe);
+        webhookService.sendWebhookNotification(
+          userId,
+          "update_recipe",
+          jsonedRecipe
+        );
 
         return res.send(updatedRecipe.recipe);
       }
@@ -148,7 +152,12 @@ export class RecipeController {
       const result = await recipeService.deleteRecipeById(query);
 
       if (result.recipeDeleted && result.recipeImagesDeleted) {
-        webhookService.webhookHandler(userId, "delete_recipe", null, recipeId);
+        webhookService.sendWebhookNotification(
+          userId,
+          "delete_recipe",
+          null,
+          recipeId
+        );
 
         return res.sendStatus(StatusCodes.OK);
       } else {

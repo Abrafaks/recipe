@@ -5,7 +5,6 @@ import {
   app,
   StatusCodes,
   RecipeDocument,
-  User,
 } from "./config/server.config";
 import { deleteAllWebhooks, addWebhook } from "./mocks/webhook.mocks";
 import { getToken, deleteAllUsers } from "./mocks/user.mocks";
@@ -210,9 +209,9 @@ describe("Webhook testing", function () {
     });
 
     it("should send POST request to given address after creating recipe", async function () {
-      const webhookHandlerFunction = sandbox.spy(
+      const sendWebhookNotificationSpy = sandbox.spy(
         webhookService,
-        "webhookHandler"
+        "sendWebhookNotification"
       );
       const response = await chai
         .request(app)
@@ -223,9 +222,9 @@ describe("Webhook testing", function () {
           ...recipes.recipe,
         });
 
-      sinon.assert.calledOnce(webhookHandlerFunction);
+      sinon.assert.calledOnce(sendWebhookNotificationSpy);
       sinon.assert.calledWith(
-        webhookHandlerFunction,
+        sendWebhookNotificationSpy,
         userId,
         "create_recipe",
         response.body
@@ -233,9 +232,9 @@ describe("Webhook testing", function () {
     });
 
     it("should send POST request to given address after updating recipe", async function () {
-      const webhookHandlerFunction = sandbox.spy(
+      const sendWebhookNotificationSpy = sandbox.spy(
         webhookService,
-        "webhookHandler"
+        "sendWebhookNotification"
       );
       const recipe = await addSomeRecipes(userId);
 
@@ -248,9 +247,9 @@ describe("Webhook testing", function () {
           ...recipes.recipe,
         });
 
-      sinon.assert.calledOnce(webhookHandlerFunction);
+      sinon.assert.calledOnce(sendWebhookNotificationSpy);
       sinon.assert.calledWith(
-        webhookHandlerFunction,
+        sendWebhookNotificationSpy,
         userId,
         "update_recipe",
         response.body
@@ -258,9 +257,9 @@ describe("Webhook testing", function () {
     });
 
     it("should send POST request to given address after deleting recipe", async function () {
-      const webhookHandlerFunction = sandbox.spy(
+      const sendWebhookNotificationSpy = sandbox.spy(
         webhookService,
-        "webhookHandler"
+        "sendWebhookNotification"
       );
       const recipeToDelete = (await addSomeRecipes(userId))._id;
 
@@ -273,10 +272,10 @@ describe("Webhook testing", function () {
 
       response.body.__v = 0;
 
-      sinon.assert.calledOnce(webhookHandlerFunction);
+      sinon.assert.calledOnce(sendWebhookNotificationSpy);
 
       sinon.assert.calledWith(
-        webhookHandlerFunction,
+        sendWebhookNotificationSpy,
         userId,
         "delete_recipe",
         null,
