@@ -4,11 +4,18 @@ import {
   sinon,
   app,
   StatusCodes,
-  Webhook,
+  RecipeDocument,
   User,
 } from "./config/server.config";
 import { deleteAllWebhooks, addWebhook } from "./mocks/webhook.mocks";
 import { getToken, deleteAllUsers } from "./mocks/user.mocks";
+import {
+  addSomeRecipes,
+  deleteAllRecipes,
+  recipes,
+} from "./mocks/recipe.mocks";
+import webhookService from "../services/webhook.service";
+import { assert, SinonMatcher } from "sinon";
 
 describe("Webhook testing", function () {
   let token: string;
@@ -193,19 +200,88 @@ describe("Webhook testing", function () {
 
   describe("Request interception", function () {
     const sandbox = sinon.createSandbox();
+    let recipe: RecipeDocument;
 
-    beforeEach(function () {
-      sandbox.spy();
-    });
+    beforeEach(async function () {});
 
     afterEach(function () {
       sandbox.restore();
+      deleteAllRecipes();
     });
 
-    it("should send POST request to given address after creating recipe", async function () {});
+    it("should send POST request to given address after creating recipe", async function () {
+      const webhookHandlerFunction = sandbox.spy(
+        webhookService,
+        "webhookHandler"
+      );
+      const response = await chai
+        .request(app)
+        .post("/recipe/")
+        .set("content-type", "application/json")
+        .set("Authorization", token)
+        .send({
+          ...recipes.recipe,
+        });
 
-    it("should send POST request to given address after updating recipe", async function () {});
+      sinon.assert.calledOnce(webhookHandlerFunction);
+      sinon.assert.calledWith(
+        webhookHandlerFunction,
+        userId,
+        "create_recipe",
+        response.body
+      );
+    });
 
-    it("should send POST request to given address after deleting recipe", async function () {});
+    it("should send POST request to given address after updating recipe", async function () {
+      const webhookHandlerFunction = sandbox.spy(
+        webhookService,
+        "webhookHandler"
+      );
+      const recipe = await addSomeRecipes(userId);
+
+      const response = await chai
+        .request(app)
+        .put(`/recipe/${recipe._id}`)
+        .set("content-type", "application/json")
+        .set("Authorization", token)
+        .send({
+          ...recipes.recipe,
+        });
+
+      sinon.assert.calledOnce(webhookHandlerFunction);
+      sinon.assert.calledWith(
+        webhookHandlerFunction,
+        userId,
+        "update_recipe",
+        response.body
+      );
+    });
+
+    it("should send POST request to given address after deleting recipe", async function () {
+      const webhookHandlerFunction = sandbox.spy(
+        webhookService,
+        "webhookHandler"
+      );
+      const recipeToDelete = (await addSomeRecipes(userId))._id;
+
+      const response = await chai
+        .request(app)
+        .delete(`/recipe/${recipeToDelete}`)
+        .set("content-type", "application/json")
+        .set("Authorization", token)
+        .send();
+
+      response.body.__v = 0;
+
+      sinon.assert.calledOnce(webhookHandlerFunction);
+
+      sinon.assert.calledWith(
+        webhookHandlerFunction,
+        userId,
+        "delete_recipe",
+        null,
+        recipeToDelete.toString()
+      );
+    });
   });
 });

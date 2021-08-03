@@ -24,7 +24,11 @@ export class RecipeController {
         userId: _id,
       };
 
-      const savedRecipe = await recipeService.createRecipe(recipeData);
+      const savedRecipe = (
+        await recipeService.createRecipe(recipeData)
+      ).toJSON();
+
+      savedRecipe._id = savedRecipe._id.toString();
 
       webhookService.webhookHandler(_id, "create_recipe", savedRecipe);
       return res.status(StatusCodes.CREATED).send(savedRecipe);
@@ -97,11 +101,9 @@ export class RecipeController {
       }
 
       if (updatedRecipe.OK && updatedRecipe.recipe) {
-        webhookService.webhookHandler(
-          userId,
-          "update_recipe",
-          updatedRecipe.recipe
-        );
+        const jsonedRecipe = updatedRecipe.recipe?.toJSON();
+        jsonedRecipe._id = jsonedRecipe._id.toString();
+        webhookService.webhookHandler(userId, "update_recipe", jsonedRecipe);
 
         return res.send(updatedRecipe.recipe);
       }

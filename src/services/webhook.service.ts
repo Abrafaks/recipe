@@ -141,17 +141,15 @@ export class WebhookService {
   public async webhookHandler(
     userId: string,
     event: string,
-    recipe: RecipeDocument | null,
+    recipe: LeanDocument<RecipeDocument> | null,
     recipeId?: string
   ): Promise<boolean> {
     const webhooks = await this.getWebhooks(userId, userId, false);
     let recipeWithEvent: RecipeWithEvent;
     if (webhooks?.length) {
       if (recipe) {
-        const newRecipe = recipe.toJSON();
-
         recipeWithEvent = {
-          ...newRecipe,
+          ...recipe,
           event,
         };
       } else {

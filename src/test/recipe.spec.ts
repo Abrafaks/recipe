@@ -25,7 +25,7 @@ describe("Recipe testing", function () {
 
     token = "Bearer " + data.token;
     const userId = data.userId;
-    _id = await addSomeRecipes(userId);
+    _id = (await addSomeRecipes(userId))._id;
     await addSomeRecipes(userId);
   });
 
