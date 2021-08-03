@@ -459,5 +459,3 @@ describe("Recipe testing", function () {
     });
   });
 });
-
-export { token };
