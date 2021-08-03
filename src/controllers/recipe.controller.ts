@@ -28,8 +28,6 @@ export class RecipeController {
         await recipeService.createRecipe(recipeData)
       ).toJSON();
 
-      savedRecipe._id = savedRecipe._id.toString();
-
       webhookService.sendWebhookNotification(_id, "create_recipe", savedRecipe);
       return res.status(StatusCodes.CREATED).send(savedRecipe);
     } catch (err) {
@@ -102,7 +100,6 @@ export class RecipeController {
 
       if (updatedRecipe.OK && updatedRecipe.recipe) {
         const jsonedRecipe = updatedRecipe.recipe?.toJSON();
-        jsonedRecipe._id = jsonedRecipe._id.toString();
         webhookService.sendWebhookNotification(
           userId,
           "update_recipe",
