@@ -1,18 +1,41 @@
-import { chai, expect, app, StatusCodes } from "./config/server.config";
-import { deleteAllWebhooks } from "./mocks/webhook.mocks";
+import {
+  chai,
+  expect,
+  sinon,
+  app,
+  StatusCodes,
+  Webhook,
+  User,
+} from "./config/server.config";
+import { deleteAllWebhooks, addWebhook } from "./mocks/webhook.mocks";
+import { getToken, deleteAllUsers } from "./mocks/user.mocks";
 
-afterEach("Delete all users", async function () {
-  await deleteAllWebhooks();
-});
+describe("Webhook testing", function () {
+  let token: string;
+  let userId: string;
+  let webhookId: string;
 
-describe("User testing", function () {
+  beforeEach("Add webhook, user and get token", async function () {
+    const user = await getToken();
+    const webhook = await addWebhook(user.userId);
+
+    token = "Bearer " + user.token;
+    userId = user.userId;
+    webhookId = webhook._id;
+  });
+
+  afterEach("Delete all webhooks and users", async function () {
+    await deleteAllUsers();
+    await deleteAllWebhooks();
+  });
+
   describe("Create webhook", function () {
     it("should create webhook", async function () {
       const response = await chai
         .request(app)
         .post("/webhooks")
         .set("content-type", "application/json")
-        .set("Authorization", `${process.env.token}`)
+        .set("Authorization", `${token}`)
         .send({
           url: "https://trello.com/b/S495BUmj/recipe",
         });
@@ -26,7 +49,7 @@ describe("User testing", function () {
         .request(app)
         .post("/webhooks")
         .set("content-type", "application/json")
-        .set("Authorization", `${process.env.token}`)
+        .set("Authorization", `${token}`)
         .send({
           url: "https://trello.com/b/S495BUmj/recipe",
         });
@@ -35,7 +58,7 @@ describe("User testing", function () {
         .request(app)
         .post("/webhooks")
         .set("content-type", "application/json")
-        .set("Authorization", `${process.env.token}`)
+        .set("Authorization", `${token}`)
         .send({
           url: "https://trello.com/b/S495BUmj/recipe",
         });
@@ -53,7 +76,7 @@ describe("User testing", function () {
         .request(app)
         .post("/webhooks")
         .set("content-type", "application/json")
-        .set("Authorization", `${process.env.token}`)
+        .set("Authorization", `${token}`)
         .send({
           url: "//trello.com/b/S495BUmj/recipe",
         });
@@ -67,9 +90,9 @@ describe("User testing", function () {
     it("should read my webhooks", async function () {
       const response = await chai
         .request(app)
-        .get(`/webhooks/${process.env.userId}`)
+        .get(`/webhooks/${userId}`)
         .set("content-type", "application/json")
-        .set("Authorization", `${process.env.token}`)
+        .set("Authorization", `${token}`)
         .send();
 
       expect(response).to.have.status(StatusCodes.OK);
@@ -80,9 +103,9 @@ describe("User testing", function () {
     it("should not read unauthenticated user webhooks", async function () {
       const response = await chai
         .request(app)
-        .get(`/webhooks/${process.env.userId}`)
+        .get(`/webhooks/${userId}`)
         .set("content-type", "application/json")
-        .set("Authorization", `${process.env.token}hehe`)
+        .set("Authorization", `${token}hehe`)
         .send({
           url: "https://trello.com/b/S495BUmj/recipe",
         });
@@ -95,9 +118,9 @@ describe("User testing", function () {
     it("should update my webhook", async function () {
       const response = await chai
         .request(app)
-        .put(`/webhooks/${process.env.webhookId}`)
+        .put(`/webhooks/${webhookId}`)
         .set("content-type", "application/json")
-        .set("Authorization", `${process.env.token}`)
+        .set("Authorization", `${token}`)
         .send({
           url: "https://trello.com/b/S495BUmj/recipe",
         });
@@ -110,9 +133,9 @@ describe("User testing", function () {
     it("should update webhook with same data", async function () {
       const response = await chai
         .request(app)
-        .put(`/webhooks/${process.env.webhookId}`)
+        .put(`/webhooks/${webhookId}`)
         .set("content-type", "application/json")
-        .set("Authorization", `${process.env.token}`)
+        .set("Authorization", `${token}`)
         .send({
           url: "https://trello.com/b/S495BUmj/recipesssss",
         });
@@ -123,9 +146,9 @@ describe("User testing", function () {
     it("should not update webhook for unauthenticated user", async function () {
       const response = await chai
         .request(app)
-        .put(`/webhooks/${process.env.webhookId}`)
+        .put(`/webhooks/${webhookId}`)
         .set("content-type", "application/json")
-        .set("Authorization", `${process.env.token}hehe`)
+        .set("Authorization", `${token}hehe`)
         .send({
           url: "https://trello.com/b/S495BUmj/recipesssss",
         });
@@ -138,9 +161,9 @@ describe("User testing", function () {
     it("should delete my webhook", async function () {
       const response = await chai
         .request(app)
-        .delete(`/webhooks/${process.env.webhookId}`)
+        .delete(`/webhooks/${webhookId}`)
         .set("content-type", "application/json")
-        .set("Authorization", `${process.env.token}`);
+        .set("Authorization", `${token}`);
 
       expect(response.error).to.be.false;
       expect(response).to.have.status(StatusCodes.OK);
@@ -150,9 +173,9 @@ describe("User testing", function () {
     it("should not delete webhook with invalid ID", async function () {
       const response = await chai
         .request(app)
-        .delete(`/webhooks/${process.env.webhookId}hehe`)
+        .delete(`/webhooks/${webhookId}hehe`)
         .set("content-type", "application/json")
-        .set("Authorization", `${process.env.token}`);
+        .set("Authorization", `${token}`);
 
       expect(response).to.have.status(StatusCodes.BAD_REQUEST);
     });
@@ -160,15 +183,25 @@ describe("User testing", function () {
     it("should not delete webhook for unauthenticated user", async function () {
       const response = await chai
         .request(app)
-        .delete(`/webhooks/${process.env.webhookId}`)
+        .delete(`/webhooks/${webhookId}`)
         .set("content-type", "application/json")
-        .set("Authorization", `${process.env.token}hehe`);
+        .set("Authorization", `${token}hehe`);
 
       expect(response).to.have.status(StatusCodes.UNAUTHORIZED);
     });
   });
 
   describe("Request interception", function () {
+    const sandbox = sinon.createSandbox();
+
+    beforeEach(function () {
+      sandbox.spy();
+    });
+
+    afterEach(function () {
+      sandbox.restore();
+    });
+
     it("should send POST request to given address after creating recipe", async function () {});
 
     it("should send POST request to given address after updating recipe", async function () {});

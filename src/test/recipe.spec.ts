@@ -19,23 +19,21 @@ let _id: string;
 let updateRecipeId: string;
 let token: string;
 
-beforeEach("Add webhook, user and get token", async function () {
-  const data = await getToken();
-
-  token = "Bearer " + data.token;
-  process.env.token = token;
-  const userId = data.userId;
-  _id = await addSomeRecipes(userId);
-  await addSomeRecipes(userId);
-  await addWebhook();
-});
-
-afterEach("Delete all recipes", async function () {
-  await deleteAllRecipes();
-  await deleteAllUsers();
-});
-
 describe("Recipe testing", function () {
+  beforeEach("Add webhook, user and get token", async function () {
+    const data = await getToken();
+
+    token = "Bearer " + data.token;
+    const userId = data.userId;
+    _id = await addSomeRecipes(userId);
+    await addSomeRecipes(userId);
+  });
+
+  afterEach("Delete all recipes", async function () {
+    await deleteAllRecipes();
+    await deleteAllUsers();
+  });
+
   it("should return token", function () {
     expect(token).to.be.a("string");
   });
@@ -470,3 +468,5 @@ describe("Recipe testing", function () {
     });
   });
 });
+
+export { token };

@@ -4,6 +4,7 @@ import chai, { expect } from "chai";
 import { StatusCodes } from "http-status-codes";
 import mongoose from "mongoose";
 import faker from "faker";
+import sinon from "sinon";
 import { User } from "../../models/user.model";
 import { Recipe, RecipeDocument } from "../../models/recipe.model";
 import { Webhook } from "../../models/webhook.model";
@@ -18,6 +19,7 @@ chai.use(chaiHttp);
 export {
   chai,
   expect,
+  sinon,
   mongoose,
   Webhook,
   User,

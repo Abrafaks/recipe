@@ -1,11 +1,19 @@
 import { chai, expect, app, StatusCodes } from "./config/server.config";
-import { user, deleteAllUsers, finalUser } from "./mocks/user.mocks";
-
-afterEach("Delete all users", async function () {
-  await deleteAllUsers();
-});
+import {
+  user,
+  createUser,
+  deleteAllUsers,
+  finalUser,
+} from "./mocks/user.mocks";
 
 describe("User testing", function () {
+  beforeEach("Create user", async function () {
+    await createUser();
+  });
+
+  afterEach("Delete all users", async function () {
+    await deleteAllUsers();
+  });
   describe("Create user", function () {
     it("should create user", async function () {
       const response = await chai
