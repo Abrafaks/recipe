@@ -67,7 +67,6 @@ export class ImageController {
   public async readRecipeImage(req: Request, res: Response): Promise<Response> {
     try {
       const { _id: userId, isAdmin } = req.user!;
-      console.log(userId, isAdmin);
       const { imageId } = matchedData(req);
       const buffer = await imageService.readRecipeImage(imageId);
       if (buffer) {

@@ -97,7 +97,6 @@ export class UserController {
 
       return res.sendStatus(StatusCodes.BAD_REQUEST);
     } catch (err) {
-      console.log(err);
       return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
