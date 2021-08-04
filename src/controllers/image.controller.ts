@@ -4,6 +4,7 @@ import imageService, { ImageService } from "../services/image.service";
 import sharp from "sharp";
 import { matchedData } from "express-validator";
 import { StatusCodes } from "http-status-codes";
+import { StringDecoder } from "string_decoder";
 
 export class ImageController {
   constructor(private readonly imageService: ImageService) {}
@@ -90,10 +91,18 @@ export class ImageController {
         isAdmin
       );
 
-      if (!deletedImage) {
-        return res.sendStatus(StatusCodes.BAD_REQUEST);
+      if (deletedImage.FORBIDDEN) {
+        return res.sendStatus(StatusCodes.FORBIDDEN);
       }
-      return res.sendStatus(StatusCodes.OK);
+
+      if (deletedImage.NOT_FOUND) {
+        return res.sendStatus(StatusCodes.NOT_FOUND);
+      }
+
+      if (deletedImage.OK) {
+        return res.sendStatus(StatusCodes.OK);
+      }
+      return res.sendStatus(StatusCodes.BAD_REQUEST);
     } catch (err) {
       return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }

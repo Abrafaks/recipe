@@ -2,12 +2,7 @@
 import { Image, ImageDocument } from "../models/image.model";
 import { Recipe, RecipeDocument } from "../models/recipe.model";
 
-interface Query {
-  _id: string;
-  userId?: string;
-}
-
-interface AddImageResult {
+interface ImageResult {
   FORBIDDEN: boolean;
   NOT_FOUND: boolean;
   OK: boolean;
@@ -16,33 +11,24 @@ interface AddImageResult {
 
 export class ImageService {
   public async readRecipeById(
-    id: string,
-    userId: string,
-    isAdmin: boolean
+    recipeId: string
   ): Promise<RecipeDocument | null> {
-    let query: Query = {
-      _id: id,
-      userId,
-    };
-    if (isAdmin) {
-      delete query.userId;
-    }
-    return Recipe.findOne(query);
+    return Recipe.findById(recipeId);
   }
 
   public async addRecipeImage(
-    id: string,
+    recipeId: string,
     image: Buffer,
     userId: string,
     isAdmin: boolean
-  ): Promise<AddImageResult> {
-    const addImageResult: AddImageResult = {
+  ): Promise<ImageResult> {
+    const addImageResult: ImageResult = {
       OK: false,
       FORBIDDEN: false,
       NOT_FOUND: false,
     };
 
-    const recipe = await this.readRecipeById(id, userId, isAdmin);
+    const recipe = await this.readRecipeById(recipeId);
 
     if (!recipe) {
       addImageResult.NOT_FOUND = true;
@@ -95,20 +81,32 @@ export class ImageService {
     imageId: string,
     userId: string,
     isAdmin: boolean
-  ): Promise<ImageDocument | null> {
-    const image = await Image.findOne({ _id: imageId });
+  ): Promise<ImageResult> {
+    const deleteImageResult: ImageResult = {
+      OK: false,
+      FORBIDDEN: false,
+      NOT_FOUND: false,
+    };
+
+    const image = await Image.findById(imageId);
 
     if (!image) {
-      return null;
+      deleteImageResult.NOT_FOUND = true;
+      return deleteImageResult;
     }
 
-    const recipe = await this.readRecipeById(image.recipeId, userId, isAdmin);
+    const recipe = await Recipe.findById(image.recipeId);
 
-    if (!recipe) {
-      return null;
+    if (!isAdmin && recipe?.userId !== userId.toString()) {
+      deleteImageResult.FORBIDDEN = true;
+      return deleteImageResult;
     }
 
-    return Image.findOneAndDelete({ _id: imageId });
+    const isImageDeleted = await Image.deleteOne({ _id: imageId });
+
+    deleteImageResult.OK = Boolean(isImageDeleted?.ok);
+    deleteImageResult.imageId = imageId;
+    return deleteImageResult;
   }
 }
 

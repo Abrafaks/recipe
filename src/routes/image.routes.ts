@@ -145,7 +145,7 @@ router.get(
  *           Bad request. Errors:
  *           'Please upload png, jpeg or jpg.',
  *           'Too many parts',
- *           'File too large',
+ *           'File too large. Max size 1MB',
  *           'Too many files',
  *           'Field name too long',
  *           'Field value too long',
@@ -157,7 +157,12 @@ router.get(
  *               type: object
  *               example: {error: "Too many fields"}
  *       401:
- *         description: Unauthorized
+ *         description: Unauthorized.
+ *       403:
+ *         description: Forbidden - there is recipe, but it's not yours.
+ *       404:
+ *         description: Not found - there is not such recipe in entire db.
+ *
  */
 
 const uploadImage = upload.single("image");
@@ -205,9 +210,14 @@ router.post(
  *       200:
  *         description: Image deleted successfully
  *       400:
- *         description: Bad request
+ *         description: Bad request.
  *       401:
- *         description: Unauthorized
+ *         description: Unauthorized.
+ *       403:
+ *         description: Forbidden - there is image, but it's not yours.
+ *       404:
+ *         description: Not found - there is not such image in entire db.
+ *
  */
 
 router.delete(
