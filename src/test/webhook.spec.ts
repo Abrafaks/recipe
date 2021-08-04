@@ -300,18 +300,4 @@ describe("Webhook testing", function () {
       );
     });
   });
-
-  describe("axios testing", function () {
-    const sandbox = sinon.createSandbox();
-    let recipe: RecipeDocument;
-
-    beforeEach(async function () {});
-
-    afterEach(function () {
-      sandbox.restore();
-      deleteAllRecipes();
-    });
-
-    it("should send POST request to given address after creating recipe", async function () {});
-  });
 });
