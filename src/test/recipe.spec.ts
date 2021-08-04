@@ -1,41 +1,30 @@
-import {
-  chai,
-  expect,
-  app,
-  StatusCodes,
-  RecipeDocument,
-  Recipe,
-  User,
-} from "./config/server.config";
+import { chai, expect, app, StatusCodes, Recipe } from "./config/server.config";
 import {
   recipes,
   deleteAllRecipes,
   addSomeRecipes,
 } from "./mocks/recipe.mocks";
 import { getToken, deleteAllUsers } from "./mocks/user.mocks";
-import { addWebhook } from "./mocks/webhook.mocks";
 
 let _id: string;
 let updateRecipeId: string;
 let token: string;
 
-beforeEach("Add webhook, user and get token", async function () {
-  const data = await getToken();
-
-  token = "Bearer " + data.token;
-  process.env.token = token;
-  const userId = data.userId;
-  _id = await addSomeRecipes(userId);
-  await addSomeRecipes(userId);
-  await addWebhook();
-});
-
-afterEach("Delete all recipes", async function () {
-  await deleteAllRecipes();
-  await deleteAllUsers();
-});
-
 describe("Recipe testing", function () {
+  beforeEach("Add user and get token", async function () {
+    const data = await getToken();
+
+    token = "Bearer " + data.token;
+    const userId = data.userId;
+    _id = (await addSomeRecipes(userId))._id;
+    await addSomeRecipes(userId);
+  });
+
+  afterEach("Delete all recipes", async function () {
+    await deleteAllRecipes();
+    await deleteAllUsers();
+  });
+
   it("should return token", function () {
     expect(token).to.be.a("string");
   });
@@ -59,7 +48,6 @@ describe("Recipe testing", function () {
         "preparing",
         "ingredients",
         "userId",
-        "__v",
       ]);
       updateRecipeId = response.body._id;
     });
@@ -414,7 +402,6 @@ describe("Recipe testing", function () {
         "preparing",
         "ingredients",
         "userId",
-        "__v",
       ]);
     });
 

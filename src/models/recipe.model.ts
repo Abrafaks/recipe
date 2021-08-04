@@ -173,7 +173,7 @@ recipeSchema.methods.toJSON = function () {
 
   delete recipeObject.__v;
 
-  return recipeObject;
+  return { ...recipeObject, _id: recipeObject._id.toString() };
 };
 
 export const Recipe = model<RecipeDocument>("recipe", recipeSchema);

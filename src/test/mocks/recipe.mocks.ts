@@ -173,7 +173,7 @@ const addSomeRecipes = async function (userId: string) {
 
   const recipeForId = await recipe1.save();
   await recipe2.save();
-  return recipeForId._id;
+  return recipeForId;
 };
 
 export { recipes, deleteAllRecipes, addSomeRecipes };
