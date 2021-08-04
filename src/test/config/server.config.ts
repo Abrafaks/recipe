@@ -9,6 +9,7 @@ import { User } from "../../models/user.model";
 import { Recipe, RecipeDocument } from "../../models/recipe.model";
 import { Webhook, WebhookDocument } from "../../models/webhook.model";
 import jwt from "jsonwebtoken";
+import axios from "axios";
 dotenv.config();
 process.env.MONGODB_CONNECTION_STRING = "mongodb://localhost:27017/recipe-test";
 
@@ -30,4 +31,5 @@ export {
   app,
   StatusCodes,
   jwt,
+  axios,
 };

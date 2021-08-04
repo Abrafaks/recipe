@@ -159,9 +159,14 @@ export class WebhookService {
         };
       }
 
-      webhooks.map(async (webhook: WebhookDocument) => {
-        const response = await axios.post(`${webhook.url}`, recipeWithEvent);
-      });
+      await Promise.all(
+        webhooks.map(async (webhook: WebhookDocument) => {
+          return axios.post(`${webhook.url}`, recipeWithEvent, {
+            // no matter what status code request returned, it's ok
+            validateStatus: (code) => true,
+          });
+        })
+      );
 
       return true;
     }

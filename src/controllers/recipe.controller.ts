@@ -24,11 +24,13 @@ export class RecipeController {
         userId: _id,
       };
 
-      const savedRecipe = (
-        await recipeService.createRecipe(recipeData)
-      ).toJSON();
+      const savedRecipe = await recipeService.createRecipe(recipeData);
 
-      webhookService.sendWebhookNotification(_id, "create_recipe", savedRecipe);
+      await webhookService.sendWebhookNotification(
+        _id,
+        "create_recipe",
+        savedRecipe.toJSON()
+      );
       return res.status(StatusCodes.CREATED).send(savedRecipe);
     } catch (err) {
       return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);

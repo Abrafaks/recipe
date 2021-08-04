@@ -5,6 +5,10 @@ import {
   app,
   StatusCodes,
   RecipeDocument,
+  User,
+  Recipe,
+  Webhook,
+  axios,
 } from "./config/server.config";
 import { deleteAllWebhooks, addWebhook } from "./mocks/webhook.mocks";
 import { getToken, deleteAllUsers } from "./mocks/user.mocks";
@@ -14,7 +18,7 @@ import {
   recipes,
 } from "./mocks/recipe.mocks";
 import webhookService from "../services/webhook.service";
-import { assert, SinonMatcher } from "sinon";
+import { SinonSandbox } from "sinon";
 
 describe("Webhook testing", function () {
   let token: string;
@@ -198,21 +202,24 @@ describe("Webhook testing", function () {
   });
 
   describe("sendWebhookNotification testing", function () {
-    const sandbox = sinon.createSandbox();
-    let recipe: RecipeDocument;
+    let sandbox: SinonSandbox;
 
-    beforeEach(async function () {});
+    beforeEach(async function () {
+      sandbox = sinon.createSandbox();
+    });
 
     afterEach(function () {
       sandbox.restore();
       deleteAllRecipes();
     });
 
-    it("should send POST request to given address after creating recipe", async function () {
+    it.only("should send POST request to given address after creating recipe", async function () {
       const sendWebhookNotificationSpy = sandbox.spy(
         webhookService,
         "sendWebhookNotification"
       );
+      const axiosSpy = sandbox.spy(axios, "post");
+
       const response = await chai
         .request(app)
         .post("/recipe/")
@@ -223,10 +230,20 @@ describe("Webhook testing", function () {
         });
 
       sinon.assert.calledOnce(sendWebhookNotificationSpy);
+
       sinon.assert.calledWith(
         sendWebhookNotificationSpy,
         userId,
         "create_recipe",
+        response.body
+      );
+
+      response.body.event = "create_recipe";
+
+      sinon.assert.calledOnce(axiosSpy);
+      sinon.assert.calledWith(
+        axiosSpy,
+        "https://trello.com/b/S495BUmj/recipesssss",
         response.body
       );
     });
@@ -282,5 +299,19 @@ describe("Webhook testing", function () {
         recipeToDelete.toString()
       );
     });
+  });
+
+  describe("axios testing", function () {
+    const sandbox = sinon.createSandbox();
+    let recipe: RecipeDocument;
+
+    beforeEach(async function () {});
+
+    afterEach(function () {
+      sandbox.restore();
+      deleteAllRecipes();
+    });
+
+    it("should send POST request to given address after creating recipe", async function () {});
   });
 });
