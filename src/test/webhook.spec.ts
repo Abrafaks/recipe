@@ -205,15 +205,14 @@ describe("Webhook testing", function () {
     let sandbox: SinonSandbox;
 
     beforeEach(async function () {
+      if (sandbox) {
+        sandbox.restore();
+      }
+      deleteAllRecipes();
       sandbox = sinon.createSandbox();
     });
 
-    afterEach(function () {
-      sandbox.restore();
-      deleteAllRecipes();
-    });
-
-    it.only("should send POST request to given address after creating recipe", async function () {
+    it("should send POST request to given address after creating recipe", async function () {
       const sendWebhookNotificationSpy = sandbox.spy(
         webhookService,
         "sendWebhookNotification"
@@ -253,6 +252,8 @@ describe("Webhook testing", function () {
         webhookService,
         "sendWebhookNotification"
       );
+      const axiosSpy = sandbox.spy(axios, "post");
+
       const recipe = await addSomeRecipes(userId);
 
       const response = await chai
@@ -271,6 +272,15 @@ describe("Webhook testing", function () {
         "update_recipe",
         response.body
       );
+
+      response.body.event = "update_recipe";
+
+      sinon.assert.calledOnce(axiosSpy);
+      sinon.assert.calledWith(
+        axiosSpy,
+        "https://trello.com/b/S495BUmj/recipesssss",
+        response.body
+      );
     });
 
     it("should send POST request to given address after deleting recipe", async function () {
@@ -278,6 +288,8 @@ describe("Webhook testing", function () {
         webhookService,
         "sendWebhookNotification"
       );
+      const axiosSpy = sandbox.spy(axios, "post");
+
       const recipeToDelete = (await addSomeRecipes(userId))._id;
 
       const response = await chai
@@ -297,6 +309,18 @@ describe("Webhook testing", function () {
         "delete_recipe",
         null,
         recipeToDelete.toString()
+      );
+
+      const recipeWithEvent = {
+        recipeId: recipeToDelete.toString(),
+        event: "delete_recipe",
+      };
+
+      sinon.assert.calledOnce(axiosSpy);
+      sinon.assert.calledWith(
+        axiosSpy,
+        "https://trello.com/b/S495BUmj/recipesssss",
+        recipeWithEvent
       );
     });
   });

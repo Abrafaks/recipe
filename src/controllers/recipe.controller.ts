@@ -102,7 +102,7 @@ export class RecipeController {
 
       if (updatedRecipe.OK && updatedRecipe.recipe) {
         const jsonedRecipe = updatedRecipe.recipe?.toJSON();
-        webhookService.sendWebhookNotification(
+        await webhookService.sendWebhookNotification(
           userId,
           "update_recipe",
           jsonedRecipe
@@ -151,7 +151,7 @@ export class RecipeController {
       const result = await recipeService.deleteRecipeById(query);
 
       if (result.recipeDeleted && result.recipeImagesDeleted) {
-        webhookService.sendWebhookNotification(
+        await webhookService.sendWebhookNotification(
           userId,
           "delete_recipe",
           null,
