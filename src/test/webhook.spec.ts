@@ -4,10 +4,6 @@ import {
   sinon,
   app,
   StatusCodes,
-  RecipeDocument,
-  User,
-  Recipe,
-  Webhook,
   axios,
 } from "./config/server.config";
 import { deleteAllWebhooks, addWebhook } from "./mocks/webhook.mocks";
