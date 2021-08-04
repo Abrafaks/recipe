@@ -4,7 +4,7 @@ import chai, { expect } from "chai";
 import { StatusCodes } from "http-status-codes";
 import mongoose from "mongoose";
 import faker from "faker";
-import sinon from "sinon";
+import sinon, { SinonSandbox } from "sinon";
 import { User } from "../../models/user.model";
 import { Recipe, RecipeDocument } from "../../models/recipe.model";
 import { Webhook, WebhookDocument } from "../../models/webhook.model";
@@ -21,6 +21,7 @@ export {
   chai,
   expect,
   sinon,
+  SinonSandbox,
   mongoose,
   Webhook,
   WebhookDocument,

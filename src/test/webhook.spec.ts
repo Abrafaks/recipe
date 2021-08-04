@@ -2,6 +2,7 @@ import {
   chai,
   expect,
   sinon,
+  SinonSandbox,
   app,
   StatusCodes,
   axios,
@@ -14,7 +15,6 @@ import {
   recipes,
 } from "./mocks/recipe.mocks";
 import webhookService from "../services/webhook.service";
-import { SinonSandbox } from "sinon";
 
 describe("Webhook testing", function () {
   let token: string;
