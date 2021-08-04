@@ -33,7 +33,9 @@ export class ImageController {
       }
 
       if (savedImage.OK) {
-        return res.send({ _id: savedImage.imageId });
+        return res
+          .status(StatusCodes.CREATED)
+          .send({ _id: savedImage.imageId });
       }
       return res.sendStatus(StatusCodes.BAD_REQUEST);
     } catch (err) {
