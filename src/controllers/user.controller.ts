@@ -94,6 +94,7 @@ export class UserController {
       if (!deletedUser.OK) {
         return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
       }
+
       return res.sendStatus(StatusCodes.OK);
     } catch (err) {
       return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);

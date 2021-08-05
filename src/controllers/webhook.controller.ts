@@ -71,13 +71,10 @@ export class WebhookController {
         return res.sendStatus(StatusCodes.NOT_FOUND);
       }
 
-      if (updatedWebhook.OK && updatedWebhook.webhook) {
-        return res.send(updatedWebhook.webhook);
+      if (!updatedWebhook.OK || !updatedWebhook.webhook) {
+        return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
       }
-
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .send({ error: "Nothing to update" });
+      return res.send(updatedWebhook.webhook);
     } catch (err) {
       return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }

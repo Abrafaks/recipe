@@ -106,18 +106,18 @@ export class RecipeController {
         return res.sendStatus(StatusCodes.NOT_FOUND);
       }
 
-      if (updatedRecipe.OK && updatedRecipe.recipe) {
-        const jsonedRecipe = updatedRecipe.recipe?.toJSON();
-        await webhookService.sendWebhookNotification(
-          userId,
-          Event.update_recipe,
-          jsonedRecipe
-        );
-
-        return res.send(updatedRecipe.recipe);
+      if (!updatedRecipe.OK || !updatedRecipe.recipe) {
+        return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
       }
 
-      return res.sendStatus(StatusCodes.BAD_REQUEST);
+      const jsonedRecipe = updatedRecipe.recipe?.toJSON();
+      await webhookService.sendWebhookNotification(
+        userId,
+        Event.update_recipe,
+        jsonedRecipe
+      );
+
+      return res.send(updatedRecipe.recipe);
     } catch (err) {
       return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }
