@@ -6,6 +6,12 @@ import recipeService, { RecipeService } from "../services/recipe.service";
 import webhookService, { WebhookService } from "../services/webhook.service";
 import { StatusCodes } from "http-status-codes";
 
+enum Event {
+  create_recipe = "create_recipe",
+  update_recipe = "update_recipe",
+  delete_recipe = "delete_recipe",
+}
+
 export class RecipeController {
   constructor(
     private recipeService: RecipeService,
@@ -28,7 +34,7 @@ export class RecipeController {
 
       await webhookService.sendWebhookNotification(
         _id,
-        "create_recipe",
+        Event.create_recipe,
         savedRecipe.toJSON()
       );
       return res.status(StatusCodes.CREATED).send(savedRecipe);
@@ -104,7 +110,7 @@ export class RecipeController {
         const jsonedRecipe = updatedRecipe.recipe?.toJSON();
         await webhookService.sendWebhookNotification(
           userId,
-          "update_recipe",
+          Event.update_recipe,
           jsonedRecipe
         );
 
@@ -153,7 +159,7 @@ export class RecipeController {
       if (result.recipeDeleted && result.recipeImagesDeleted) {
         await webhookService.sendWebhookNotification(
           userId,
-          "delete_recipe",
+          Event.delete_recipe,
           null,
           recipeId
         );

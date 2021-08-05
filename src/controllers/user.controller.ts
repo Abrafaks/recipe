@@ -91,11 +91,10 @@ export class UserController {
         return res.sendStatus(StatusCodes.NOT_FOUND);
       }
 
-      if (deletedUser.OK) {
-        return res.send();
+      if (!deletedUser.OK) {
+        return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
       }
-
-      return res.sendStatus(StatusCodes.BAD_REQUEST);
+      return res.sendStatus(StatusCodes.OK);
     } catch (err) {
       return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }

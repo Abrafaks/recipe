@@ -7,7 +7,7 @@ import {
   StatusCodes,
   axios,
 } from "./config/server.config";
-import { deleteAllWebhooks, addWebhook } from "./mocks/webhook.mocks";
+import { deleteAllWebhooks, addWebhook, Event } from "./mocks/webhook.mocks";
 import { getToken, deleteAllUsers } from "./mocks/user.mocks";
 import {
   addSomeRecipes,
@@ -232,11 +232,11 @@ describe("Webhook testing", function () {
       sinon.assert.calledWith(
         sendWebhookNotificationSpy,
         userId,
-        "create_recipe",
+        Event.create_recipe,
         response.body
       );
 
-      response.body.event = "create_recipe";
+      response.body.event = Event.create_recipe;
 
       sinon.assert.calledOnce(axiosSpy);
       sinon.assert.calledWith(axiosSpy, url, response.body);
@@ -264,11 +264,11 @@ describe("Webhook testing", function () {
       sinon.assert.calledWith(
         sendWebhookNotificationSpy,
         userId,
-        "update_recipe",
+        Event.update_recipe,
         response.body
       );
 
-      response.body.event = "update_recipe";
+      response.body.event = Event.update_recipe;
 
       sinon.assert.calledOnce(axiosSpy);
       sinon.assert.calledWith(axiosSpy, url, response.body);
@@ -297,14 +297,14 @@ describe("Webhook testing", function () {
       sinon.assert.calledWith(
         sendWebhookNotificationSpy,
         userId,
-        "delete_recipe",
+        Event.delete_recipe,
         null,
         recipeToDelete.toString()
       );
 
       const recipeWithEvent = {
         recipeId: recipeToDelete.toString(),
-        event: "delete_recipe",
+        event: Event.delete_recipe,
       };
 
       sinon.assert.calledOnce(axiosSpy);
