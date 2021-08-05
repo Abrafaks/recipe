@@ -17,9 +17,11 @@ import {
 import webhookService from "../services/webhook.service";
 
 describe("Webhook testing", function () {
+  const validUrl = "https://trello.com/b/S495BUmj/recipe";
   let token: string;
   let userId: string;
   let webhookId: string;
+  let url: string;
 
   beforeEach("Add webhook, user and get token", async function () {
     const user = await getToken();
@@ -28,6 +30,7 @@ describe("Webhook testing", function () {
     token = "Bearer " + user.token;
     userId = user.userId;
     webhookId = webhook._id;
+    url = webhook.url;
   });
 
   afterEach("Delete all webhooks and users", async function () {
@@ -35,7 +38,7 @@ describe("Webhook testing", function () {
     await deleteAllWebhooks();
   });
 
-  describe("Create webhook", function () {
+  context("Create webhook", function () {
     it("should create webhook", async function () {
       const response = await chai
         .request(app)
@@ -43,7 +46,7 @@ describe("Webhook testing", function () {
         .set("content-type", "application/json")
         .set("Authorization", `${token}`)
         .send({
-          url: "https://trello.com/b/S495BUmj/recipe",
+          url: validUrl,
         });
       expect(response.error).to.be.false;
       expect(response).to.have.status(StatusCodes.CREATED);
@@ -57,7 +60,7 @@ describe("Webhook testing", function () {
         .set("content-type", "application/json")
         .set("Authorization", `${token}`)
         .send({
-          url: "https://trello.com/b/S495BUmj/recipe",
+          url: validUrl,
         });
 
       const response2 = await chai
@@ -66,7 +69,7 @@ describe("Webhook testing", function () {
         .set("content-type", "application/json")
         .set("Authorization", `${token}`)
         .send({
-          url: "https://trello.com/b/S495BUmj/recipe",
+          url: validUrl,
         });
       expect(response1.error).to.be.false;
       expect(response1).to.have.status(StatusCodes.CREATED);
@@ -92,7 +95,7 @@ describe("Webhook testing", function () {
     });
   });
 
-  describe("Read webhook", function () {
+  context("Read webhook", function () {
     it("should read my webhooks", async function () {
       const response = await chai
         .request(app)
@@ -113,14 +116,14 @@ describe("Webhook testing", function () {
         .set("content-type", "application/json")
         .set("Authorization", `${token}hehe`)
         .send({
-          url: "https://trello.com/b/S495BUmj/recipe",
+          url: validUrl,
         });
 
       expect(response).to.have.status(StatusCodes.UNAUTHORIZED);
     });
   });
 
-  describe("Update webhook", function () {
+  context("Update webhook", function () {
     it("should update my webhook", async function () {
       const response = await chai
         .request(app)
@@ -128,7 +131,7 @@ describe("Webhook testing", function () {
         .set("content-type", "application/json")
         .set("Authorization", `${token}`)
         .send({
-          url: "https://trello.com/b/S495BUmj/recipe",
+          url: validUrl,
         });
 
       expect(response.error).to.be.false;
@@ -143,7 +146,7 @@ describe("Webhook testing", function () {
         .set("content-type", "application/json")
         .set("Authorization", `${token}`)
         .send({
-          url: "https://trello.com/b/S495BUmj/recipesssss",
+          url,
         });
 
       expect(response).to.have.status(StatusCodes.OK);
@@ -156,14 +159,14 @@ describe("Webhook testing", function () {
         .set("content-type", "application/json")
         .set("Authorization", `${token}hehe`)
         .send({
-          url: "https://trello.com/b/S495BUmj/recipesssss",
+          url,
         });
 
       expect(response).to.have.status(StatusCodes.UNAUTHORIZED);
     });
   });
 
-  describe("Delete webhook", function () {
+  context("Delete webhook", function () {
     it("should delete my webhook", async function () {
       const response = await chai
         .request(app)
@@ -197,7 +200,7 @@ describe("Webhook testing", function () {
     });
   });
 
-  describe("sendWebhookNotification testing", function () {
+  context("sendWebhookNotification testing", function () {
     let sandbox: SinonSandbox;
 
     beforeEach(async function () {
@@ -236,11 +239,7 @@ describe("Webhook testing", function () {
       response.body.event = "create_recipe";
 
       sinon.assert.calledOnce(axiosSpy);
-      sinon.assert.calledWith(
-        axiosSpy,
-        "https://trello.com/b/S495BUmj/recipesssss",
-        response.body
-      );
+      sinon.assert.calledWith(axiosSpy, url, response.body);
     });
 
     it("should send POST request to given address after updating recipe", async function () {
@@ -272,11 +271,7 @@ describe("Webhook testing", function () {
       response.body.event = "update_recipe";
 
       sinon.assert.calledOnce(axiosSpy);
-      sinon.assert.calledWith(
-        axiosSpy,
-        "https://trello.com/b/S495BUmj/recipesssss",
-        response.body
-      );
+      sinon.assert.calledWith(axiosSpy, url, response.body);
     });
 
     it("should send POST request to given address after deleting recipe", async function () {
@@ -313,11 +308,7 @@ describe("Webhook testing", function () {
       };
 
       sinon.assert.calledOnce(axiosSpy);
-      sinon.assert.calledWith(
-        axiosSpy,
-        "https://trello.com/b/S495BUmj/recipesssss",
-        recipeWithEvent
-      );
+      sinon.assert.calledWith(axiosSpy, url, recipeWithEvent);
     });
   });
 });

@@ -29,7 +29,7 @@ describe("Recipe testing", function () {
     expect(token).to.be.a("string");
   });
 
-  describe("Creating recipes", function () {
+  context("Creating recipes", function () {
     it("should create recipe", async function () {
       const response = await chai
         .request(app)
@@ -66,7 +66,7 @@ describe("Recipe testing", function () {
     });
   });
 
-  describe("Recipe title validation", function () {
+  context("Recipe title validation", function () {
     it("should not create recipe with empty title", async function () {
       const response = await chai
         .request(app)
@@ -128,7 +128,7 @@ describe("Recipe testing", function () {
     });
   });
 
-  describe("Recipe description testing", function () {
+  context("Recipe description testing", function () {
     it("should not create recipe with description that is too long", async function () {
       const response = await chai
         .request(app)
@@ -173,7 +173,7 @@ describe("Recipe testing", function () {
     });
   });
 
-  describe("Recipe preparing testing", function () {
+  context("Recipe preparing testing", function () {
     it("should not create recipe with empty preparing", async function () {
       const response = await chai
         .request(app)
@@ -235,7 +235,7 @@ describe("Recipe testing", function () {
     });
   });
 
-  describe("Recipe preparing testing", function () {
+  context("Recipe preparing testing", function () {
     it("should not create recipe with ingredients that is empty", async function () {
       const response = await chai
         .request(app)
@@ -312,7 +312,7 @@ describe("Recipe testing", function () {
     });
   });
 
-  describe("Reading recipes", function () {
+  context("Reading recipes", function () {
     it("should return all recipes", async function () {
       const response = await chai
         .request(app)
@@ -389,7 +389,7 @@ describe("Recipe testing", function () {
       );
     });
   });
-  describe("Read recipe by id", function () {
+  context("Read recipe by id", function () {
     it("should return recipe by id", async function () {
       const response = await chai
         .request(app)
@@ -421,7 +421,7 @@ describe("Recipe testing", function () {
     });
   });
 
-  describe("Update recipe testing", function () {
+  context("Update recipe testing", function () {
     it("should edit recipe for user", async function () {
       const { description, preparing, ingredients } = recipes.recipe;
       const title = "New title.";
