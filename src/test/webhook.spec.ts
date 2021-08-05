@@ -216,7 +216,8 @@ describe("Webhook testing", function () {
         webhookService,
         "sendWebhookNotification"
       );
-      const axiosSpy = sandbox.spy(axios, "post");
+      // const axiosSpy = sandbox.spy(axios, "post");
+      const axiosStub = sandbox.stub(axios, "post").resolves(true);
 
       const response = await chai
         .request(app)
@@ -238,8 +239,8 @@ describe("Webhook testing", function () {
 
       response.body.event = Event.create_recipe;
 
-      sinon.assert.calledOnce(axiosSpy);
-      sinon.assert.calledWith(axiosSpy, url, response.body);
+      sinon.assert.calledOnce(axiosStub);
+      sinon.assert.calledWith(axiosStub, url, response.body);
     });
 
     it("should send POST request to given address after updating recipe", async function () {
@@ -247,7 +248,8 @@ describe("Webhook testing", function () {
         webhookService,
         "sendWebhookNotification"
       );
-      const axiosSpy = sandbox.spy(axios, "post");
+      //const axiosSpy = sandbox.spy(axios, "post");
+      const axiosStub = sandbox.stub(axios, "post").resolves(true);
 
       const recipe = await addSomeRecipes(userId);
 
@@ -270,8 +272,8 @@ describe("Webhook testing", function () {
 
       response.body.event = Event.update_recipe;
 
-      sinon.assert.calledOnce(axiosSpy);
-      sinon.assert.calledWith(axiosSpy, url, response.body);
+      sinon.assert.calledOnce(axiosStub);
+      sinon.assert.calledWith(axiosStub, url, response.body);
     });
 
     it("should send POST request to given address after deleting recipe", async function () {
@@ -279,7 +281,8 @@ describe("Webhook testing", function () {
         webhookService,
         "sendWebhookNotification"
       );
-      const axiosSpy = sandbox.spy(axios, "post");
+      //const axiosSpy = sandbox.spy(axios, "post");
+      const axiosStub = sandbox.stub(axios, "post").resolves(true);
 
       const recipeToDelete = (await addSomeRecipes(userId))._id;
 
@@ -307,8 +310,8 @@ describe("Webhook testing", function () {
         event: Event.delete_recipe,
       };
 
-      sinon.assert.calledOnce(axiosSpy);
-      sinon.assert.calledWith(axiosSpy, url, recipeWithEvent);
+      sinon.assert.calledOnce(axiosStub);
+      sinon.assert.calledWith(axiosStub, url, recipeWithEvent);
     });
   });
 });
