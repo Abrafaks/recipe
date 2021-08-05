@@ -14,7 +14,8 @@ describe("User testing", function () {
   afterEach("Delete all users", async function () {
     await deleteAllUsers();
   });
-  describe("Create user", function () {
+
+  context("Create user", function () {
     it("should create user", async function () {
       const response = await chai
         .request(app)
@@ -54,7 +55,7 @@ describe("User testing", function () {
     });
   });
 
-  describe("Login user", function () {
+  context("Login user", function () {
     it("should login user", async function () {
       const response = await chai
         .request(app)

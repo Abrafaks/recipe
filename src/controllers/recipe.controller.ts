@@ -6,6 +6,12 @@ import recipeService, { RecipeService } from "../services/recipe.service";
 import webhookService, { WebhookService } from "../services/webhook.service";
 import { StatusCodes } from "http-status-codes";
 
+enum Event {
+  create_recipe = "create_recipe",
+  update_recipe = "update_recipe",
+  delete_recipe = "delete_recipe",
+}
+
 export class RecipeController {
   constructor(
     private recipeService: RecipeService,
@@ -24,11 +30,13 @@ export class RecipeController {
         userId: _id,
       };
 
-      const savedRecipe = (
-        await recipeService.createRecipe(recipeData)
-      ).toJSON();
+      const savedRecipe = await recipeService.createRecipe(recipeData);
 
-      webhookService.sendWebhookNotification(_id, "create_recipe", savedRecipe);
+      await webhookService.sendWebhookNotification(
+        _id,
+        Event.create_recipe,
+        savedRecipe.toJSON()
+      );
       return res.status(StatusCodes.CREATED).send(savedRecipe);
     } catch (err) {
       return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
@@ -98,18 +106,18 @@ export class RecipeController {
         return res.sendStatus(StatusCodes.NOT_FOUND);
       }
 
-      if (updatedRecipe.OK && updatedRecipe.recipe) {
-        const jsonedRecipe = updatedRecipe.recipe?.toJSON();
-        webhookService.sendWebhookNotification(
-          userId,
-          "update_recipe",
-          jsonedRecipe
-        );
-
-        return res.send(updatedRecipe.recipe);
+      if (!updatedRecipe.OK || !updatedRecipe.recipe) {
+        return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
       }
 
-      return res.sendStatus(StatusCodes.BAD_REQUEST);
+      const jsonedRecipe = updatedRecipe.recipe?.toJSON();
+      await webhookService.sendWebhookNotification(
+        userId,
+        Event.update_recipe,
+        jsonedRecipe
+      );
+
+      return res.send(updatedRecipe.recipe);
     } catch (err) {
       return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }
@@ -149,9 +157,9 @@ export class RecipeController {
       const result = await recipeService.deleteRecipeById(query);
 
       if (result.recipeDeleted && result.recipeImagesDeleted) {
-        webhookService.sendWebhookNotification(
+        await webhookService.sendWebhookNotification(
           userId,
-          "delete_recipe",
+          Event.delete_recipe,
           null,
           recipeId
         );

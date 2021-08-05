@@ -4,11 +4,12 @@ import chai, { expect } from "chai";
 import { StatusCodes } from "http-status-codes";
 import mongoose from "mongoose";
 import faker from "faker";
-import sinon from "sinon";
+import sinon, { SinonSandbox } from "sinon";
 import { User } from "../../models/user.model";
 import { Recipe, RecipeDocument } from "../../models/recipe.model";
 import { Webhook, WebhookDocument } from "../../models/webhook.model";
 import jwt from "jsonwebtoken";
+import axios from "axios";
 dotenv.config();
 process.env.MONGODB_CONNECTION_STRING = "mongodb://localhost:27017/recipe-test";
 
@@ -20,6 +21,7 @@ export {
   chai,
   expect,
   sinon,
+  SinonSandbox,
   mongoose,
   Webhook,
   WebhookDocument,
@@ -30,4 +32,5 @@ export {
   app,
   StatusCodes,
   jwt,
+  axios,
 };
