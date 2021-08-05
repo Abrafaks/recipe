@@ -216,7 +216,6 @@ describe("Webhook testing", function () {
         webhookService,
         "sendWebhookNotification"
       );
-      // const axiosSpy = sandbox.spy(axios, "post");
       const axiosStub = sandbox.stub(axios, "post").resolves(true);
 
       const response = await chai
@@ -248,7 +247,6 @@ describe("Webhook testing", function () {
         webhookService,
         "sendWebhookNotification"
       );
-      //const axiosSpy = sandbox.spy(axios, "post");
       const axiosStub = sandbox.stub(axios, "post").resolves(true);
 
       const recipe = await addSomeRecipes(userId);
@@ -281,7 +279,6 @@ describe("Webhook testing", function () {
         webhookService,
         "sendWebhookNotification"
       );
-      //const axiosSpy = sandbox.spy(axios, "post");
       const axiosStub = sandbox.stub(axios, "post").resolves(true);
 
       const recipeToDelete = (await addSomeRecipes(userId))._id;
